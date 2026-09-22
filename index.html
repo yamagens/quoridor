@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#f5f3ed">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="コリドール">
-<meta name="description" content="非公式コリドール練習アプリ。通常9×9とキッズ7×7、2～4人、人間とコンピューターの混合対戦、強さ10段階。">
+<meta name="description" content="非公式コリドール練習アプリ。通常9×9とキッズ7×7、2～4人、最短マス数、開始位置の指定・抽選、ヒント、コンピューターの強さ10段階。次の1手を考えるヒント機能。">
 <title>コリドール｜通常・キッズ 2～4人対戦</title>
 <style>
 :root{color-scheme:light;--bg:#f5f3ed;--paper:#fffefa;--ink:#243739;--muted:#647575;--line:#dddeda;--human:#157879;--human-light:#e4f2ee;--computer:#b55d3b;--computer-light:#f7e9df;--wall:#49585c;--danger:#b63045;--shadow:0 6px 24px #23353408;--radius:18px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
@@ -58,6 +58,36 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 
 @media(max-width:760px){.name-fields input{font-size:16px}}
 
+
+/* v2.1: optional coaching; hint analysis never commits a move. */
+:root{--hint:#91640e;--hint-line:#d7b66a;--hint-bg:#fff7e3}
+.hint-toolbar{display:flex;align-items:center;gap:10px;margin:0 0 10px;min-height:44px}
+.hint-toolbar>span{font-size:11px;color:var(--muted);line-height:1.6;flex:1;min-width:0}
+.hint-button{min-height:44px;padding:8px 18px;border:1px solid var(--hint-line);background:var(--hint-bg);color:var(--hint);font-size:13px;font-weight:650;white-space:nowrap}
+.hint-panel{border:1px solid var(--hint-line);border-radius:13px;padding:14px;background:var(--hint-bg);margin:0 0 12px;overflow-wrap:anywhere}
+.hint-panel h3{font-size:14px;line-height:1.6;color:var(--ink);margin:0 0 6px}
+.hint-panel p{font-size:12px;line-height:1.8;margin:6px 0;color:var(--ink)}
+.hint-panel .hint-meta{font-size:10px;color:var(--muted);white-space:pre-line}
+.hint-panel .hint-disclaimer{font-size:10px;color:#6c644f;line-height:1.7}
+.hint-panel .hint-actions{display:flex;gap:10px;align-items:center;margin-top:8px}
+.hint-panel .hint-actions span{font-size:10px;line-height:1.7;flex:1}
+.hint-panel .text-btn{min-height:40px;flex-shrink:0;color:var(--hint);font-size:11px}
+.hint-panel details{border-top:1px solid #e4d7b8;margin-top:10px;padding-top:6px}
+.hint-panel summary{font-size:11px;cursor:pointer;min-height:36px;display:flex;align-items:center}
+.hint-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px;margin:0 0 8px}
+.hint-table th,.hint-table td{padding:6px 4px;text-align:right;border-bottom:1px solid #e8dfc8;font-variant-numeric:tabular-nums}
+.hint-table th:first-child,.hint-table td:first-child{text-align:left;width:46%;overflow-wrap:anywhere}
+#hintPanel [hidden]{display:none!important}
+#board .hint-marker{pointer-events:none}
+.mobile-hint{min-width:54px;padding:6px 7px;font-size:11px}
+@media(max-width:760px){.hint-toolbar{margin-bottom:9px}.hint-panel{padding:11px 12px}.hint-panel p{font-size:11px}.mobile-buttons{gap:5px}.mobile-mode{min-width:66px;padding:6px 8px;font-size:11px}.mobile-rotate{width:44px;min-width:44px;flex-shrink:0}.mobile-buttons .primary-btn{font-size:11px;padding:8px 6px}.mobile-hint{min-height:44px;flex-shrink:0}}
+
+/* v2.2: distance numbers and explicit player-to-seat assignment. */
+.player-distance{margin-top:7px;padding-top:6px;border-top:1px solid var(--line);display:flex;align-items:baseline;gap:5px;color:var(--ink);font-size:10px;flex-wrap:wrap}.player-distance strong{font-size:24px;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--seat)}.player-distance .distance-prefix{margin-right:auto}.distance-options{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted);margin-top:10px}.distance-options label{display:flex;gap:7px;align-items:center;min-height:32px;cursor:pointer;color:var(--ink);font-size:11px}.distance-options input{width:18px;height:18px;accent-color:var(--human);margin:0}.distance-options>span{font-size:9px;text-align:right}.distance-note{font-size:10px;color:var(--muted);line-height:1.7;margin:1px 0 4px}.placement-note{font-size:10px!important;margin:8px 0!important;line-height:1.7!important}.seat-fields{display:grid;gap:8px;margin:10px 0}.seat-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:10px;align-items:center}.seat-person{font-size:11px;min-width:0;overflow-wrap:anywhere;display:flex;align-items:center;gap:7px}.seat-person .player-id{flex-shrink:0}.seat-row select{font-size:12px;min-height:44px}.seat-fixed{font-size:11px;color:var(--muted);text-align:right}.seat-preview{display:grid;grid-template-columns:1fr 1.05fr 1fr;grid-template-rows:auto auto auto;gap:6px;border:1px solid var(--line);background:#f4f4ec;border-radius:12px;padding:10px;min-width:0}.seat-preview-item{font-size:10px;line-height:1.6;background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:6px;min-width:0;text-align:center;overflow-wrap:anywhere}.seat-preview-item strong{display:block;font-size:11px}.seat-preview-item small{font-size:9px}.seat-preview-item[data-seat="0"]{grid-area:3/2}.seat-preview-item[data-seat="1"]{grid-area:1/2}.seat-preview-item[data-seat="2"]{grid-area:2/1}.seat-preview-item[data-seat="3"]{grid-area:2/3}.seat-preview-center{grid-area:2/2;display:grid;place-content:center;text-align:center;font-size:10px;color:var(--muted)}.seat-preview-item.empty{background:transparent;border-style:dashed;color:var(--muted)}.seat-preview-item.random{color:var(--muted)}#seatStatus:empty{display:none}.normal-pawn-direction{stroke:#fffefa;stroke-width:2.4;stroke-linejoin:round}.normal-pawn-number{paint-order:stroke;stroke-width:.8;stroke-linejoin:round}
+@media(max-width:760px){.player-distance{font-size:10px;padding-top:5px;margin-top:5px}.player-distance strong{font-size:23px}.distance-note{font-size:9px}.distance-options{margin-top:5px}.distance-options label{min-height:30px}.seat-row{gap:8px}.seat-preview{padding:8px;gap:4px}.seat-preview-item{padding:5px 3px}}
+@media(max-width:360px){.player-distance{font-size:9px;gap:3px}.player-distance strong{font-size:21px}.distance-options>span{display:none}.seat-row{grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr);gap:5px}.seat-row select{font-size:11px;padding:7px 5px}.seat-person{font-size:10px;gap:4px}.seat-preview-item strong{font-size:10px}}
+.distance-note summary{cursor:pointer;min-height:22px;line-height:22px}.distance-note p{margin:2px 0 5px}
+@media(max-width:760px){.player-line{min-height:20px}.player-goal{margin-top:1px;line-height:1.3}.player-goal b{font-size:12px}.player .wall-line{margin-top:2px;line-height:1.2}.player .wall-line b{font-size:13px}.player-distance{margin-top:3px;padding-top:3px}.player-distance strong{font-size:21px}}
 </style></head>
 <body>
 <div class="app">
@@ -70,6 +100,8 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 <main class="game-layout">
 <section class="board-column" aria-label="対局盤">
   <div class="players" id="players"></div>
+  <div class="distance-options"><label><input id="distanceToggle" type="checkbox" checked><span>最短マス数を表示</span></label><span>数字は現在の盤面で計算</span></div>
+  <details id="distanceNote" class="distance-note"><summary>数え方（ジャンプは含みません）</summary><p>現在のマスを除き、フェンスを避けてゴールまで数えます。ほかの駒とジャンプ、今後のフェンスは含まないため、勝つまでの手数ではありません。</p></details>
   <div class="turn-order" id="turnOrder" aria-label="手番の順序"></div>
   <div class="board-wrap">
     <svg id="board" tabindex="0" viewBox="0 0 580 580" role="img" aria-label="コリドールの盤面。方向ボタンでも操作できます。"></svg>
@@ -80,6 +112,16 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <div class="turn-panel" id="turnPanel" aria-live="polite" aria-atomic="true"><div class="turn-title"><span id="turnDot" class="turn-dot"></span><strong id="turnText"></strong></div><p id="turnDetail"></p></div>
   <div id="handoffPanel" class="handoff-panel" hidden><p id="handoffText"></p><button id="readyBtn" class="primary-btn">自分の番をはじめる</button></div>
   <div id="passPanel" class="pass-panel" hidden><p>移動できるマスも、置けるフェンスもありません。本アプリでは、この場合に限り順番を送ります。</p><button id="passBtn" class="primary-btn">順番を送る</button></div>
+  <div class="hint-toolbar"><button id="hintBtn" class="hint-button" aria-controls="hintPanel">ヒント</button><span id="hintAvailability">迷ったら、次の1手を確認できます。</span></div>
+  <section id="hintPanel" class="hint-panel" aria-label="次の1手のヒント" hidden>
+    <div role="status" aria-live="polite" aria-atomic="true"><h3 id="hintTitle"></h3><p id="hintReason"></p></div>
+    <p id="hintMeta" class="hint-meta"></p>
+    <div id="hintExplanation" hidden>
+      <div class="hint-actions"><span id="hintActionNote">盤面の金色の枠が候補です。<br>着手する場合は「確定」を押してください。</span><button id="dismissHint" class="text-btn">自分で考える</button></div>
+      <details id="hintDetails"><summary>歩数の変化を見る</summary><table class="hint-table"><thead><tr><th scope="col">プレイヤー</th><th scope="col">いま</th><th scope="col">候補のあと</th></tr></thead><tbody id="hintSteps"></tbody></table><p id="hintRisk" class="hint-disclaimer"></p><p class="hint-disclaimer">歩数はフェンスだけで計算した目安です。ジャンプと今後の着手は含みません。フェンスを置くための1手の消費も別に考える必要があります。</p></details>
+      <p class="hint-disclaimer">ヒントは候補であり、最善手や勝利を保証するものではありません。</p>
+    </div>
+  </section>
   <div id="playControls">
     <div class="mode-switch" role="group" aria-label="手の種類"><button id="moveMode" aria-pressed="true"><span aria-hidden="true">●</span> 駒を動かす</button><button id="wallMode" aria-pressed="false"><span aria-hidden="true">━</span> フェンス</button></div>
     <div class="input-area">
@@ -96,15 +138,15 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   </div>
   <div id="resultArea" class="result-area" hidden><p id="resultText"></p><button id="againBtn" class="primary-btn">もう一局</button></div>
   <div class="utility-row"><button id="undoBtn" class="utility-btn">↶ 1手戻す</button><button id="dataBtn" class="utility-btn">保存・読込</button><button id="resignBtn" class="utility-btn">対局を終了</button></div>
-  <label class="path-option"><input type="checkbox" id="pathToggle"><span>最短経路の目安を表示</span></label>
+  <label class="path-option"><input type="checkbox" id="pathToggle"><span>最短経路の線を表示</span></label>
   <p class="path-note" id="pathNote" hidden>全員の経路を表示します。ジャンプや、これから置かれるフェンスは反映しません。</p>
   <p class="multi-help" id="localNote" hidden>同じ端末を交代で操作します。番号と色で駒を見分けてください。チーム戦ではなく、最初にゴールした1人の勝ちです。</p>
   <details class="history-box"><summary>手順を見る <span id="historyCount">0手</span></summary><ol id="historyList"></ol></details>
 </section>
 </main>
-<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.0.0</span></footer>
+<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.2.0</span></footer>
 </div>
-<div id="mobileBar" class="mobile-bar" aria-label="スマートフォン用の操作"><div id="mobileSelection" class="mobile-selection"></div><div class="mobile-buttons"><button id="mobileMode" class="mobile-mode">フェンス</button><button id="mobileRotate" class="mobile-rotate" aria-label="フェンスの向きを変える">↻</button><button id="mobileConfirm" class="primary-btn">移動を確定</button></div></div>
+<div id="mobileBar" class="mobile-bar" aria-label="スマートフォン用の操作"><div id="mobileSelection" class="mobile-selection"></div><div class="mobile-buttons"><button id="mobileMode" class="mobile-mode">フェンス</button><button id="mobileHint" class="hint-button mobile-hint" aria-controls="hintPanel">ヒント</button><button id="mobileRotate" class="mobile-rotate" aria-label="フェンスの向きを変える">↻</button><button id="mobileConfirm" class="primary-btn">移動を確定</button></div></div>
 <dialog id="settingsDialog" aria-labelledby="settingsTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">NEW GAME</p><h2 id="settingsTitle">対局をはじめる</h2></div><button class="icon-btn" data-close="settingsDialog" aria-label="設定を閉じる">×</button></div>
   <p class="dialog-lead">ひとりでも、家族でも。反対側の辺のどこかに、最初に着いた人の勝ちです。</p>
@@ -117,7 +159,14 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
     <fieldset><legend><label for="humanCount">自分で操作する人数</label></legend><select id="humanCount"><option value="1">1人</option><option value="2">2人</option></select></fieldset>
   </div>
   <p id="settingsSummary" class="settings-summary"></p>
-  <p id="threeNote" hidden>3人戦は下・左・上の3辺から開始します。右側から開始する駒がいないため、配置は対称ではありません。</p>
+  <fieldset id="placementField"><legend><label for="placementSelect">開始位置</label></legend>
+    <select id="placementSelect"><option value="fixed">位置を指定する</option><option value="random">ランダムに配置する</option></select>
+    <p class="placement-note" id="placementNote">プレイヤー1は下側に固定します。</p>
+    <div id="seatFields" class="seat-fields"></div>
+    <div id="seatPreview" class="seat-preview" aria-label="開始位置の確認"></div>
+    <p id="seatStatus" class="placement-note" role="status" aria-live="polite"></p>
+  </fieldset>
+  <p id="threeNote" hidden>3人戦は4辺のうち3辺を使います。駒のない辺は配置によって変わります。</p>
   <details class="name-details" id="nameDetails"><summary>プレイヤーの名前（任意）</summary><div class="name-fields" id="nameFields"></div></details>
   <fieldset id="levelField"><legend>コンピューター全員の強さ</legend><div class="level-control"><button id="levelMinus" class="icon-btn" aria-label="レベルを下げる">−</button><div class="level-display"><span>LEVEL</span><strong id="levelNumber">5</strong><em>/ 10</em></div><button id="levelPlus" class="icon-btn" aria-label="レベルを上げる">＋</button></div><input id="levelRange" type="range" min="1" max="10" step="1" value="5" aria-label="全コンピューター共通のレベル"><div class="range-labels"><span>やさしい</span><span>先読みが深い</span></div><p id="levelDescription" class="level-description"></p></fieldset>
   <fieldset><legend><label for="orderSelect">プレイヤー1の手番</label></legend><select id="orderSelect"><option value="first">先手（最初）</option><option value="second">後手</option><option value="random">ランダム</option></select></fieldset>
@@ -130,14 +179,16 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <div class="dialog-heading"><div><p class="eyebrow">HOW TO PLAY</p><h2 id="helpTitle">ルールと操作</h2></div><button class="icon-btn" data-close="helpDialog" aria-label="説明を閉じる">×</button></div>
   <h3>通常とキッズ</h3><p>通常は9×9マス、キッズは7×7マスです。キッズでは色つきのネズミと、同じ色のチーズを表示します。チーズはゴールの辺を示す目印で、その辺のどのマスに到達しても勝ちです。</p>
   <table class="rule-table"><thead><tr><th>1人あたりのフェンス</th><th>2人戦</th><th>3人戦</th><th>4人戦</th></tr></thead><tbody><tr><td>通常 9×9</td><td>10枚</td><td>6枚</td><td>5枚</td></tr><tr><td>キッズ 7×7</td><td>8枚</td><td>5枚</td><td>4枚</td></tr></tbody></table>
-  <h3>2～4人の個人戦</h3><p>各辺の中央から、向かい側の辺を目指します。プレイヤー1は下から上、2は上から下、3は左から右、4は右から左です。手番は時計回りで、最初の人だけ開始設定で変わります。最初にゴールした1人の勝ちです。3人戦は右側の開始位置を使いません。</p>
+  <h3>2～4人の個人戦</h3><p>各辺の中央から、向かい側の辺を目指します。プレイヤー1は下から上へ進みます。ほかの人の開始位置は設定で指定・抽選でき、上側からは下へ、左側からは右へ、右側からは左へ進みます。手番は位置に沿って時計回りで、最初の人は手番設定で変わります。最初にゴールした1人の勝ちです。3人戦は4辺のうち3辺を使います。</p>
   <h3>自分の番にすること</h3><p>駒を上下左右に1マス動かすか、フェンスを1枚置くかのどちらかです。後退もできます。フェンスは2マス分の長さで、置いた後は動かせません。人間とコンピューターは同じルールで遊びます。</p>
   <h3>ジャンプと斜め移動</h3><p>別の駒とフェンスを挟まず隣り合うと、その駒を直線に跳び越えられます。向こう側がフェンス・盤外・別の駒で塞がれている場合は、隣の駒の左右へ回り込めます。着地点は空きマスで、その間にフェンスがないことが必要です。2つの駒をまとめて跳び越えたり、駒と同じマスに入ったりはできません。</p>
+  <h3>最短マス数と駒の向き</h3><p>各プレイヤーの欄に「ゴールまで最短○マス」を表示します。現在のマスは数えず、フェンスの迂回を含め、ゴールの辺のどこかまでの最小のマス数を計算します。9×9の開始時は8マス、7×7では6マス、到達時は0マスです。</p><p>ほかの駒の占有・ジャンプ・今後のフェンスは計算に含めないため、勝つまでに必要な手数や先着順を示す数値ではありません。仮置きでは数字は変わらず、着手を確定すると全員分を更新します。数字の表示と経路の線の表示は別々に切り替えられます。通常の三角形の駒とキッズのネズミは、後退するときも自分のゴールの辺を向き続けます。</p>
   <h3>全員の道を残す</h3><p>フェンスは重ねたり途中で十字に交差させたりできません。誰か1人でも、ゴールへの道を完全になくす配置は禁止です。残り道を調べる際には、一時的な駒の占有を無視し、フェンスだけでつながりを確認します。</p>
   <h3>指で操作する</h3><p>移動できるマスは、手番の駒と同じ色で光ります。タップまたは方向ボタンで選んで「移動を確定」を押します。フェンスは近くをタップし、縦横と方向ボタンで調整して確定します。タップだけでは着手されません。スマートフォンでは、画面下の固定ボタンでも確定・駒とフェンスの切り替え・回転ができます。</p>
-  <h3>親子で同じ端末を使う</h3><p>「自分で操作する人数」を2人以上にすると、番号の小さい駒から順に人間が操作します。2人なら上下の向かい合う位置です。手番の名前とゴール方向を確かめてから操作してください。交代確認は設定で外せます。画面の向きは固定です。別々の端末を接続するオンライン対戦ではありません。</p>
+  <h3>ヒント</h3><p>自分の手番に「ヒント」を押すと、移動先またはフェンスの候補を金色の枠で表示します。理由と歩数の変化を確認し、使う場合だけ「確定」を押してください。「自分で考える」で候補を消せます。人間だけの対戦でも、手番の人が使えます。相手のレベルは変わりません。</p><p>ヒントはレベル10の思考設定で検討します。計算時間に制限があり、全ての手を読み切るものではありません。理由は選ばれた手の歩数変化などを実際に計算して表示するもので、探索の全過程を説明するものではありません。軽量計算に切り替わった場合はその旨を表示します。ヒントの表示や取消では対局の手数は増えません。</p>
+  <h3>親子で同じ端末を使う</h3><p>「自分で操作する人数」を2人以上にすると、番号の小さい駒から順に人間が操作します。3・4人戦では人間の開始位置を上・左・右から選べます。使用中の位置を選ぶと入れ替わり、コンピューターは残りの位置に入ります。「ランダム」ではプレイヤー1以外を対局開始時に抽選します。名前・色・番号は人と一緒に移ります。手番の名前とゴール方向を確かめてから操作してください。交代確認は設定で外せます。画面の向きは固定です。別々の端末を接続するオンライン対戦ではありません。</p>
   <h3>戻す・保存・旧版からの移行</h3><p>「1手戻す」は、直前に人間が確定した着手と、その後のコンピューターの着手をまとめて取り消します。人間が複数でも同じです。途中の対局は同じブラウザーに自動保存します。旧版の9×9・2人戦データも読み込めます。別端末へ移す場合は「保存・読込」を使ってください。</p>
-  <h3>キーボード</h3><p>矢印キーで位置を選び、Enterで確定します。Mで駒、Wでフェンス、Rでフェンスの回転、Escapeで選択を取り消します。斜めの移動は画面の斜めボタンを使ってください。</p>
+  <h3>キーボード</h3><p>矢印キーで位置を選び、Enterで確定します。Mで駒、Wでフェンス、Rでフェンスの回転、Escapeで選択を取り消します。Hでヒントを表示・中止します。斜めの移動は画面の斜めボタンを使ってください。</p>
   <h3>コンピューター</h3><p>2人戦は相手の反撃を、3・4人戦は各プレイヤーが自分の勝利を目指す手を先読みします。全員同じレベル設定ですが、盤面の位置によって選ぶ手は異なります。全合法手の完全な読みや必勝を保証するものではありません。</p>
   <h3>着手不能時の補助ルール</h3><p>3・4人戦で駒同士が詰まり、合法な移動もフェンス配置も1つもない場合だけ、順番を送れます。全員が着手不能なら勝者なしで終了します。これは公開説明で扱いを確認できなかった例外に対する本アプリの処理です。通常のパスはできません。</p>
   <p class="rule-source">ルール参考：<a href="https://www.play-departmentstore.com/fs/castjapan/gc006" target="_blank" rel="noopener noreferrer">日本販売元・通常版</a> ／ <a href="https://www.play-departmentstore.com/fs/castjapan/gk003" target="_blank" rel="noopener noreferrer">日本販売元・キッズ版</a></p>
@@ -155,17 +206,21 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 
 <script id="engine-code">
 /* Quoridor rules, independent of the browser. Row 0 is the top of the screen.
-   Player seats: 0=south, 1=north, 2=west, 3=east. Play proceeds clockwise.
+   Physical seats: 0=south, 1=north, 2=west, 3=east. SEATS maps player IDs to seats. Play proceeds clockwise.
    Kids and classic use the same movement/goal rules. See README for the
    explicitly documented, forced-pass convention in an immobile multiplayer position. */
-function createQuoridorEngine(size, count) {
+function createQuoridorEngine(size, count, seats) {
   'use strict';
   size = size ?? 9; count = count ?? 2;
   if (![7, 9].includes(size) || ![2, 3, 4].includes(count)) throw new Error('盤面または人数が正しくありません。');
+  const SEATS = seats === undefined ? Array.from({length:count},(_,p)=>p) : Array.isArray(seats) ? seats.slice() : [];
+  if(SEATS.length!==count||SEATS.some(p=>!Number.isInteger(p)||p<0||p>3)||new Set(SEATS).size!==count||SEATS[0]!==0||
+    (count===2&&SEATS[1]!==1))throw new Error('開始位置の設定が正しくありません。');
+  Object.freeze(SEATS);
   const N = size, P = count, M = N - 1, V = N * N, W = M * M,
     STOCK = (N === 7 ? {2:8,3:5,4:4} : {2:10,3:6,4:5})[P],
     STEP = [-N, 1, N, -1], OPP = [2, 3, 0, 1],
-    ORDER = (P === 2 ? [0,1] : P === 3 ? [0,2,1] : [0,2,1,3]),
+    ORDER = Object.freeze([0,2,1,3].filter(seat=>SEATS.includes(seat)).map(seat=>SEATS.indexOf(seat))),
     BASE = new Uint8Array(V);
   for (let p = 0; p < V; p++) {
     const r = (p / N) | 0, c = p % N;
@@ -176,13 +231,13 @@ function createQuoridorEngine(size, count) {
   function initial(first = 0) {
     if (!Number.isInteger(first) || first < 0 || first >= P) throw new Error('開始手番が正しくありません。');
     const middle = M / 2;
-    return {size:N, count:P, pos:[M*N+middle,middle,middle*N,middle*N+M].slice(0,P),
+    return {size:N, count:P, pos:SEATS.map(seat=>[M*N+middle,middle,middle*N,middle*N+M][seat]),
       left:Array(P).fill(STOCK), h:new Uint8Array(W), v:new Uint8Array(W),
       edges:BASE.slice(), turn:first, ply:0};
   }
   function clone(s) { return {size:N,count:P,pos:s.pos.slice(),left:s.left.slice(),h:new Uint8Array(s.h),
     v:new Uint8Array(s.v),edges:new Uint8Array(s.edges),turn:s.turn,ply:s.ply}; }
-  function goal(pos, p) { return p === 0 ? pos < N : p === 1 ? pos >= M*N : p === 2 ? pos%N === M : pos%N === 0; }
+  function goal(pos, p) { const seat=SEATS[p];return seat === 0 ? pos < N : seat === 1 ? pos >= M*N : seat === 2 ? pos%N === M : pos%N === 0; }
   function winner(s) { for (let p=0;p<P;p++) if(goal(s.pos[p],p))return p; return -1; }
   function moves(s, player = s.turn) {
     const a = s.pos[player], occupied = new Set(s.pos), out = [];
@@ -221,7 +276,7 @@ function createQuoridorEngine(size, count) {
     const dist=new Int16Array(V);dist.fill(-1);
     const queue=new Uint8Array(V);let head=0,tail=0;
     for(let i=0;i<N;i++) {
-      const p=player===0?i:player===1?M*N+i:player===2?i*N+M:i*N;
+      const seat=SEATS[player],p=seat===0?i:seat===1?M*N+i:seat===2?i*N+M:i*N;
       dist[p]=0;queue[tail++]=p;
     }
     while(head<tail) {
@@ -262,7 +317,7 @@ function createQuoridorEngine(size, count) {
   }
   function unmake(s,a,u){s.turn=u.player;s.ply=u.ply;if(a.t==='m')s.pos[s.turn]=u.pos;else if(a.t==='w'){rawWall(s,a,false);s.left[s.turn]++;}}
   function apply(s,a){if(!legal(s,a))throw new Error('不正な着手です。');const copy=clone(s);make(copy,a);return copy;}
-  function key(s){return N+':'+P+':'+s.pos.join(',')+'/'+s.left.join(',')+'/'+s.turn+'/'+Array.from(s.h).join('')+Array.from(s.v).join('');}
+  function key(s){return N+':'+P+':'+SEATS.join('')+':'+s.pos.join(',')+'/'+s.left.join(',')+'/'+s.turn+'/'+Array.from(s.h).join('')+Array.from(s.v).join('');}
   function square(p){return 'abcdefghi'[p%N]+(N-((p/N)|0));}
   function actionName(a){return a.t==='p'?'着手不能のため順番を送る':a.t==='m'?square(a.to)+'へ移動':'abcdefghi'[a.c]+(M-a.r)+' '+(a.o==='h'?'横フェンス':'縦フェンス');}
   function shortestPath(s,p) {
@@ -272,8 +327,9 @@ function createQuoridorEngine(size, count) {
       if(next<0)break;out.push(next);cur=next;
     }return out;
   }
-  function pack(s){return {size:N,count:P,pos:s.pos.slice(),left:s.left.slice(),h:Array.from(s.h),v:Array.from(s.v),turn:s.turn,ply:s.ply};}
+  function pack(s){return {size:N,count:P,seats:SEATS.slice(),pos:s.pos.slice(),left:s.left.slice(),h:Array.from(s.h),v:Array.from(s.v),turn:s.turn,ply:s.ply};}
   function unpack(data) {
+    if(data && (data.seats===undefined ? SEATS.some((seat,p)=>seat!==p) : !Array.isArray(data.seats)||data.seats.length!==P||data.seats.some((seat,p)=>seat!==SEATS[p])))throw new Error('局面と開始位置が一致しません。');
     if(!data || (data.size!==undefined&&data.size!==N)||(data.count!==undefined&&data.count!==P)||
       !Array.isArray(data.pos)||data.pos.length!==P||!Array.isArray(data.left)||data.left.length!==P||
       !Array.isArray(data.h)||data.h.length!==W||!Array.isArray(data.v)||data.v.length!==W||
@@ -287,7 +343,7 @@ function createQuoridorEngine(size, count) {
     if(placed!==P*STOCK-s.left.reduce((a,b)=>a+b,0)||s.pos.some((_,p)=>distance(s,p)<0)||s.pos.filter((pos,p)=>goal(pos,p)).length>1)throw new Error('成立しない局面です。');
     return s;
   }
-  return {N,P,M,V,W,STOCK,STEP,ORDER,nextPlayer,turnOffset,initial,clone,goal,winner,moves,geometry,rawWall,distanceMap,distance,
+  return {N,P,M,V,W,STOCK,STEP,SEATS,ORDER,nextPlayer,turnOffset,initial,clone,goal,winner,moves,geometry,rawWall,distanceMap,distance,
     wallError,firstAction,forcedPass,legal,make,unmake,apply,key,square,actionName,shortestPath,pack,unpack};
 }
 
@@ -712,10 +768,10 @@ function createQuoridorComputer(E) {
 </script>
 
 <script id="records-code">
-/* Versioned, replay-validated records. v1 remains readable, with v1 localStorage left intact. */
+/* Replay-validated v3 records. Legacy v1/v2 are migrated with their original fixed seats. */
 function createQuoridorRecords() {
   'use strict';
-  const FORMAT='quoridor-practice', VERSION=2;
+  const FORMAT='quoridor-practice', VERSION=3;
   function uid(){return typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);}
   function cleanName(value,fallback){return typeof value==='string'&&value.trim()?value.replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,20):fallback;}
   function defaults(count,humans){return Array.from({length:count},(_,p)=>p<humans?(humans===1?'あなた':'プレイヤー'+(p+1)):'コンピューター'+(p-humans+1));}
@@ -725,17 +781,29 @@ function createQuoridorRecords() {
     if(rank<0||rank>=E.P)throw new Error('開始手番が正しくありません。');
     return E.ORDER[(E.P-rank)%E.P];
   }
+  function seatsFor(count,placement='fixed',requested,rng=Math.random) {
+    if(![2,3,4].includes(count)||!['fixed','random'].includes(placement))throw new Error('配置設定が正しくありません。');
+    if(placement==='random'&&count>2){
+      const pool=[1,2,3];
+      // Uniform Fisher–Yates shuffle; draw only at the start of a new game, never on restore.
+      for(let i=pool.length-1;i>0;i--){const j=Math.min(i,Math.max(0,Math.floor(rng()*(i+1))));[pool[i],pool[j]]=[pool[j],pool[i]];}
+      return [0,...pool.slice(0,count-1)];
+    }
+    const seats=requested===undefined?Array.from({length:count},(_,p)=>p):requested;
+    return createQuoridorEngine(9,count,seats).SEATS.slice();
+  }
   function fresh(config,rng) {
-    const E=createQuoridorEngine(config.size??9,config.count??2),h=config.humans??1,level=config.level??5,order=config.order??'first';
+    const count=config.count??2,placement=count===2?'fixed':config.placement??'fixed',seats=seatsFor(count,placement,config.seats,rng);
+    const E=createQuoridorEngine(config.size??9,count,seats),h=config.humans??1,level=config.level??5,order=config.order??'first';
     if(!Number.isInteger(h)||h<1||h>E.P||!Number.isInteger(level)||level<1||level>10)throw new Error('人数またはレベルが正しくありません。');
     const fallback=defaults(E.P,h),names=fallback.map((n,p)=>p<h?cleanName(config.names?.[p],n):n);
-    const g={id:uid(),startedAt:new Date().toISOString(),size:E.N,count:E.P,humans:h,level,order,
+    const g={id:uid(),startedAt:new Date().toISOString(),size:E.N,count:E.P,humans:h,level,order,seats,placement,
       first:firstFor(E,order,rng),names,actions:[],termination:null};
     const s=E.initial(g.first);
-    return {E,game:g,state:s,states:[s],preferences:{showPaths:false,handoff:true}};
+    return {E,game:g,state:s,states:[s],preferences:{showPaths:false,showDistances:true,handoff:true}};
   }
   function parse(data) {
-    if(!data||data.format!==FORMAT||![1,2].includes(data.version)||!data.game)throw new Error('このアプリの対局ファイルではありません。');
+    if(!data||data.format!==FORMAT||![1,2,3].includes(data.version)||!data.game)throw new Error('このアプリの対局ファイルではありません。');
     let g=data.game;
     if(data.version===1){
       if(typeof g.resigned!=='boolean')throw new Error('旧版の終局情報が正しくありません。');
@@ -745,11 +813,13 @@ function createQuoridorRecords() {
       !Number.isInteger(g.level)||g.level<1||g.level>10||!Number.isInteger(g.first)||g.first<0||g.first>=g.count||
       !['first','second','third','fourth','random'].includes(g.order)||!Array.isArray(g.actions)||g.actions.length>10000||
       !Array.isArray(g.names)||g.names.length!==g.count||g.names.some(n=>typeof n!=='string'||n.length>100))throw new Error('対局設定の形式が正しくありません。');
-    const E=createQuoridorEngine(g.size,g.count);
+    if(data.version<3)g={...g,seats:Array.from({length:g.count},(_,p)=>p),placement:'fixed'};
+    if(!['fixed','random'].includes(g.placement)||!Array.isArray(g.seats))throw new Error('開始位置の保存データが正しくありません。');
+    const E=createQuoridorEngine(g.size,g.count,g.seats);
     if(g.order!=='random'&&g.first!==firstFor(E,g.order))throw new Error('開始手番と設定が一致しません。');
     const fallback=defaults(g.count,g.humans),clean={id:typeof g.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(g.id)?g.id:uid(),
       startedAt:typeof g.startedAt==='string'&&g.startedAt.length<50&&Number.isFinite(Date.parse(g.startedAt))?g.startedAt:new Date().toISOString(),
-      size:g.size,count:g.count,humans:g.humans,level:g.level,order:g.order,first:g.first,
+      size:g.size,count:g.count,humans:g.humans,level:g.level,order:g.order,first:g.first,seats:E.SEATS.slice(),placement:g.placement,
       names:g.names.map((n,p)=>cleanName(n,fallback[p])),actions:[],termination:null};
     let s=E.initial(g.first);const states=[s];
     for(const a of g.actions){
@@ -766,29 +836,95 @@ function createQuoridorRecords() {
       else if(t.type==='blocked'&&Array.from({length:E.P},(_,p)=>E.forcedPass(s,p)).every(Boolean))clean.termination={type:'blocked'};
       else throw new Error('終局情報の形式が正しくありません。');
     }
-    return {E,game:clean,state:s,states,preferences:{showPaths:!!data.preferences?.showPaths,handoff:data.preferences?.handoff!==false}};
+    return {E,game:clean,state:s,states,preferences:{showPaths:!!data.preferences?.showPaths,showDistances:data.preferences?.showDistances!==false,handoff:data.preferences?.handoff!==false}};
   }
-  function record(game,preferences){return {format:FORMAT,version:VERSION,game,preferences:{showPaths:!!preferences.showPaths,handoff:preferences.handoff!==false}};}
-  return {FORMAT,VERSION,uid,cleanName,defaults,firstFor,fresh,parse,record};
+  function record(game,preferences){return {format:FORMAT,version:VERSION,game,preferences:{showPaths:!!preferences.showPaths,showDistances:preferences.showDistances!==false,handoff:preferences.handoff!==false}};}
+  return {FORMAT,VERSION,uid,cleanName,defaults,firstFor,seatsFor,fresh,parse,record};
 }
 
+</script>
+
+
+<script id="hints-code">
+/* Explain measurable effects, not invented search reasoning. Never mutate input. */
+function createQuoridorHints(E) {
+  'use strict';
+  function wallRisk(input, player) {
+    const s=E.clone(input),base=E.distance(s,player);
+    if(E.winner(s)>=0||!s.left.some((n,p)=>p!==player&&n>0))return 0;
+    let risk=0;
+    for(const o of ['h','v'])for(let k=0;k<E.W;k++){
+      const a={t:'w',o,r:Math.floor(k/E.M),c:k%E.M};
+      if(!E.geometry(s,a))continue;
+      E.rawWall(s,a,true);
+      try {
+        // Every remaining player must still be able to reach their own goal.
+        const ds=s.pos.map((_,p)=>E.distance(s,p));
+        if(ds.every(x=>x>=0))risk=Math.max(risk,ds[player]-base);
+      } finally {E.rawWall(s,a,false);}
+    }
+    return risk;
+  }
+  function analyze(input,action) {
+    if(!E.legal(input,action))throw new Error('ヒントの候補は合法な手ではありません。');
+    const s=E.clone(input),p=s.turn,next=E.apply(s,action),before=s.pos.map((_,q)=>E.distance(s,q)),
+      after=next.pos.map((_,q)=>E.distance(next,q)),deltas=after.map((v,q)=>v-before[q]);
+    let jump='none';
+    if(action.t==='m'){
+      const dr=Math.abs(Math.floor(action.to/E.N)-Math.floor(s.pos[p]/E.N)),dc=Math.abs(action.to%E.N-s.pos[p]%E.N);
+      if(dr+dc===2)jump=dr&&dc?'diagonal':'straight';
+    }
+    const winning=E.winner(next)===p;
+    return {player:p,action:{...action},winning,jump,before,after,deltas,
+      oneMoveBefore:s.pos.map((_,q)=>!E.goal(s.pos[q],q)&&E.moves(s,q).some(to=>E.goal(to,q))),
+      oneMoveAfter:next.pos.map((_,q)=>!E.goal(next.pos[q],q)&&E.moves(next,q).some(to=>E.goal(to,q))),
+      riskBefore:winning||action.t==='p'?null:wallRisk(s,p),
+      riskAfter:winning||action.t==='p'?null:wallRisk(next,p)};
+  }
+  function describe(data,names,kids=false) {
+    const p=data.player,d=data.deltas[p],sentences=[],pawn=kids?'ネズミ':'駒';
+    if(data.winning)return 'この1手でゴールに着きます。「移動を確定」を押すと勝ちです。';
+    if(data.action.t==='p')return '駒を動かす場所も、置けるフェンスもありません。この場合だけ、順番を送れます。';
+    if(data.action.t==='m'){
+      if(data.jump==='straight')sentences.push(`となりの${pawn}を跳びこえる手です。`);
+      else if(data.jump==='diagonal')sentences.push(`となりの${pawn}の向こうに跳べないので、横に回りこむ手です。`);
+      if(d<0)sentences.push(`ゴールまでの道が${-d}歩短くなります。フェンスは使わずに進みます。`);
+      else if(d===0)sentences.push('ゴールまでの道の長さは変わりませんが、立つ位置を変える候補です。');
+      else sentences.push(`いったん道が${d}歩長くなる候補です。まっすぐ進む手とも比べて考えてみてください。`);
+    } else {
+      const stopped=data.oneMoveBefore.map((v,q)=>v&&q!==p&&!data.oneMoveAfter[q]?q:-1).filter(q=>q>=0);
+      if(stopped.length){const q=stopped[0];sentences.push(`今の盤面では、${names[q]||`${q+1}番`}は1回の移動でゴールできます。このフェンスで、その1手でのゴールを防ぎます。`);}
+      const rivals=data.deltas.map((v,q)=>({v,q})).filter(x=>x.q!==p&&x.v>0).sort((a,b)=>b.v-a.v);
+      if(rivals.length){const q=rivals[0].q;sentences.push(`${names[q]||`${q+1}番`}の道を${data.deltas[q]}歩長くするフェンスです。`);}
+      else sentences.push('今すぐには、ほかの人の道を長くしないフェンスです。');
+      if(d>0)sentences.push(`自分の道も${d}歩長くなる点に注意してください。`);
+      else sentences.push('自分の道の長さは変わりません。');
+      if(data.riskAfter<data.riskBefore)sentences.push('相手のフェンス1枚で、自分が大きく遠回りさせられる余地を減らします。');
+      else if(!rivals.length)sentences.push('この手のよさは歩数の変化だけでは判断できません。');
+      sentences.push('置くために1手使うので、駒を進める場合との比較も大切です。');
+    }
+    return sentences.join('');
+  }
+  return {analyze,wallRisk,describe};
+}
 </script>
 
 <script id="app-code">
 (() => {
   'use strict';
-  const $=id=>document.getElementById(id),R=createQuoridorRecords(),STORAGE='quoridor-practice-v2',OLD_STORAGE='quoridor-practice-v1';
+  const $=id=>document.getElementById(id),R=createQuoridorRecords(),STORAGE='quoridor-practice-v3',PREVIOUS_STORAGE='quoridor-practice-v2',OLD_STORAGE='quoridor-practice-v1';
   const COLORS=['#157879','#b55d3b','#6555a7','#397bb7'],LIGHTS=['#e4f2ee','#f8e9df','#eeebf9','#e7f0fa'],
     ARROWS=['↑','↓','→','←'],GOALS=['上','下','右','左'],STARTS=['下','上','左','右'];
   const SIZE=580,GRID=56,SPAN=468,GAP=8;
   let bundle=R.fresh({}),E=bundle.E,C=createQuoridorComputer(E),state=bundle.state,game=bundle.game,states=bundle.states,
     prefs=bundle.preferences,mode='move',orientation='h',preview=null,feedback='',progress=null,handoffPending=false,
     worker=null,workerURL=null,ticket=0,busy=false,watchdog=null,delayed=null,fallbackTimer=null,noticeTimer=null,storageOK=true,
-    pointerStart=null,draftNames=[];
+    pointerStart=null,draftNames=[],draftSeats=[0,1],
+    hintWorker=null,hintURL=null,hintTicket=0,hintBusy=false,hintResult=null,hintProgress=null,hintError='',hintWatchdog=null,hintTimer=null;
   const human=p=>p<game.humans;
   const dialogsOpen=()=>!!document.querySelector('dialog[open]');
   const ended=()=>!!game.termination||E.winner(state)>=0;
-  const canPlay=()=>!ended()&&human(state.turn)&&!busy&&!handoffPending&&!dialogsOpen();
+  const canPlay=()=>!ended()&&human(state.turn)&&!busy&&!hintBusy&&!handoffPending&&!dialogsOpen();
   const name=p=>game.names[p];
   const text=(id,value)=>{$(id).textContent=value;};
   const rec=()=>R.record(game,prefs);
@@ -799,20 +935,22 @@ function createQuoridorRecords() {
     text('saveState',storageOK?'自動保存':'保存不可');
   }
   function stopComputer(){
+    stopHint(true);
     ticket++;busy=false;progress=null;clearTimeout(watchdog);clearTimeout(delayed);clearTimeout(fallbackTimer);
     watchdog=delayed=fallbackTimer=null;
     if(worker){worker.terminate();worker=null;}if(workerURL){URL.revokeObjectURL(workerURL);workerURL=null;}
   }
   function openDialog(id){stopComputer();if(!$(id).open)$(id).showModal();render();}
-  function closeDialog(id){if($(id).open)$(id).close();}
+  function closeDialog(id){if($(id).open){$(id).close();render();}}
   function install(parsed,saveNow=true){
     stopComputer();E=parsed.E;C=createQuoridorComputer(E);state=parsed.state;game=parsed.game;states=parsed.states;prefs=parsed.preferences;
     mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
-    $('pathToggle').checked=prefs.showPaths;if(saveNow)save();render();scheduleComputer();
+    $('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;if(saveNow)save();render();scheduleComputer();
   }
   function blockedMatch(){return E.P>2&&E.moves(state).length===0&&Array.from({length:E.P},(_,p)=>E.forcedPass(state,p)).every(Boolean);}
   function commit(action){
     if(ended()||!E.legal(state,action)){feedback='この手は指せません。別の位置を選んでください。';render();return false;}
+    stopHint();
     state=E.apply(state,action);states.push(state);game.actions.push({...action});
     preview=null;mode='move';feedback='';progress=null;handoffPending=game.humans>1&&prefs.handoff&&human(state.turn);
     if(E.winner(state)<0&&blockedMatch())game.termination={type:'blocked'};
@@ -825,8 +963,8 @@ function createQuoridorRecords() {
       self.onmessage=event=>{
         const m=event.data;
         try{
-          const key=m.state.size+':'+m.state.count;
-          if(signature!==key){E=createQuoridorEngine(m.state.size,m.state.count);C=createQuoridorComputer(E);signature=key;}
+          const key=m.state.size+':'+m.state.count+':'+(m.state.seats||[]).join(',');
+          if(signature!==key){E=createQuoridorEngine(m.state.size,m.state.count,m.state.seats);C=createQuoridorComputer(E);signature=key;}
           const result=C.choose(E.unpack(m.state),m.level,{recent:m.recent,
             progress:stats=>self.postMessage({id:m.id,type:'progress',stats})});
           self.postMessage({id:m.id,type:'result',result});
@@ -872,6 +1010,100 @@ function createQuoridorRecords() {
       }catch(_){fallback(id);}
     },220);
   }
+
+  const hintStamp=()=>game.id+':'+game.actions.length+':'+E.key(state);
+  const sameAction=(a,b)=>!!a&&!!b&&a.t===b.t&&(a.t==='m'?a.to===b.to:a.t==='w'?a.o===b.o&&a.r===b.r&&a.c===b.c:true);
+  function releaseHintWorker(){
+    clearTimeout(hintWatchdog);clearTimeout(hintTimer);hintWatchdog=hintTimer=null;
+    if(hintWorker){hintWorker.terminate();hintWorker=null;}
+    if(hintURL){URL.revokeObjectURL(hintURL);hintURL=null;}
+  }
+  function stopHint(clearPreview=false){
+    if(clearPreview&&hintResult&&sameAction(preview,hintResult.action))preview=null;
+    hintTicket++;releaseHintWorker();hintBusy=false;hintResult=null;hintProgress=null;hintError='';
+  }
+  function dismissHint(){stopHint(true);feedback='';render();}
+  function validHintJob(id,stamp){return id===hintTicket&&hintBusy&&stamp===hintStamp()&&!ended()&&human(state.turn)&&!handoffPending&&!dialogsOpen()&&document.visibilityState!=='hidden';}
+  function finishHint(id,stamp,result,analysis,lightweight=false){
+    if(!validHintJob(id,stamp))return;
+    if(!result?.action||!E.legal(state,result.action)){failHint(id,stamp);return;}
+    // A worker result describes only the immutable snapshot used for this request.
+    if(!analysis||!sameAction(analysis.action,result.action)||analysis.player!==state.turn){failHint(id,stamp);return;}
+    releaseHintWorker();hintBusy=false;hintProgress=null;hintError='';
+    hintResult={...result,analysis,stamp,lightweight};preview=result.action.t==='p'?null:{...result.action};
+    mode=result.action.t==='w'?'wall':'move';if(mode==='wall')orientation=result.action.o;
+    feedback='';render();
+  }
+  function failHint(id,stamp){
+    if(!validHintJob(id,stamp))return;
+    releaseHintWorker();hintBusy=false;hintResult=null;hintProgress=null;
+    hintError='ヒントを計算できませんでした。もう一度「ヒント」を押すか、ご自身で手を選んでください。';render();
+  }
+  function fallbackHint(id,stamp){
+    if(!validHintJob(id,stamp))return;
+    releaseHintWorker();
+    hintTimer=setTimeout(()=>{
+      if(!validHintJob(id,stamp))return;
+      try {
+        const snapshot=E.clone(state),result=C.choose(snapshot,10,{ms:90,recent:states.slice(-28).map(E.key)}),
+          analysis=createQuoridorHints(E).analyze(snapshot,result.action);
+        finishHint(id,stamp,result,analysis,true);
+      }catch(_){failHint(id,stamp);}
+    },30);
+  }
+  function requestHint(){
+    if(hintBusy){dismissHint();return;}
+    if(!canPlay())return;
+    stopHint();const id=hintTicket,stamp=hintStamp();hintBusy=true;preview=null;feedback='';
+    $('hintDetails').open=false;render();
+    const source=createQuoridorEngine.toString()+'\n'+createQuoridorComputer.toString()+'\n'+createQuoridorHints.toString()+`
+      self.onmessage=event=>{
+        const m=event.data;
+        try {
+          const E=createQuoridorEngine(m.state.size,m.state.count,m.state.seats),s=E.unpack(m.state),C=createQuoridorComputer(E),
+            result=C.choose(s,10,{recent:m.recent,progress:stats=>self.postMessage({id:m.id,type:'progress',stats})}),
+            analysis=createQuoridorHints(E).analyze(s,result.action);
+          self.postMessage({id:m.id,type:'result',result,analysis});
+        }catch(error){self.postMessage({id:m.id,type:'error',message:String(error.message||error)});}
+      };`;
+    try {
+      hintURL=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));hintWorker=new Worker(hintURL);
+      hintWorker.onmessage=event=>{
+        const m=event.data;if(m.id!==id||!validHintJob(id,stamp))return;
+        if(m.type==='progress'){hintProgress=m.stats;renderHint();return;}
+        if(m.type==='error'){fallbackHint(id,stamp);return;}
+        if(m.type==='result')finishHint(id,stamp,m.result,m.analysis);
+      };
+      hintWorker.onerror=e=>{e.preventDefault();fallbackHint(id,stamp);};
+      hintWorker.postMessage({id,kind:'hint',state:E.pack(state),level:10,recent:states.slice(-28).map(E.key)});
+      hintWatchdog=setTimeout(()=>fallbackHint(id,stamp),10000);
+    }catch(_){fallbackHint(id,stamp);}
+  }
+  function renderHint(){
+    const allowed=!ended()&&human(state.turn)&&!handoffPending&&!dialogsOpen()&&!busy;
+    for(const id of ['hintBtn','mobileHint']){$(id).disabled=!allowed;$(id).textContent=hintBusy?'中止':'ヒント';$(id).setAttribute('aria-label',hintBusy?'ヒントの計算を中止':'次の1手のヒント');}
+    text('hintAvailability',ended()?'対局は終了しました。':!human(state.turn)?'人間の手番で使えます。':handoffPending?'自分の番をはじめてから使えます。':hintBusy?'計算中です。中止して自分で選ぶこともできます。':'迷ったら、次の1手を確認できます。');
+    $('hintPanel').hidden=!allowed||(!hintBusy&&!hintResult&&!hintError);$('hintExplanation').hidden=!hintResult;
+    $('hintPanel').setAttribute('aria-busy',String(hintBusy));
+    if(!allowed)return;
+    if(hintBusy){text('hintTitle','ヒントを考えています…');text('hintReason','移動とフェンスの候補を比べています。');text('hintMeta',hintProgress?`${hintProgress.depth}手先まで比較済み`:'レベル10の思考設定で検討します。');return;}
+    if(hintError){text('hintTitle','ヒントを表示できませんでした');text('hintReason',hintError);text('hintMeta','');return;}
+    if(!hintResult)return;
+    const r=hintResult,d=r.analysis;
+    text('hintActionNote',r.action.t==='p'?'「順番を送る」で次の人に進めます。':'盤面の金色の枠が候補です。着手する場合は「確定」を押してください。');
+    const title=r.action.t==='m'?`${E.square(r.action.to)}へ${E.N===7?'ネズミ':'駒'}を動かす`:r.action.t==='w'?`${r.action.o==='h'?'横':'縦'}のフェンスを置く`:'順番を送る';
+    text('hintTitle',`${state.turn+1} ${name(state.turn)}へのヒント：${title}`);
+    text('hintReason',createQuoridorHints(E).describe(d,game.names,E.N===7));
+    const meta=r.lightweight?'軽量計算（通常のヒントより先読みが浅い場合があります）':d.winning?'ゴールへの到達を確認':`レベル10の思考設定 ／ ${r.depth>0?r.depth+'手先まで比較':'先の探索を完了できなかったため、候補の評価で選択'}`;
+    text('hintMeta',meta+(r.action.t==='w'?'\n'+wallLabel(r.action):''));
+    const body=$('hintSteps');body.replaceChildren();
+    for(let p=0;p<E.P;p++){
+      const tr=document.createElement('tr');
+      for(const v of [`${p+1} ${name(p)}`,d.before[p]+'歩',d.after[p]+'歩']){const td=document.createElement('td');td.textContent=v;tr.append(td);}body.append(tr);
+    }
+    text('hintRisk',d.riskBefore===null?'':`ほかの駒を動かさず、相手がフェンス1枚で増やせる自分の歩数の最大値：${d.riskBefore}歩 → ${d.riskAfter}歩。相手が実際にそのフェンスを置く予測ではなく、連続する複数のフェンスも含みません。`);
+  }
+
   function undoIndex(){let i=game.actions.length-1;while(i>=0&&!human(states[i].turn))i--;return i;}
   function undo(){
     const i=undoIndex();if(i<0&&!game.termination)return;
@@ -884,13 +1116,13 @@ function createQuoridorRecords() {
     return E.moves(state).find(p=>Math.sign(((p/E.N)|0)-r)===dr&&Math.sign(p%E.N-c)===dc);
   }
   function defaultWall(){const a=(E.N-3)/2;return {t:'w',o:orientation,r:a,c:a};}
-  function setMode(next){if(!canPlay()||(next==='wall'&&state.left[state.turn]<=0))return;mode=next;preview=mode==='wall'?defaultWall():null;feedback='';render();}
-  function changeOrientation(o){if(!canPlay())return;orientation=o;if(preview?.t==='w')preview.o=o;render();}
+  function setMode(next){if(!canPlay()||(next==='wall'&&state.left[state.turn]<=0))return;stopHint();mode=next;preview=mode==='wall'?defaultWall():null;feedback='';render();}
+  function changeOrientation(o){if(!canPlay())return;stopHint();orientation=o;if(preview?.t==='w')preview.o=o;render();}
   function direction(dr,dc){
     if(!canPlay())return;
     if(mode==='move'){const to=moveInDirection(dr,dc);if(to===undefined)return;preview={t:'m',to};}
     else{if(dr&&dc)return;const w=preview?.t==='w'?preview:defaultWall();preview={...w,r:Math.max(0,Math.min(E.M-1,w.r+dr)),c:Math.max(0,Math.min(E.M-1,w.c+dc))};}
-    feedback='';render();
+    stopHint();feedback='';render();
   }
   function wallLabel(w){const a='abcdefghi'[w.c],b='abcdefghi'[w.c+1],r=E.N-w.r;return w.o==='h'?`${a}・${b}列の${r}／${r-1}段の間`:`${a}／${b}列の間の${r}・${r-1}段`;}
   function winnerName(){
@@ -899,21 +1131,23 @@ function createQuoridorRecords() {
   }
   function renderTurn(){
     const done=ended(),p=state.turn;
-    $('turnDot').classList.toggle('thinking',!done&&!human(p)&&busy);
+    $('turnDot').classList.toggle('thinking',!done&&((!human(p)&&busy)||hintBusy));
     if(done){
       text('turnText',winnerName());text('turnDetail',game.termination?.type==='resigned'?'投了で終了しました。':game.termination?'勝者を決めずに終了しました。':'ゴールの辺に到達しました。');
       text('resultText',`${E.N}×${E.N}・${E.P}人対戦／${game.actions.length}手`);
     }else if(!human(p)){
       text('turnText',name(p)+(busy?'が考えています':'の番です'));
       text('turnDetail',feedback||(dialogsOpen()?'画面を閉じると再開します。':progress?`全員共通レベル${game.level}／${progress.depth}手先まで比較済み`:`全員共通レベル${game.level}で先読みしています。`));
+    }else if(hintBusy){
+      text('turnText',`${p+1} ${name(p)}のヒントを考えています`);text('turnDetail','手番は進みません。「中止」で計算を取り消せます。');
     }else{
       text('turnText',`${p+1} ${name(p)}の番です`);
-      text('turnDetail',feedback||(handoffPending?`${name(p)}に端末を渡してください。ゴールは${GOALS[p]}側です。`:`${ARROWS[p]} ${GOALS[p]}側の辺がゴールです。`)+(handoffPending?'':mode==='move'?' 移動先を選んで確定してください。':' フェンスを仮置きして確定してください。'));
+      text('turnDetail',feedback||(handoffPending?`${name(p)}に端末を渡してください。ゴールは${GOALS[E.SEATS[p]]}側です。`:`${ARROWS[E.SEATS[p]]} ${GOALS[E.SEATS[p]]}側の辺がゴールです。`)+(handoffPending?'':mode==='move'?' 移動先を選んで確定してください。':' フェンスを仮置きして確定してください。'));
     }
     $('resultArea').hidden=!done;
     const handoff=!done&&human(p)&&handoffPending;
     $('handoffPanel').hidden=!handoff;
-    if(handoff){text('handoffText',`${p+1} ${name(p)}の操作です。${ARROWS[p]} ${GOALS[p]}側のゴールを目指します。`);text('readyBtn',name(p)+'の番をはじめる');}
+    if(handoff){text('handoffText',`${p+1} ${name(p)}の操作です。${ARROWS[E.SEATS[p]]} ${GOALS[E.SEATS[p]]}側のゴールを目指します。`);text('readyBtn',name(p)+'の番をはじめる');}
     const pass=!done&&!handoff&&human(p)&&E.moves(state).length===0&&E.forcedPass(state);
     $('passPanel').hidden=!pass;$('passBtn').disabled=!canPlay();
     $('playControls').hidden=done||handoff||pass;
@@ -941,15 +1175,15 @@ function createQuoridorRecords() {
         if(valid&&prefs.showPaths){const after=E.apply(state,preview);message=wallLabel(preview)+'\n経路：'+state.pos.map((_,q)=>`${q+1} +${E.distance(after,q)-E.distance(state,q)}`).join('／')+'歩';}
       }
     }else message=mode==='wall'?'盤面をタップして仮置きします。':'駒と同じ色のマス、または方向ボタンで選べます。';
-    if(!active&&!ended())message=human(p)?'操作する人を確認してください。':'コンピューターの手番です。';
+    if(!active&&!ended())message=hintBusy?'ヒントを考えています。「中止」で通常の操作に戻れます。':human(p)?'操作する人を確認してください。':'コンピューターの手番です。';
     text('selectionText',message);$('selectionText').classList.toggle('invalid',!!preview&&active&&!valid);
     $('confirmBtn').disabled=!active||!valid;text('confirmBtn',mode==='wall'?'フェンスを確定':'移動を確定');$('clearBtn').disabled=!active||!preview;
     $('mobileBar').hidden=ended()||dialogsOpen();
-    text('mobileSelection',`${p+1} ${name(p)}：`+(preview&&active?E.actionName(preview):handoffPending?'操作する人を確認してください':human(p)?`${ARROWS[p]} ${GOALS[p]}側の辺がゴール`:'考えています'));
+    text('mobileSelection',`${p+1} ${name(p)}：`+(hintBusy?'ヒントを計算中':preview&&active?(hintResult?'ヒント：':'')+E.actionName(preview):handoffPending?'操作する人を確認してください':human(p)?`${ARROWS[E.SEATS[p]]} ${GOALS[E.SEATS[p]]}側の辺がゴール`:'考えています'));
     text('mobileMode',mode==='wall'?'駒に切替':'フェンス');$('mobileMode').disabled=!active||(mode==='move'&&state.left[p]<=0);
     $('mobileRotate').disabled=!active||mode!=='wall';
     const forced=active&&E.moves(state).length===0&&E.forcedPass(state);
-    text('mobileConfirm',handoffPending&&human(p)?`${p+1}番の操作を開始`:forced?'順番を送る':!human(p)?'考えています':mode==='wall'?'フェンスを確定':'移動を確定');
+    text('mobileConfirm',handoffPending&&human(p)?`${p+1}番の操作を開始`:forced?'順番を送る':hintBusy?'ヒントを計算中':!human(p)?'考えています':mode==='wall'?'フェンスを確定':'移動を確定');
     $('mobileConfirm').disabled=!((handoffPending&&human(p)&&!ended()&&!dialogsOpen())||forced||(active&&valid));
     $('undoBtn').disabled=undoIndex()<0&&!game.termination;$('resignBtn').disabled=ended();text('resignBtn',E.P===2&&game.humans===1?'投了':'対局を終了');
   }
@@ -962,10 +1196,16 @@ function createQuoridorRecords() {
       const title=document.createElement('strong');title.textContent=name(p);title.title=name(p);
       const kind=document.createElement('span');kind.className='player-kind';kind.textContent=human(p)?'人間':'レベル'+game.level;
       line.append(badge,title,kind);card.append(line);
-      const goal=document.createElement('div');goal.className='player-goal';goal.innerHTML=`<b>${ARROWS[p]}</b> ${GOALS[p]}側の辺がゴール`;
+      const goal=document.createElement('div');goal.className='player-goal';goal.innerHTML=`<b>${ARROWS[E.SEATS[p]]}</b> ${GOALS[E.SEATS[p]]}側の辺がゴール`;
       const walls=document.createElement('div');walls.className='wall-line';walls.innerHTML=`<span>フェンス <b id="walls${p}">${state.left[p]}</b> / ${E.STOCK}</span><span class="stock" aria-hidden="true">${Array.from({length:E.STOCK},(_,i)=>`<i class="${i<state.left[p]?'on':''}"></i>`).join('')}</span>`;
       card.append(goal,walls);
-      if(prefs.showPaths){const d=document.createElement('div');d.className='player-distance';d.textContent='経路の目安：'+E.distance(state,p)+'歩';card.append(d);}
+      if(prefs.showDistances){
+        const d=document.createElement('div'),distance=E.distance(state,p);d.className='player-distance';d.dataset.player=p;
+        const label=document.createElement('span');label.className='distance-prefix';label.textContent=distance===0?'ゴール！':'ゴールまで';
+        const prefix=document.createElement('span');prefix.textContent='最短';
+        const value=document.createElement('strong');value.id='distance'+p;value.textContent=distance>=0?String(distance):'—';
+        const unit=document.createElement('span');unit.textContent='マス';d.append(label,prefix,value,unit);card.append(d);
+      }
       area.append(card);
     }
     const flow=$('turnOrder');flow.replaceChildren();const label=document.createElement('span');label.textContent='手番：';flow.append(label);
@@ -992,8 +1232,8 @@ function createQuoridorRecords() {
     const lines=[`M${GRID} 44H${g.end}`,`M${GRID} 528H${g.end}`,`M528 ${GRID}V${g.end}`,`M44 ${GRID}V${g.end}`];
     const positions=[[286,20,0],[286,559,0],[558,286,90],[16,286,-90]];
     for(let p=0;p<E.P;p++){
-      parts.push(`<path class="goal-line" data-player="${p}" d="${lines[p]}" stroke="${COLORS[p]}" stroke-width="${p===actor&&!ended()?5:3}" opacity="${p===actor&&!ended()?'.9':'.5'}" stroke-linecap="round"/>`);
-      const [x,y,a]=positions[p];
+      parts.push(`<path class="goal-line" data-player="${p}" d="${lines[E.SEATS[p]]}" stroke="${COLORS[p]}" stroke-width="${p===actor&&!ended()?5:3}" opacity="${p===actor&&!ended()?'.9':'.5'}" stroke-linecap="round"/>`);
+      const [x,y,a]=positions[E.SEATS[p]];
       parts.push(`<g transform="translate(${x} ${y}) rotate(${a})">${E.N===7?cheese(-55,0,COLORS[p],p):''}<text x="${E.N===7?8:0}" y="5" text-anchor="middle" font-size="13" font-weight="650" fill="${COLORS[p]}">${p+1}のゴール</text></g>`);
     }
     for(let i=0;i<E.N;i++){
@@ -1018,17 +1258,24 @@ function createQuoridorRecords() {
       }
     }
     if(active&&preview?.t==='m'){const [x,y]=point(preview.to);parts.push(`<circle cx="${x}" cy="${y}" r="17" fill="${COLORS[actor]}" fill-opacity=".2" stroke="${COLORS[actor]}" stroke-width="2" stroke-dasharray="4 4"/>`);}
+    if(active&&hintResult&&sameAction(preview,hintResult.action)){
+      if(preview.t==='m'){const r=Math.floor(preview.to/E.N),c=preview.to%E.N;parts.push(`<rect class="hint-marker" x="${GRID+c*S+3}" y="${GRID+r*S+3}" width="${g.cell-6}" height="${g.cell-6}" rx="7" fill="none" stroke="#a57412" stroke-width="3" stroke-dasharray="7 4"/>`);}
+      else if(preview.t==='w')parts.push(wallSvg(preview,'none','class="hint-marker" stroke="#a57412" stroke-width="4" stroke-dasharray="7 3"'));
+    }
     for(let p=0;p<E.P;p++){
       const [x,y]=point(state.pos[p]),color=COLORS[p];
       if(p===actor&&!ended())parts.push(`<circle cx="${x}" cy="${y}" r="${E.N===7?26:21}" fill="none" stroke="${color}" opacity=".8" stroke-width="2" stroke-dasharray="3 4"/>`);
-      parts.push(`<g class="pawn" data-player="${p}"><title>${p+1}番の駒、${GOALS[p]}側へ</title>`);
+      parts.push(`<g class="pawn" data-player="${p}" data-seat="${E.SEATS[p]}" data-facing="${GOALS[E.SEATS[p]]}"><title>${p+1}番の駒、${GOALS[E.SEATS[p]]}側へ</title>`);
       if(E.N===7){
-        const angle=[0,180,90,-90][p];
+        const angle=[0,180,90,-90][E.SEATS[p]];
         parts.push(`<g class="mouse-pawn" transform="translate(${x} ${y}) rotate(${angle})"><path d="M0 18Q18 29 20 16" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="4" rx="14" ry="18" fill="${color}" stroke="#fffefa" stroke-width="2"/><circle cx="-10" cy="-9" r="8" fill="${color}" stroke="#fffefa" stroke-width="1.8"/><circle cx="10" cy="-9" r="8" fill="${color}" stroke="#fffefa" stroke-width="1.8"/><circle cx="-10" cy="-9" r="4.5" fill="#fffefa" opacity=".45"/><circle cx="10" cy="-9" r="4.5" fill="#fffefa" opacity=".45"/><ellipse cx="0" cy="-3" rx="10" ry="12" fill="${color}"/><circle cx="-4" cy="-6" r="2.2" fill="#fffefa"/><circle cx="4" cy="-6" r="2.2" fill="#fffefa"/><circle cx="-4" cy="-6.8" r="1" fill="#243739"/><circle cx="4" cy="-6.8" r="1" fill="#243739"/><circle cx="0" cy="-15" r="2.5" fill="#f4dbbc"/></g><circle cx="${x+17}" cy="${y-20}" r="9" fill="#fffefa" stroke="${color}" stroke-width="1.5"/><text x="${x+17}" y="${y-16.5}" font-size="11" font-weight="700" text-anchor="middle" fill="${color}">${p+1}</text>`);
-      }else parts.push(`<circle cx="${x}" cy="${y+3}" r="18" class="pawn-shadow"/><circle cx="${x}" cy="${y}" r="17" fill="${color}" class="pawn-top"/><circle cx="${x}" cy="${y}" r="11" fill="none" stroke="#fffefa" stroke-width="1" opacity=".4"/><text x="${x}" y="${y+4}" font-size="12" font-weight="700" text-anchor="middle" fill="#fffefa">${p+1}</text>`);
+      }else{
+        const angle=[0,180,90,-90][E.SEATS[p]];
+        parts.push(`<circle cx="${x}" cy="${y+3}" r="18" class="pawn-shadow"/><g class="normal-pawn" transform="translate(${x} ${y})"><g class="pawn-facing" transform="rotate(${angle})"><path class="normal-pawn-direction" d="M0 -22 L19 15 Q20 18 16 18 L0 12 L-16 18 Q-20 18 -19 15 Z" fill="${color}"/></g><text class="normal-pawn-number" x="0" y="4" font-size="12" font-weight="750" text-anchor="middle" fill="#fffefa" stroke="${color}">${p+1}</text></g>`);
+      }
       parts.push('</g>');
     }
-    $('board').setAttribute('aria-label',`${E.N}×${E.N}マス、${E.P}人対戦。${name(actor)}の番。${GOALS[actor]}側の辺がゴールです。`);
+    $('board').setAttribute('aria-label',`${E.N}×${E.N}マス、${E.P}人対戦。${name(actor)}の番。${GOALS[E.SEATS[actor]]}側の辺がゴールです。`);
     $('board').innerHTML=parts.join('');
   }
   function render(){
@@ -1037,10 +1284,10 @@ function createQuoridorRecords() {
     document.documentElement.style.setProperty('--actor',COLORS[actor]);document.documentElement.style.setProperty('--actor-light',LIGHTS[actor]);
     text('modeBadge',(E.N===7?'キッズ ':'通常 ')+E.N+'×'+E.N);
     text('matchInfo',`${E.P}人対戦 · 人間${game.humans}人`+(game.humans<E.P?`＋コンピューター${E.P-game.humans}人 · 全員レベル${game.level}`:' · コンピューターなし'));
-    renderPlayers();renderTurn();renderControls();renderBoard();
+    renderPlayers();renderTurn();renderControls();renderHint();renderBoard();
     text('plyLabel',game.actions.length+'手目');text('historyCount',game.actions.length+'手');
     text('lastMove',game.actions.length?`${name(states.at(-2).turn)}：${E.actionName(game.actions.at(-1))}`:name(game.first)+'から開始します。');
-    text('saveState',storageOK?'自動保存':'保存不可');$('pathNote').hidden=!prefs.showPaths;$('localNote').hidden=game.humans===1;
+    text('saveState',storageOK?'自動保存':'保存不可');$('pathNote').hidden=!prefs.showPaths;$('distanceNote').hidden=!prefs.showDistances;$('localNote').hidden=game.humans===1;
     const list=$('historyList');list.replaceChildren();
     for(let i=game.actions.length-1;i>=Math.max(0,game.actions.length-500);i--){const li=document.createElement('li');li.value=i+1;li.style.color=COLORS[states[i].turn];li.textContent=name(states[i].turn)+'：'+E.actionName(game.actions[i]);list.append(li);}
   }
@@ -1052,6 +1299,51 @@ function createQuoridorRecords() {
     text('levelDescription',n===h?'人間だけで対戦します。コンピューターの設定は使いません。':descriptions[l-1]+` 最大${n>2&&l>=5?Math.max(n,cfg.depth):cfg.depth}手先（時間制限あり）。`);
     $('levelField').disabled=n===h;$('levelMinus').disabled=l===1||n===h;$('levelPlus').disabled=l===10||n===h;
   }
+  function normalizeDraftSeats(n){
+    const next=[0];
+    for(let p=1;p<n;p++){
+      const wanted=n===2?1:draftSeats[p];
+      next.push(Number.isInteger(wanted)&&wanted>0&&wanted<4&&!next.includes(wanted)?wanted:[1,2,3].find(seat=>!next.includes(seat)));
+    }
+    draftSeats=next;
+  }
+  function draftName(p,n,h){return p<h?R.cleanName(draftNames[p],R.defaults(n,h)[p]):R.defaults(n,h)[p];}
+  function renderSeatPreview(){
+    const n=+$('playerCount').value,h=+$('humanCount').value,random=$('placementSelect').value==='random'&&n>2,area=$('seatPreview');area.replaceChildren();
+    for(let seat=0;seat<4;seat++){
+      const p=draftSeats.indexOf(seat),box=document.createElement('div');box.className='seat-preview-item';box.dataset.seat=seat;
+      const who=document.createElement('strong'),direction=document.createElement('small');
+      if(random&&seat!==0){box.classList.add('random');who.textContent='？';direction.textContent=STARTS[seat]+'側：開始時に抽選';}
+      else if(p<0){box.classList.add('empty');who.textContent='駒なし';direction.textContent=STARTS[seat]+'側';}
+      else{who.textContent=(p+1)+' '+draftName(p,n,h);who.style.color=COLORS[p];direction.textContent=STARTS[seat]+'から'+GOALS[seat]+'へ '+ARROWS[seat];box.style.borderColor=COLORS[p];}
+      box.append(who,direction);area.append(box);
+    }
+    const center=document.createElement('div');center.className='seat-preview-center';center.textContent=random?'1番は下側固定':'開始位置　↻\n手番は時計回り';center.style.whiteSpace='pre-line';area.append(center);
+  }
+  function renderSeatSettings(){
+    const n=+$('playerCount').value,h=+$('humanCount').value,random=$('placementSelect').value==='random'&&n>2;
+    $('placementSelect').disabled=n===2;
+    text('placementNote',n===2?'2人戦では向かい合う位置です。プレイヤー1は下側、2は上側です。':random?'プレイヤー1は下側に固定。ほかの全員は「この設定で開始」を押したときに抽選します。': 'プレイヤー1は下側に固定。使用中の位置を選ぶと、その人と位置を交換します。コンピューターは残りの位置です。');
+    const area=$('seatFields');area.replaceChildren();
+    if(!random)for(let p=0;p<h;p++){
+      const row=document.createElement('div');row.className='seat-row';
+      const label=document.createElement('label');label.className='seat-person';
+      const badge=document.createElement('span');badge.className='player-id';badge.style.background=COLORS[p];badge.textContent=p+1;
+      const title=document.createElement('span');title.textContent=draftName(p,n,h);label.append(badge,title);row.append(label);
+      if(p===0||n===2){const fixed=document.createElement('span');fixed.className='seat-fixed';fixed.textContent=STARTS[draftSeats[p]]+'側 → '+GOALS[draftSeats[p]]+'側のゴール';row.append(fixed);}
+      else{
+        const select=document.createElement('select');select.id='seat'+p;label.htmlFor=select.id;select.setAttribute('aria-label',(p+1)+'番の人の開始位置');
+        for(const seat of [1,2,3])select.add(new Option(STARTS[seat]+'側 → '+GOALS[seat]+'側へ',String(seat)));
+        select.value=draftSeats[p];select.addEventListener('change',()=>{
+          const from=draftSeats[p],to=+select.value,other=draftSeats.indexOf(to);draftSeats[p]=to;if(other>=0)draftSeats[other]=from;
+          updateSettings();text('seatStatus',other>=0?`${p+1}番と${other+1}番の開始位置を交換しました。`:`${p+1}番を${STARTS[to]}側に配置します。`);
+          $('seat'+p)?.focus({preventScroll:true});
+        });row.append(select);
+      }
+      area.append(row);
+    }
+    renderSeatPreview();
+  }
   function updateSettings(){
     collectNames();const n=+$('playerCount').value,h=Math.min(n,+$('humanCount').value||1),oldOrder=$('orderSelect').value;
     $('humanCount').replaceChildren();for(let i=1;i<=n;i++)$('humanCount').add(new Option(i+'人'+(i===n?'（全員）':''),String(i)));$('humanCount').value=h;
@@ -1059,16 +1351,17 @@ function createQuoridorRecords() {
     for(let i=0;i<n;i++)$('orderSelect').add(new Option(n===2?(i===0?'先手（最初）':'後手'):i+1+'番目'+(i===0?'（最初）':''),values[i]));
     $('orderSelect').add(new Option('ランダム','random'));$('orderSelect').value=values.slice(0,n).includes(oldOrder)||oldOrder==='random'?oldOrder:'first';
     const tmp=createQuoridorEngine(selectedSize(),n);text('settingsSummary',`人間${h}人＋コンピューター${n-h}人 ／ フェンス各${tmp.STOCK}枚`);
+    normalizeDraftSeats(n);if(n===2)$('placementSelect').value='fixed';renderSeatSettings();
     $('threeNote').hidden=n!==3;$('handoffOption').hidden=h<2;
     const area=$('nameFields');area.replaceChildren();const fallback=R.defaults(n,h);
     for(let p=0;p<h;p++){
-      const label=document.createElement('label');label.textContent=`${p+1}番（${STARTS[p]}から${GOALS[p]}へ）`;
+      const label=document.createElement('label');label.textContent=`${p+1}番（${p>0&&$('placementSelect').value==='random'?'開始位置は抽選':STARTS[draftSeats[p]]+'から'+GOALS[draftSeats[p]]+'へ'}）`;
       const input=document.createElement('input');input.dataset.player=p;input.id='name'+p;input.maxLength=20;input.autocomplete='off';input.placeholder=fallback[p];input.value=draftNames[p]??'';input.setAttribute('aria-label',`${p+1}番の人の名前`);label.append(input);area.append(label);
     }
     updateLevel();
   }
   function settings(){
-    draftNames=game.names.map((n,p)=>human(p)?n:'');$('nameFields').replaceChildren();
+    draftNames=game.names.map((n,p)=>human(p)?n:'');draftSeats=E.SEATS.slice();$('placementSelect').value=game.placement; text('seatStatus','');$('nameFields').replaceChildren();
     document.querySelector(`input[name=boardSize][value="${E.N}"]`).checked=true;
     $('playerCount').value=E.P;$('humanCount').replaceChildren();for(let i=1;i<=E.P;i++)$('humanCount').add(new Option(i+'人',String(i)));$('humanCount').value=game.humans;
     $('levelRange').value=game.level;$('orderSelect').replaceChildren();$('orderSelect').add(new Option(game.order,game.order));$('orderSelect').value=game.order;
@@ -1076,8 +1369,12 @@ function createQuoridorRecords() {
     updateSettings();openDialog('settingsDialog');
   }
   function startFromSettings(){
-    collectNames();const next=R.fresh({size:selectedSize(),count:+$('playerCount').value,humans:+$('humanCount').value,level:+$('levelRange').value,order:$('orderSelect').value,names:draftNames});
-    next.preferences={showPaths:prefs.showPaths,handoff:$('handoffToggle').checked};closeDialog('settingsDialog');notify('');install(next);
+    collectNames();
+    try{
+      const next=R.fresh({size:selectedSize(),count:+$('playerCount').value,humans:+$('humanCount').value,level:+$('levelRange').value,order:$('orderSelect').value,names:draftNames,seats:draftSeats,placement:$('placementSelect').value});
+      next.preferences={showPaths:prefs.showPaths,showDistances:prefs.showDistances,handoff:$('handoffToggle').checked};closeDialog('settingsDialog');notify('');install(next);
+    }catch(error){text('seatStatus',error.message);}
+
   }
   $('board').addEventListener('pointerdown',e=>{if(e.isPrimary)pointerStart={x:e.clientX,y:e.clientY,id:e.pointerId};});
   $('board').addEventListener('pointercancel',()=>pointerStart=null);
@@ -1090,13 +1387,14 @@ function createQuoridorRecords() {
       if(!E.moves(state).includes(to)){feedback='駒と同じ色で光るマスが、移動できる場所です。';renderTurn();return;}
       preview={t:'m',to};
     }else preview={t:'w',o:orientation,r:Math.max(0,Math.min(E.M-1,Math.round((y-g.cross)/g.step))),c:Math.max(0,Math.min(E.M-1,Math.round((x-g.cross)/g.step)))};
-    feedback='';render();
+    stopHint();feedback='';render();
   });
   $('moveMode').addEventListener('click',()=>setMode('move'));$('wallMode').addEventListener('click',()=>setMode('wall'));
   $('horizontalBtn').addEventListener('click',()=>changeOrientation('h'));$('verticalBtn').addEventListener('click',()=>changeOrientation('v'));
   for(const b of document.querySelectorAll('#directionPad button'))b.addEventListener('click',()=>direction(+b.dataset.dr,+b.dataset.dc));
   $('confirmBtn').addEventListener('click',()=>{if(canPlay()&&preview&&E.legal(state,preview))commit(preview);});
-  $('clearBtn').addEventListener('click',()=>{preview=null;feedback='';render();});
+  $('clearBtn').addEventListener('click',()=>{if(!canPlay())return;stopHint();preview=null;feedback='';render();});
+  $('hintBtn').addEventListener('click',requestHint);$('mobileHint').addEventListener('click',requestHint);$('dismissHint').addEventListener('click',dismissHint);
   $('readyBtn').addEventListener('click',()=>{if(!ended()&&human(state.turn)){handoffPending=false;feedback='';render();}});
   $('passBtn').addEventListener('click',()=>{if(canPlay()&&E.forcedPass(state))commit({t:'p'});});
   $('mobileMode').addEventListener('click',()=>setMode(mode==='wall'?'move':'wall'));
@@ -1104,6 +1402,7 @@ function createQuoridorRecords() {
   $('mobileConfirm').addEventListener('click',()=>{if(handoffPending&&human(state.turn))$('readyBtn').click();else if(canPlay()&&E.forcedPass(state))$('passBtn').click();else $('confirmBtn').click();});
   $('undoBtn').addEventListener('click',undo);
   $('pathToggle').addEventListener('change',()=>{prefs.showPaths=$('pathToggle').checked;save();render();});
+  $('distanceToggle').addEventListener('change',()=>{prefs.showDistances=$('distanceToggle').checked;save();render();});
   $('newBtn').addEventListener('click',settings);$('againBtn').addEventListener('click',settings);
   $('helpBtn').addEventListener('click',()=>openDialog('helpDialog'));
   $('dataBtn').addEventListener('click',()=>{text('dataMessage','');openDialog('dataDialog');});
@@ -1114,7 +1413,9 @@ function createQuoridorRecords() {
   });
   $('confirmResign').addEventListener('click',()=>{if(!ended()){stopComputer();game.termination=E.P===2&&game.humans===1?{type:'resigned',player:0}:{type:'stopped'};preview=null;handoffPending=false;save();}closeDialog('resignDialog');render();});
   $('levelRange').addEventListener('input',updateLevel);$('levelMinus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value-1;updateLevel();});$('levelPlus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value+1;updateLevel();});
-  $('playerCount').addEventListener('change',updateSettings);$('humanCount').addEventListener('change',updateSettings);
+  $('playerCount').addEventListener('change',()=>{text('seatStatus','');updateSettings();});$('humanCount').addEventListener('change',()=>{text('seatStatus','');updateSettings();});
+  $('placementSelect').addEventListener('change',()=>{text('seatStatus','');updateSettings();});
+  $('nameFields').addEventListener('input',()=>{collectNames();renderSeatSettings();});
   for(const input of document.querySelectorAll('input[name=boardSize]'))input.addEventListener('change',updateSettings);
   $('startBtn').addEventListener('click',startFromSettings);
   for(const b of document.querySelectorAll('[data-close]'))b.addEventListener('click',()=>closeDialog(b.dataset.close));
@@ -1134,7 +1435,8 @@ function createQuoridorRecords() {
     const dirs={ArrowUp:[-1,0],ArrowRight:[0,1],ArrowDown:[1,0],ArrowLeft:[0,-1]};
     if(dirs[e.key]){e.preventDefault();direction(...dirs[e.key]);$('board').focus({preventScroll:true});}
     else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){e.preventDefault();$('confirmBtn').click();}
-    else if(e.key==='Escape'){preview=null;render();}
+    else if(e.key==='Escape'){stopHint();preview=null;render();}
+    else if(e.key.toLowerCase()==='h'){e.preventDefault();requestHint();}
     else if(e.key.toLowerCase()==='m')setMode('move');else if(e.key.toLowerCase()==='w')setMode('wall');
     else if(e.key.toLowerCase()==='r'&&mode==='wall')changeOrientation(orientation==='h'?'v':'h');
   });
@@ -1142,12 +1444,12 @@ function createQuoridorRecords() {
   window.addEventListener('pagehide',()=>{save();stopComputer();});
   window.addEventListener('pageshow',()=>{render();scheduleComputer();});
   // Read-only snapshots for testing and troubleshooting. No ability to mutate a live game.
-  window.Quoridor=Object.freeze({version:'2.0.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending})});
+  window.Quoridor=Object.freeze({version:'2.2.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError})});
   let restored=null,migrated=false;
-  try{const raw=localStorage.getItem(STORAGE);if(raw)restored=R.parse(JSON.parse(raw));else{const old=localStorage.getItem(OLD_STORAGE);if(old){restored=R.parse(JSON.parse(old));migrated=true;}}}
+  try{const raw=localStorage.getItem(STORAGE);if(raw)restored=R.parse(JSON.parse(raw));else{const old=localStorage.getItem(PREVIOUS_STORAGE)||localStorage.getItem(OLD_STORAGE);if(old){restored=R.parse(JSON.parse(old));migrated=true;}}}
   catch(_){notify('保存データを復元できなかったため、新しい盤面を表示します。書き出したファイルは「保存・読込」から復元できます。');}
-  if(restored){install(restored);if(migrated)notify('旧版の対局を引き継ぎました。「新しい対局」からキッズや人数を選べます。',true);}
-  else{$('pathToggle').checked=prefs.showPaths;render();settings();}
+  if(restored){install(restored);if(migrated)notify('旧版の対局を引き継ぎました。最短マス数を表示し、「新しい対局」で開始位置を選べます。',true);}
+  else{$('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;render();settings();}
 })();
 
 </script>
