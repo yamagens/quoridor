@@ -1,253 +1,304 @@
 <!doctype html>
-<html lang="ja">
-<head>
+<html lang="ja"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="コリドール">
-<meta name="description" content="コリドールの非公式・個人練習用ブラウザーアプリ。コンピューター10段階、タップと方向ボタンに対応。">
-<title>コリドール｜ひとり対戦</title>
+<meta name="description" content="非公式コリドール練習アプリ。通常9×9とキッズ7×7、2～4人、人間とコンピューターの混合対戦、強さ10段階。">
+<title>コリドール｜通常・キッズ 2～4人対戦</title>
 <style>
 :root{color-scheme:light;--bg:#f5f3ed;--paper:#fffefa;--ink:#243739;--muted:#647575;--line:#dddeda;--human:#157879;--human-light:#e4f2ee;--computer:#b55d3b;--computer-light:#f7e9df;--wall:#49585c;--danger:#b63045;--shadow:0 6px 24px #23353408;--radius:18px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation;color:inherit;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default;opacity:.35}button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #246fda;outline-offset:3px}button,input{border-radius:10px}button{border:1px solid transparent;transition:background .13s,box-shadow .13s}button:not(:disabled):active{transform:translateY(1px)}[hidden]{display:none!important}.app{max-width:1040px;margin:0 auto;padding:22px 24px calc(18px + env(safe-area-inset-bottom))}.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:8px}.brand{display:flex;align-items:center;gap:12px}.brand h1{font-size:23px;letter-spacing:3.5px;font-weight:650;line-height:1.15;margin:0}.brand p{margin:5px 0 0;font-size:11px;color:var(--muted);letter-spacing:.5px}.brand-mark{width:33px;height:33px;display:grid;grid-template-columns:1fr 1fr;gap:5px;position:relative}.brand-mark i{border:1.5px solid #b4beb9;border-radius:3px}.brand-mark:after{content:"";position:absolute;top:0;bottom:0;width:4px;left:14.5px;border-radius:2px;background:var(--human)}.header-actions{display:flex;gap:8px;align-items:center}.icon-btn{height:42px;min-width:42px;background:var(--paper);border:1px solid var(--line);font-size:20px}.small-btn{height:42px;background:var(--ink);color:white;padding:0 16px;font-size:12px;font-weight:650}.game-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:28px;align-items:start}.board-column{min-width:0}.players{display:grid;grid-template-columns:1fr 1fr;gap:10px}.player{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:13px 14px;position:relative}.player.active{border-color:var(--human);box-shadow:0 0 0 1px var(--human)}.player.computer.active{border-color:var(--computer);box-shadow:0 0 0 1px var(--computer)}.player-line{display:flex;align-items:center;gap:7px;min-height:22px}.player-line strong{font-size:13px;white-space:nowrap}.pawn-symbol{height:13px;width:13px;display:inline-block;border-radius:50%;flex:0 0 auto}.human-symbol{background:var(--human);border:3px solid #83c6ba;box-shadow:0 0 0 1px var(--human)}.computer-symbol{background:var(--computer);border:3px solid #e9b294;box-shadow:0 0 0 1px var(--computer)}.order-label{font-size:10px;color:var(--muted);margin-left:auto}.level-badge{font-size:10px;color:var(--computer);background:var(--computer-light);padding:2px 6px;border-radius:6px;margin-left:auto;font-weight:700;white-space:nowrap}.wall-line{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:6px;font-size:10px;color:var(--muted)}.wall-line b{font-size:16px;color:var(--ink);font-variant-numeric:tabular-nums}.stock{display:flex;gap:3px}.stock i{height:14px;width:3px;border-radius:2px;background:#dcded7}.stock i.on{background:var(--human)}.computer .stock i.on{background:var(--computer)}.distance{font-size:10px;color:var(--muted);margin-top:4px}.board-wrap{max-width:556px;margin:10px auto 0;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px 6px}.goal-label{text-align:center;font-size:10px;letter-spacing:1px;font-weight:600;height:18px;line-height:18px}.human-goal{color:var(--human)}.computer-goal{color:var(--computer)}.goal-label span{font-size:12px}#board{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overflow:visible}#board .cell{fill:#ecebe4;stroke:#e4e4dc;stroke-width:1}#board .legal-cell{fill:#d5ebe4;stroke:#81b6a9;stroke-width:1.2}#board .selected-cell{fill:#badcd0;stroke:var(--human);stroke-width:3}#board text{font-family:inherit;pointer-events:none}#board .pawn-shadow{fill:#14252d;opacity:.12}#board .pawn-top{stroke:var(--paper);stroke-width:3}.board-caption{display:flex;align-items:center;gap:9px;padding:9px 3px 0;font-size:10px;color:var(--muted);min-height:27px}.board-caption #lastMove{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.board-caption #plyLabel{white-space:nowrap;font-variant-numeric:tabular-nums}.save-dot{margin-left:auto;white-space:nowrap;font-size:9px}.save-dot:before{content:"";display:inline-block;width:5px;height:5px;background:#5a9484;border-radius:50%;margin:0 4px 1px 0}.control-column{padding-top:0}.turn-panel{border:1px solid var(--line);background:var(--paper);padding:16px 18px;border-radius:14px;margin-bottom:16px;min-height:87px}.turn-title{display:flex;align-items:center;gap:8px}.turn-title strong{font-size:16px}.turn-dot{width:8px;height:8px;border-radius:50%;background:var(--human);flex-shrink:0}.turn-dot.thinking{width:14px;height:14px;border:2px solid #e9bca7;border-top-color:var(--computer);background:none;animation:spin .85s linear infinite}.turn-panel p{font-size:11px;color:var(--muted);margin:5px 0 0;min-height:17px}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#e8e9e2;padding:4px;border-radius:12px;margin-bottom:12px}.mode-switch button{background:transparent;min-height:44px;font-size:13px;font-weight:600}.mode-switch button[aria-pressed=true]{background:var(--paper);box-shadow:0 2px 6px #26393910}.mode-switch span{margin-right:5px;font-size:14px}.input-area{background:var(--paper);border:1px solid var(--line);padding:16px;border-radius:14px}.input-row{display:flex;align-items:center;gap:15px;min-height:153px}.direction-pad{display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,44px);gap:3px;flex-shrink:0}.direction-pad button{background:#edf0eb;border:1px solid #dfe4de;font-size:23px;line-height:1}.direction-pad button.chosen{background:var(--human-light);border-color:var(--human);color:var(--human)}.direction-pad .diagonal:disabled{visibility:hidden}.direction-pad span{display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted)}.selection-area{flex:1;min-width:0}.selection-label{margin:0 0 4px;color:var(--ink);font-size:12px;font-weight:650}.selection-area #selectionText{font-size:11px;color:var(--muted);min-height:47px;margin:0 0 8px;line-height:1.6}.selection-area #selectionText.invalid{color:var(--danger)}.primary-btn{background:var(--human);color:white;font-weight:600;border-radius:10px;min-height:46px;padding:9px 14px;font-size:13px}.selection-area .primary-btn{width:100%;padding:8px}.text-btn{border:none;background:transparent;font-size:11px;min-height:33px;color:var(--muted)}.selection-area .text-btn{width:100%;margin-top:3px}.full{display:block;width:100%;margin-top:12px}.orientation{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.orientation button{min-height:40px;font-size:12px;border:1px solid var(--line);background:#fafaf6}.orientation button[aria-pressed=true]{color:var(--human);background:var(--human-light);border-color:var(--human)}.utility-row{display:flex;gap:8px;margin-top:14px}.utility-btn{min-height:43px;background:var(--paper);border:1px solid var(--line);flex:1;font-size:11px}.path-option{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted);margin:15px 0;cursor:pointer;min-height:32px}.path-option input{accent-color:var(--human);height:18px;width:18px;margin:0}.path-note{font-size:10px;color:var(--muted);margin:-6px 0 14px;line-height:1.7}.history-box{border-top:1px solid var(--line);padding:12px 2px}.history-box summary{font-size:11px;cursor:pointer;padding:4px 0}.history-box summary span{float:right;color:var(--muted)}.history-box ol{padding-left:28px;font-size:11px;max-height:180px;overflow:auto;color:var(--muted);margin-bottom:2px}.history-box li{padding:5px 0}.history-box .log-human{color:var(--human)}.history-box .log-computer{color:var(--computer)}footer{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line);margin-top:22px;padding-top:14px;font-size:10px;color:#7e8984}footer i{font-style:normal;margin:0 6px}.notice{font-size:12px;background:#fff2d7;border:1px solid #e1c78b;border-radius:12px;padding:10px 14px;margin-bottom:14px;line-height:1.7}.result-area{border:1px solid #aecfc3;background:var(--human-light);border-radius:14px;padding:20px;text-align:center}.result-area p{font-size:14px;margin-top:0}.result-area .primary-btn{min-width:160px}dialog{border:1px solid var(--line);border-radius:22px;padding:0;background:var(--paper);color:var(--ink);width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 36px);overflow:auto;box-shadow:0 24px 90px #1028283b}dialog::backdrop{background:#20323170;backdrop-filter:blur(3px)}.dialog-body{padding:26px}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.dialog-heading .icon-btn{border:none;background:#f0f0e9;border-radius:50%;flex-shrink:0}h2{margin:3px 0 0;font-size:23px;letter-spacing:.4px}.eyebrow{font-size:9px!important;letter-spacing:2px;color:var(--human)!important;margin:0!important;font-weight:650}.dialog-lead{font-size:12px!important;margin:14px 0 22px!important}.dialog-body p{font-size:12px;line-height:1.8;color:var(--muted)}fieldset{border:none;padding:0;margin:24px 0}legend{font-size:13px;font-weight:650;margin-bottom:12px}.level-control{display:flex;align-items:center;justify-content:space-between;padding:2px 8px}.level-display{display:flex;align-items:baseline;gap:8px}.level-display span{font-size:10px;letter-spacing:1px;color:var(--muted)}.level-display strong{font-size:47px;font-weight:500;line-height:1.3;color:var(--human);font-variant-numeric:tabular-nums}.level-display em{font-style:normal;font-size:13px;color:var(--muted)}input[type=range]{width:100%;height:32px;accent-color:var(--human);cursor:pointer;margin:10px 0 0}.range-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.level-description{background:#f1f2eb;border-radius:9px;padding:10px 12px;min-height:58px;margin:12px 0 0!important;font-size:11px!important}.order-options{display:flex;gap:8px}.order-options label{flex:1;text-align:center;position:relative;cursor:pointer}.order-options input{position:absolute;opacity:0}.order-options span{border:1px solid var(--line);display:block;padding:12px 2px;border-radius:10px;font-size:13px}.order-options input:checked+span{background:var(--human-light);border-color:var(--human);color:var(--human);font-weight:650}.order-options input:focus-visible+span{outline:3px solid #246fda;outline-offset:3px}.small-note{font-size:10px!important;line-height:1.8}.replace-note{font-size:11px!important;color:var(--computer)!important}.outline-btn{background:var(--paper);border:1px solid var(--human);color:var(--human);min-height:46px;font-size:13px;font-weight:600}.data-message{color:var(--human)!important;min-height:24px}h3{font-size:14px;margin:24px 0 6px}h3+p{margin-top:4px}#helpDialog{width:min(520px,calc(100vw - 24px))}#helpDialog h2{font-size:22px}.preview-wall{stroke-dasharray:8 5}.last-wall{filter:drop-shadow(0 0 3px #b86a4588)}@keyframes spin{to{transform:rotate(360deg)}}
 @media(hover:hover){button:not(:disabled):hover{filter:brightness(.97)}}
 @media(max-width:760px){.app{max-width:540px;padding:12px 12px calc(14px + env(safe-area-inset-bottom))}.header{margin-bottom:13px}.brand{gap:9px}.brand h1{font-size:19px;letter-spacing:2.5px}.brand-mark{width:27px;height:27px;gap:5px}.brand-mark:after{left:11.5px}.brand p{font-size:9px;margin-top:4px}.small-btn{padding:0 12px;height:39px;font-size:11px}.header .icon-btn{height:39px;min-width:36px;font-size:19px}.header-actions{gap:6px}.game-layout{display:flex;flex-direction:column;gap:12px}.board-column,.control-column{width:100%}.players{gap:8px}.player{padding:9px 10px;border-radius:12px}.player-line{gap:6px}.player-line strong{font-size:12px}.wall-line{margin-top:2px;font-size:9px}.wall-line b{font-size:15px}.stock{gap:3px}.stock i{height:12px;width:3px}.board-wrap{margin-top:8px;padding:3px 4px;max-width:min(100%,470px)}.goal-label{font-size:9px;height:15px;line-height:15px}.board-caption{padding-top:7px;font-size:9px;gap:7px;min-height:23px}.turn-panel{padding:10px 13px;min-height:64px;margin-bottom:10px;border-radius:12px}.turn-title strong{font-size:14px}.turn-panel p{font-size:10px;margin-top:3px}.mode-switch{margin-bottom:9px}.mode-switch button{min-height:40px;font-size:12px}.input-area{padding:11px 12px}.input-row{min-height:140px;gap:18px}.direction-pad{grid-template-columns:repeat(3,43px);grid-template-rows:repeat(3,42px);gap:3px}.selection-area #selectionText{min-height:38px}.selection-area .primary-btn{min-height:44px}.utility-row{margin-top:10px}.utility-btn{min-height:42px}.path-option{margin:8px 0}.orientation{margin-bottom:8px}.orientation button{min-height:38px}.history-box{padding-top:7px}.history-box summary{font-size:10px}footer{font-size:9px;margin-top:14px;padding-top:10px}.dialog-body{padding:22px}.notice{font-size:11px}.brand p span{display:inline}}
 @media(max-width:360px){.app{padding-left:8px;padding-right:8px}.brand h1{font-size:17px;letter-spacing:2px}.brand p span{display:none}.brand-mark{display:none}.players{gap:6px}.player{padding:8px}.player-line strong{font-size:11px}.level-badge{padding:2px 4px}.stock{gap:2px}.input-row{gap:10px}.direction-pad{grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,40px)}.input-area{padding:10px}.selection-area #selectionText{font-size:10px}.selection-label{font-size:11px}.header-actions{gap:5px}.dialog-body{padding:18px}h2{font-size:21px}}
-@media(max-width:760px) and (min-height:750px){.board-wrap{max-width:min(100%,calc(100svh - 418px),470px)}}
+
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 #selectionText{white-space:pre-line}
-@media(max-width:760px){.board-wrap{max-width:min(100%,max(278px,calc(100svh - 510px)),420px)}.turn-panel{min-height:54px;padding:8px 12px}.input-row{min-height:132px}.selection-area #selectionText{min-height:32px;margin-bottom:6px}.selection-area .text-btn{min-height:28px}.input-area{padding-top:9px;padding-bottom:9px}}
 
-</style>
-</head>
+
+
+/* v2: multiplayer and kids. Keep the original quiet palette and large controls. */
+:root{--actor:#157879;--actor-light:#e4f2ee}
+body.kids{--bg:#f7f5e9;--paper:#fffef8;--line:#dfdfcd}
+button,input,select{font:inherit}select{color:var(--ink);border:1px solid var(--line);background:var(--paper);min-height:44px;border-radius:10px;padding:8px 10px;width:100%}
+select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
+.header{margin-bottom:16px}.brand p{font-size:11px}.game-info{display:flex;gap:7px;align-items:center;margin-bottom:11px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.mode-badge{color:var(--human);background:var(--human-light);padding:4px 9px;border-radius:7px;font-weight:650}.kids .mode-badge{color:#806017;background:#f5e9bb}
+.players{grid-template-columns:repeat(2,minmax(0,1fr))}.player{--seat:#157879;padding:10px 12px;min-width:0}.player.active,.player.computer.active{border-color:var(--seat);box-shadow:0 0 0 1px var(--seat)}
+.player-line strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}.player-id{background:var(--seat);color:white;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;width:23px;height:23px;flex:0 0 auto}
+.player-kind{font-size:9px;color:var(--muted);white-space:nowrap}.player-goal{display:flex;gap:5px;align-items:center;font-size:10px;color:var(--seat);margin-top:3px}.player-goal b{font-size:14px}.player .stock i.on{background:var(--seat)}
+.player-distance{font-size:10px;color:var(--muted);margin-top:2px}.wall-line{font-size:10px}.turn-order{font-size:10px;color:var(--muted);margin-top:8px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}.turn-order .current{font-weight:700;color:var(--actor)}
+.board-wrap{position:relative;padding:0;max-width:560px;margin-top:10px}.goal-label{display:none}#board{overflow:hidden;border-radius:18px}#board .legal-cell{fill:var(--actor-light);stroke:var(--actor);stroke-width:1.4}#board .selected-cell{fill:var(--actor-light);stroke:var(--actor);stroke-width:3}
+.board-caption{flex-wrap:wrap;row-gap:2px}.board-caption #lastMove{min-width:0;flex:1}.board-caption .save-dot{font-size:9px}.primary-btn{background:var(--actor)}
+.turn-panel{border-left:4px solid var(--actor);min-height:82px}.turn-dot{background:var(--actor)}.turn-title strong{overflow-wrap:anywhere}.turn-dot.thinking{border-top-color:var(--actor)}
+.direction-pad button.chosen{background:var(--actor-light);color:var(--actor);border-color:var(--actor)}.orientation button[aria-pressed=true]{background:var(--actor-light);color:var(--actor);border-color:var(--actor)}
+.pass-panel{background:#fff3d5;padding:16px;border:1px solid #ead8a5;border-radius:12px;font-size:12px}.pass-panel p{margin:0 0 10px}.pass-panel button{width:100%}
+.handoff-panel{padding:18px;background:var(--actor-light);border:1px solid var(--actor);border-radius:14px;text-align:center;margin-bottom:12px}.handoff-panel p{font-size:13px;margin:0 0 12px}.handoff-panel button{min-width:180px;max-width:100%;font-size:13px}
+.turn-title .turn-paused{margin-left:auto;font-size:10px;color:var(--muted)}.path-option{margin:10px 0}.multi-help{font-size:10px;color:var(--muted);margin:8px 0 0;line-height:1.7}
+#settingsDialog{width:min(530px,calc(100vw - 20px))}.dialog-body{padding:24px}#settingsDialog fieldset{margin:17px 0}#settingsDialog legend{font-size:12px;margin-bottom:8px}
+.board-options{display:grid;grid-template-columns:1fr 1fr;gap:9px}.board-options label{cursor:pointer;position:relative}.board-options input{position:absolute;opacity:0}
+.board-options .choice-box{border:1px solid var(--line);border-radius:12px;padding:12px 10px;background:#fcfcf6;display:flex;align-items:center;gap:10px;min-height:69px}
+.board-options input:checked+.choice-box{background:var(--human-light);border-color:var(--human);box-shadow:0 0 0 1px var(--human)}.board-options input:focus-visible+.choice-box{outline:3px solid #246fda;outline-offset:2px}
+.choice-grid{display:grid;grid-template-columns:repeat(3,5px);gap:3px;flex-shrink:0}.choice-grid i{height:5px;background:#788f84;border-radius:1px}.choice-box strong{display:block;font-size:14px}.choice-box small{display:block;font-size:10px;color:var(--muted);margin-top:2px}.choice-mouse{font-size:24px}
+.settings-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.settings-row fieldset{min-width:0;margin:9px 0!important}.settings-summary{background:#f1f2eb;border-radius:10px;padding:10px 12px;font-size:12px!important;margin:12px 0 6px!important;color:var(--ink)!important}
+#threeNote{font-size:10px!important;margin:5px 0!important;line-height:1.7}.name-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:9px}.name-fields label{font-size:10px;color:var(--muted);min-width:0}.name-fields input{min-height:40px;width:100%;border:1px solid var(--line);background:white;padding:8px;font-size:12px;color:var(--ink);margin-top:4px}
+.name-details{margin:12px 0}.name-details summary{font-size:11px;color:var(--muted);cursor:pointer;min-height:28px}.level-display strong{font-size:36px}.level-description{min-height:48px;padding:8px 11px}.level-control{padding:0 4px}input[type=range]{margin-top:6px}
+#levelField:disabled{opacity:.45}.option-check{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);cursor:pointer;line-height:1.7}.option-check input{width:18px;height:18px;accent-color:var(--human);flex-shrink:0}
+.start-sticky{position:sticky;bottom:-24px;background:var(--paper);padding:10px 0 0;border-top:1px solid var(--line);z-index:2}.start-sticky .full{margin-top:0}.start-sticky .text-btn{margin-top:3px;min-height:32px}.dialog-lead{margin:10px 0 15px!important}
+.rule-table{width:100%;border-collapse:collapse;font-size:11px;margin:10px 0}.rule-table th,.rule-table td{text-align:center;padding:7px 4px;border-bottom:1px solid var(--line)}.rule-table th{font-weight:600}.rule-source{font-size:10px!important}.rule-source a{color:var(--human)}
+.result-area{background:var(--actor-light);border-color:var(--actor)}.history-box li{overflow-wrap:anywhere}.small-note{margin:8px 0!important}.replace-note{margin:8px 0!important}.utility-row{flex-wrap:wrap}.utility-btn{white-space:nowrap}
+#turnDetail{white-space:pre-line}.data-message{overflow-wrap:anywhere}
+@media(max-width:760px){.app{max-width:570px;padding-top:12px}.header{margin-bottom:10px}.game-info{font-size:10px;margin-bottom:8px;gap:5px}.mode-badge{padding:3px 7px}.players{gap:7px}.player{padding:8px 9px}.player-line strong{font-size:11px}.player-id{width:21px;height:21px;font-size:10px}.player-kind{font-size:8px}.player-goal{font-size:9px}.wall-line{font-size:9px}.wall-line b{font-size:14px}.turn-order{font-size:9px;gap:4px;margin-top:6px}.board-wrap{max-width:470px;width:100%;margin-top:8px}.board-caption{font-size:9px}.turn-panel{padding:9px 12px;min-height:67px}.input-row{min-height:133px}.direction-pad{grid-template-columns:repeat(3,43px);grid-template-rows:repeat(3,44px)}.input-area{padding:10px 12px}.game-layout{gap:12px}.dialog-body{padding:20px}.start-sticky{bottom:-20px}.handoff-panel{padding:13px}.handoff-panel p{font-size:12px}.name-fields{gap:8px}}
+@media(max-width:360px){.app{padding-left:8px;padding-right:8px}.player{padding:7px}.player-line{gap:5px}.player-kind{font-size:8px}.player-goal{font-size:9px}.player-line strong{font-size:10px}.player-id{height:19px;width:19px;font-size:9px}.wall-line{font-size:8px}.stock{gap:2px}.stock i{height:11px;width:3px}.input-row{gap:12px}.direction-pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,44px)}.dialog-body{padding:17px}.start-sticky{bottom:-17px}.board-options .choice-box{padding:10px 8px;gap:7px}.choice-box strong{font-size:12px}.choice-box small{font-size:9px}.settings-row{gap:10px}}
+
+.mobile-bar{display:none}
+@media(max-width:760px){.app{padding-bottom:calc(108px + env(safe-area-inset-bottom))}.mobile-bar{display:block;position:fixed;bottom:0;left:0;right:0;padding:6px 12px calc(8px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line);box-shadow:0 -4px 20px #2335340b;z-index:5}.mobile-selection{font-size:10px;color:var(--actor);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px;max-width:520px;margin-left:auto;margin-right:auto}.mobile-buttons{display:flex;gap:7px;max-width:520px;margin:auto}.mobile-mode,.mobile-rotate{min-height:44px;border:1px solid var(--line);background:var(--actor-light);font-size:12px;padding:6px 12px;white-space:nowrap}.mobile-mode{min-width:82px}.mobile-rotate{width:44px;padding:0;font-size:23px}.mobile-buttons .primary-btn{flex:1;min-width:0;min-height:44px;font-size:12px;padding:8px}.mobile-bar[hidden]{display:none!important}}
+
+@media(max-width:760px){.name-fields input{font-size:16px}}
+
+</style></head>
 <body>
 <div class="app">
 <header class="header">
-  <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><h1>QUORIDOR</h1><p>コリドール <span>／ ひとり対戦</span></p></div></div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><h1>QUORIDOR</h1><p>コリドール <span>／ みんなで対戦</span></p></div></div>
   <div class="header-actions"><button id="helpBtn" class="icon-btn" aria-label="ルールと操作方法">?</button><button id="newBtn" class="small-btn">新しい対局</button></div>
 </header>
 <div id="notice" class="notice" role="status" hidden></div>
+<div class="game-info"><span id="modeBadge" class="mode-badge">通常 9×9</span><span id="matchInfo"></span></div>
 <main class="game-layout">
 <section class="board-column" aria-label="対局盤">
-  <div class="players">
-    <div class="player human" id="humanCard"><div class="player-line"><span class="pawn-symbol human-symbol" aria-hidden="true"></span><strong>あなた</strong><span id="humanOrder" class="order-label">先手</span></div><div class="wall-line"><span>残り壁 <b id="humanWalls">10</b></span><span class="stock" id="humanStock" aria-hidden="true"></span></div><div id="humanDistance" class="distance" hidden></div></div>
-    <div class="player computer" id="computerCard"><div class="player-line"><span class="pawn-symbol computer-symbol" aria-hidden="true"></span><strong>コンピューター</strong><span id="levelBadge" class="level-badge">5 / 10</span></div><div class="wall-line"><span>残り壁 <b id="computerWalls">10</b></span><span class="stock" id="computerStock" aria-hidden="true"></span></div><div id="computerDistance" class="distance" hidden></div></div>
-  </div>
+  <div class="players" id="players"></div>
+  <div class="turn-order" id="turnOrder" aria-label="手番の順序"></div>
   <div class="board-wrap">
-    <div class="goal-label human-goal">あなたのゴール <span>↑</span></div>
-    <svg id="board" tabindex="0" viewBox="0 0 520 520" role="img" aria-label="コリドールの盤面。あなたは下から上、コンピューターは上から下を目指します。方向ボタンでも操作できます。"></svg>
-    <div class="goal-label computer-goal"><span>↓</span> コンピューターのゴール</div>
+    <svg id="board" tabindex="0" viewBox="0 0 580 580" role="img" aria-label="コリドールの盤面。方向ボタンでも操作できます。"></svg>
   </div>
-  <div class="board-caption"><span id="plyLabel">0手目</span><span id="lastMove">移動か壁を選んでください。</span><span class="save-dot" id="saveState">自動保存</span></div>
+  <div class="board-caption"><span id="plyLabel">0手目</span><span id="lastMove"></span><span class="save-dot" id="saveState">自動保存</span></div>
 </section>
 <section class="control-column" aria-label="操作パネル">
-  <div class="turn-panel" id="turnPanel" aria-live="polite" aria-atomic="true"><div class="turn-title"><span id="turnDot" class="turn-dot"></span><strong id="turnText">あなたの番です</strong></div><p id="turnDetail">青いマスを選び、確定してください。</p></div>
+  <div class="turn-panel" id="turnPanel" aria-live="polite" aria-atomic="true"><div class="turn-title"><span id="turnDot" class="turn-dot"></span><strong id="turnText"></strong></div><p id="turnDetail"></p></div>
+  <div id="handoffPanel" class="handoff-panel" hidden><p id="handoffText"></p><button id="readyBtn" class="primary-btn">自分の番をはじめる</button></div>
+  <div id="passPanel" class="pass-panel" hidden><p>移動できるマスも、置けるフェンスもありません。本アプリでは、この場合に限り順番を送ります。</p><button id="passBtn" class="primary-btn">順番を送る</button></div>
   <div id="playControls">
-    <div class="mode-switch" role="group" aria-label="手の種類"><button id="moveMode" aria-pressed="true"><span aria-hidden="true">●</span> 駒を動かす</button><button id="wallMode" aria-pressed="false"><span aria-hidden="true">━</span> 壁を置く</button></div>
+    <div class="mode-switch" role="group" aria-label="手の種類"><button id="moveMode" aria-pressed="true"><span aria-hidden="true">●</span> 駒を動かす</button><button id="wallMode" aria-pressed="false"><span aria-hidden="true">━</span> フェンス</button></div>
     <div class="input-area">
-      <div class="orientation" id="orientation" hidden><button id="horizontalBtn" aria-pressed="true">━ 横の壁</button><button id="verticalBtn" aria-pressed="false">┃ 縦の壁</button></div>
+      <div class="orientation" id="orientation" hidden><button id="horizontalBtn" aria-pressed="true">━ 横のフェンス</button><button id="verticalBtn" aria-pressed="false">┃ 縦のフェンス</button></div>
       <div class="input-row">
-        <div class="direction-pad" id="directionPad" role="group" aria-label="移動先または壁の位置の調整">
+        <div class="direction-pad" id="directionPad" role="group" aria-label="移動先またはフェンス位置の調整">
           <button data-dr="-1" data-dc="-1" class="diagonal" aria-label="左上へ">↖</button><button data-dr="-1" data-dc="0" aria-label="上へ">↑</button><button data-dr="-1" data-dc="1" class="diagonal" aria-label="右上へ">↗</button>
           <button data-dr="0" data-dc="-1" aria-label="左へ">←</button><span id="padCenter" aria-hidden="true">移動先</span><button data-dr="0" data-dc="1" aria-label="右へ">→</button>
           <button data-dr="1" data-dc="-1" class="diagonal" aria-label="左下へ">↙</button><button data-dr="1" data-dc="0" aria-label="下へ">↓</button><button data-dr="1" data-dc="1" class="diagonal" aria-label="右下へ">↘</button>
         </div>
-        <div class="selection-area"><p class="selection-label" id="selectionLabel">移動先を選択</p><p id="selectionText">盤面の青いマス、または方向ボタンで選べます。</p><button id="confirmBtn" class="primary-btn" disabled>移動を確定</button><button id="clearBtn" class="text-btn" disabled>選択を取り消す</button></div>
+        <div class="selection-area"><p class="selection-label" id="selectionLabel">移動先を選択</p><p id="selectionText"></p><button id="confirmBtn" class="primary-btn" disabled>移動を確定</button><button id="clearBtn" class="text-btn" disabled>選択を取り消す</button></div>
       </div>
     </div>
   </div>
   <div id="resultArea" class="result-area" hidden><p id="resultText"></p><button id="againBtn" class="primary-btn">もう一局</button></div>
-  <div class="utility-row"><button id="undoBtn" class="utility-btn">↶ 1手戻す</button><button id="dataBtn" class="utility-btn">保存・読込</button><button id="resignBtn" class="utility-btn">投了</button></div>
+  <div class="utility-row"><button id="undoBtn" class="utility-btn">↶ 1手戻す</button><button id="dataBtn" class="utility-btn">保存・読込</button><button id="resignBtn" class="utility-btn">対局を終了</button></div>
   <label class="path-option"><input type="checkbox" id="pathToggle"><span>最短経路の目安を表示</span></label>
-  <p class="path-note" id="pathNote" hidden>壁だけで計算した経路です。ジャンプや、これから置かれる壁は反映しません。</p>
+  <p class="path-note" id="pathNote" hidden>全員の経路を表示します。ジャンプや、これから置かれるフェンスは反映しません。</p>
+  <p class="multi-help" id="localNote" hidden>同じ端末を交代で操作します。番号と色で駒を見分けてください。チーム戦ではなく、最初にゴールした1人の勝ちです。</p>
   <details class="history-box"><summary>手順を見る <span id="historyCount">0手</span></summary><ol id="historyList"></ol></details>
 </section>
 </main>
-<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v1.0.0</span></footer>
+<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.0.0</span></footer>
 </div>
+<div id="mobileBar" class="mobile-bar" aria-label="スマートフォン用の操作"><div id="mobileSelection" class="mobile-selection"></div><div class="mobile-buttons"><button id="mobileMode" class="mobile-mode">フェンス</button><button id="mobileRotate" class="mobile-rotate" aria-label="フェンスの向きを変える">↻</button><button id="mobileConfirm" class="primary-btn">移動を確定</button></div></div>
 <dialog id="settingsDialog" aria-labelledby="settingsTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">NEW GAME</p><h2 id="settingsTitle">対局をはじめる</h2></div><button class="icon-btn" data-close="settingsDialog" aria-label="設定を閉じる">×</button></div>
-  <p class="dialog-lead">あなたは下から上へ。反対側の端に先に着いた方の勝ちです。</p>
-  <fieldset><legend>コンピューターの強さ</legend><div class="level-control"><button id="levelMinus" class="icon-btn" aria-label="レベルを下げる">−</button><div class="level-display"><span>LEVEL</span><strong id="levelNumber">5</strong><em>/ 10</em></div><button id="levelPlus" class="icon-btn" aria-label="レベルを上げる">＋</button></div><input id="levelRange" type="range" min="1" max="10" step="1" value="5" aria-label="コンピューターのレベル"><div class="range-labels"><span>やさしい</span><span>先読みが深い</span></div><p id="levelDescription" class="level-description"></p></fieldset>
-  <fieldset><legend>あなたの手番</legend><div class="order-options"><label><input type="radio" name="order" value="first" checked><span>先手</span></label><label><input type="radio" name="order" value="second"><span>後手</span></label><label><input type="radio" name="order" value="random"><span>ランダム</span></label></div></fieldset>
-  <p class="small-note">レベルはこのアプリ内の設定です。公的な段級位や勝率には対応しません。上位レベルは端末によって思考時間が長くなります。</p>
-  <p id="replaceNote" class="replace-note" hidden>開始すると、現在の対局は新しい対局に置き換わります。</p>
-  <button id="startBtn" class="primary-btn full">この設定で開始</button><button class="text-btn full" data-close="settingsDialog">現在の盤面に戻る</button>
+  <p class="dialog-lead">ひとりでも、家族でも。反対側の辺のどこかに、最初に着いた人の勝ちです。</p>
+  <fieldset><legend>盤面を選ぶ</legend><div class="board-options">
+    <label><input type="radio" name="boardSize" value="9" checked><span class="choice-box"><span class="choice-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span><strong>通常 9×9</strong><small>いつものコリドール</small></span></span></label>
+    <label><input type="radio" name="boardSize" value="7"><span class="choice-box"><span class="choice-mouse" aria-hidden="true">🐭</span><span><strong>キッズ 7×7</strong><small>ネズミとチーズ</small></span></span></label>
+  </div></fieldset>
+  <div class="settings-row">
+    <fieldset><legend><label for="playerCount">対戦人数（全員）</label></legend><select id="playerCount"><option value="2">2人</option><option value="3">3人</option><option value="4">4人</option></select></fieldset>
+    <fieldset><legend><label for="humanCount">自分で操作する人数</label></legend><select id="humanCount"><option value="1">1人</option><option value="2">2人</option></select></fieldset>
+  </div>
+  <p id="settingsSummary" class="settings-summary"></p>
+  <p id="threeNote" hidden>3人戦は下・左・上の3辺から開始します。右側から開始する駒がいないため、配置は対称ではありません。</p>
+  <details class="name-details" id="nameDetails"><summary>プレイヤーの名前（任意）</summary><div class="name-fields" id="nameFields"></div></details>
+  <fieldset id="levelField"><legend>コンピューター全員の強さ</legend><div class="level-control"><button id="levelMinus" class="icon-btn" aria-label="レベルを下げる">−</button><div class="level-display"><span>LEVEL</span><strong id="levelNumber">5</strong><em>/ 10</em></div><button id="levelPlus" class="icon-btn" aria-label="レベルを上げる">＋</button></div><input id="levelRange" type="range" min="1" max="10" step="1" value="5" aria-label="全コンピューター共通のレベル"><div class="range-labels"><span>やさしい</span><span>先読みが深い</span></div><p id="levelDescription" class="level-description"></p></fieldset>
+  <fieldset><legend><label for="orderSelect">プレイヤー1の手番</label></legend><select id="orderSelect"><option value="first">先手（最初）</option><option value="second">後手</option><option value="random">ランダム</option></select></fieldset>
+  <label class="option-check" id="handoffOption"><input id="handoffToggle" type="checkbox" checked><span>人間の手番で「自分の番をはじめる」を表示する</span></label>
+  <p class="small-note">レベルを5にすると、コンピューターは全員レベル5です。レベルは本アプリ内の設定で、対人棋力や勝率を保証しません。</p>
+  <p id="replaceNote" class="replace-note" hidden>開始すると現在の対局を置き換えます。残す場合は先に対局データを書き出してください。</p>
+  <div class="start-sticky"><button id="startBtn" class="primary-btn full">この設定で開始</button><button class="text-btn full" data-close="settingsDialog">現在の盤面に戻る</button></div>
 </div></dialog>
 <dialog id="helpDialog" aria-labelledby="helpTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">HOW TO PLAY</p><h2 id="helpTitle">ルールと操作</h2></div><button class="icon-btn" data-close="helpDialog" aria-label="説明を閉じる">×</button></div>
-  <h3>勝ち方</h3><p>自分の開始位置の反対側にある9マスのどれかに先に到達すると勝ちです。このアプリでは、あなたは常に画面の上側を目指します。</p>
-  <h3>1回の手番にできること</h3><p>駒を動かすか、壁を1枚置くかのどちらかです。通常の移動は前後左右に1マス。後退もできます。壁は各10枚で、置いた後は動かせません。</p>
-  <h3>ジャンプと斜め移動</h3><p>相手の駒と壁を挟まず隣り合うと、相手を直線に跳び越えられます。相手の向こう側が壁または盤外で跳べない場合だけ、相手の左右へ回り込めます。横へ回る部分に壁があれば、その方向には進めません。跳ぶことは義務ではありません。</p>
-  <h3>壁の制限</h3><p>壁は2マス分です。重ねたり、途中で十字に交差させたりすることはできません。どちらかのゴールへの道を完全になくす壁も置けません。壁の端同士の接続や、重複しないT字の接続は可能です。</p>
-  <h3>タップ操作</h3><p>「駒を動かす」では青いマスを選んで「移動を確定」。「壁を置く」では盤面をタップすると近くの交点に仮置きします。「横の壁／縦の壁」と方向ボタンで調整して「壁を確定」を押します。細い溝を正確に押す必要はありません。</p>
-  <h3>方向ボタン・キーボード</h3><p>方向ボタンでも移動先を選べます。直線ジャンプはその方向のボタン、斜めへの回り込みは斜めボタンに対応します。壁は上下左右に1区画ずつ動かせます。キーボードは矢印キーで選択、Enterで確定、Mで移動、Wで壁、Rで壁の回転、Escapeで選択取消です。</p>
-  <h3>戻す・保存</h3><p>「1手戻す」は直前のあなたの手と、その後のコンピューターの応手を戻します。途中の対局は同じブラウザーに自動保存します。別端末へ移すには「保存・読込」を使います。端末間の自動同期はありません。</p>
-  <h3>コンピューターについて</h3><p>最短経路、ジャンプ、残り壁、相手の反撃を評価する独自実装です。レベルに応じて候補数・探索深さ・選択のばらつきが変わります。深さは双方の1着手を1手と数え、時間内に完了した探索を採用します。全合法手の完全読みや必勝を保証するものではありません。</p>
-  <p class="small-note">QuoridorはGigamicのゲームです。本アプリは公式製品ではなく、公式ロゴや公式画像を使用していません。</p><button class="primary-btn full" data-close="helpDialog">盤面に戻る</button>
+  <h3>通常とキッズ</h3><p>通常は9×9マス、キッズは7×7マスです。キッズでは色つきのネズミと、同じ色のチーズを表示します。チーズはゴールの辺を示す目印で、その辺のどのマスに到達しても勝ちです。</p>
+  <table class="rule-table"><thead><tr><th>1人あたりのフェンス</th><th>2人戦</th><th>3人戦</th><th>4人戦</th></tr></thead><tbody><tr><td>通常 9×9</td><td>10枚</td><td>6枚</td><td>5枚</td></tr><tr><td>キッズ 7×7</td><td>8枚</td><td>5枚</td><td>4枚</td></tr></tbody></table>
+  <h3>2～4人の個人戦</h3><p>各辺の中央から、向かい側の辺を目指します。プレイヤー1は下から上、2は上から下、3は左から右、4は右から左です。手番は時計回りで、最初の人だけ開始設定で変わります。最初にゴールした1人の勝ちです。3人戦は右側の開始位置を使いません。</p>
+  <h3>自分の番にすること</h3><p>駒を上下左右に1マス動かすか、フェンスを1枚置くかのどちらかです。後退もできます。フェンスは2マス分の長さで、置いた後は動かせません。人間とコンピューターは同じルールで遊びます。</p>
+  <h3>ジャンプと斜め移動</h3><p>別の駒とフェンスを挟まず隣り合うと、その駒を直線に跳び越えられます。向こう側がフェンス・盤外・別の駒で塞がれている場合は、隣の駒の左右へ回り込めます。着地点は空きマスで、その間にフェンスがないことが必要です。2つの駒をまとめて跳び越えたり、駒と同じマスに入ったりはできません。</p>
+  <h3>全員の道を残す</h3><p>フェンスは重ねたり途中で十字に交差させたりできません。誰か1人でも、ゴールへの道を完全になくす配置は禁止です。残り道を調べる際には、一時的な駒の占有を無視し、フェンスだけでつながりを確認します。</p>
+  <h3>指で操作する</h3><p>移動できるマスは、手番の駒と同じ色で光ります。タップまたは方向ボタンで選んで「移動を確定」を押します。フェンスは近くをタップし、縦横と方向ボタンで調整して確定します。タップだけでは着手されません。スマートフォンでは、画面下の固定ボタンでも確定・駒とフェンスの切り替え・回転ができます。</p>
+  <h3>親子で同じ端末を使う</h3><p>「自分で操作する人数」を2人以上にすると、番号の小さい駒から順に人間が操作します。2人なら上下の向かい合う位置です。手番の名前とゴール方向を確かめてから操作してください。交代確認は設定で外せます。画面の向きは固定です。別々の端末を接続するオンライン対戦ではありません。</p>
+  <h3>戻す・保存・旧版からの移行</h3><p>「1手戻す」は、直前に人間が確定した着手と、その後のコンピューターの着手をまとめて取り消します。人間が複数でも同じです。途中の対局は同じブラウザーに自動保存します。旧版の9×9・2人戦データも読み込めます。別端末へ移す場合は「保存・読込」を使ってください。</p>
+  <h3>キーボード</h3><p>矢印キーで位置を選び、Enterで確定します。Mで駒、Wでフェンス、Rでフェンスの回転、Escapeで選択を取り消します。斜めの移動は画面の斜めボタンを使ってください。</p>
+  <h3>コンピューター</h3><p>2人戦は相手の反撃を、3・4人戦は各プレイヤーが自分の勝利を目指す手を先読みします。全員同じレベル設定ですが、盤面の位置によって選ぶ手は異なります。全合法手の完全な読みや必勝を保証するものではありません。</p>
+  <h3>着手不能時の補助ルール</h3><p>3・4人戦で駒同士が詰まり、合法な移動もフェンス配置も1つもない場合だけ、順番を送れます。全員が着手不能なら勝者なしで終了します。これは公開説明で扱いを確認できなかった例外に対する本アプリの処理です。通常のパスはできません。</p>
+  <p class="rule-source">ルール参考：<a href="https://www.play-departmentstore.com/fs/castjapan/gc006" target="_blank" rel="noopener noreferrer">日本販売元・通常版</a> ／ <a href="https://www.play-departmentstore.com/fs/castjapan/gk003" target="_blank" rel="noopener noreferrer">日本販売元・キッズ版</a></p>
+  <p class="small-note">QuoridorはGigamicのゲームです。本アプリは非公式の個人練習用です。公式画像・ロゴは使用せず、駒とチーズの図形は独自に描画しています。</p><button class="primary-btn full" data-close="helpDialog">盤面に戻る</button>
 </div></dialog>
 <dialog id="dataDialog" aria-labelledby="dataTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">SAVE GAME</p><h2 id="dataTitle">保存と読み込み</h2></div><button class="icon-btn" data-close="dataDialog" aria-label="保存画面を閉じる">×</button></div>
-  <p>対局はこのブラウザー内に自動保存されます。ブラウザーのデータ消去で失われるため、残したい対局は書き出してください。</p>
+  <p>対局はこのブラウザー内に自動保存されます。ブラウザーのデータ消去で失われるため、残したい対局は書き出してください。画面を開いている間はコンピューターの思考を一時停止します。</p>
   <button id="exportBtn" class="primary-btn full">対局データを書き出す</button><button id="importBtn" class="outline-btn full">対局データを読み込む</button><input id="importFile" type="file" accept=".json,application/json" hidden>
-  <p class="small-note">書き出す形式はJavaScript Object Notation（JSON）です。読み込むと現在の対局に置き換わります。同じ保存ファイルを別端末で読み込めますが、複数の対局履歴の統合や自動同期は行いません。</p>
+  <p class="small-note">保存形式はJavaScript Object Notation（JSON）です。読み込むと現在の対局に置き換わります。旧版のデータも読み込めますが、新版の対局は旧版アプリでは開けません。端末間の自動同期はありません。</p>
   <p id="dataMessage" class="data-message" role="status"></p><button class="text-btn full" data-close="dataDialog">盤面に戻る</button>
 </div></dialog>
-<dialog id="resignDialog" aria-labelledby="resignTitle"><div class="dialog-body"><div class="dialog-heading"><h2 id="resignTitle">投了しますか？</h2><button class="icon-btn" data-close="resignDialog" aria-label="閉じる">×</button></div><p>この対局を終了し、コンピューターの勝ちにします。</p><button id="confirmResign" class="primary-btn full">投了して終了</button><button class="text-btn full" data-close="resignDialog">対局を続ける</button></div></dialog>
+<dialog id="resignDialog" aria-labelledby="resignTitle"><div class="dialog-body"><div class="dialog-heading"><h2 id="resignTitle">この対局を終了しますか？</h2><button class="icon-btn" data-close="resignDialog" aria-label="閉じる">×</button></div><p id="endDescription">勝者を決めずに現在の対局を終了します。再開したい場合は、先にデータを書き出してください。</p><button id="confirmResign" class="primary-btn full">終了する</button><button class="text-btn full" data-close="resignDialog">対局を続ける</button></div></dialog>
 <noscript><div class="notice">このアプリにはJavaScriptが必要です。Safariなどのブラウザーで開き、JavaScriptを有効にしてください。</div></noscript>
+
 <script id="engine-code">
-/* Independent rules engine. No browser dependency. Coordinates: row 0 = north. */
-function createQuoridorEngine() {
+/* Quoridor rules, independent of the browser. Row 0 is the top of the screen.
+   Player seats: 0=south, 1=north, 2=west, 3=east. Play proceeds clockwise.
+   Kids and classic use the same movement/goal rules. See README for the
+   explicitly documented, forced-pass convention in an immobile multiplayer position. */
+function createQuoridorEngine(size, count) {
   'use strict';
-  const N = 9, STEP = [-9, 1, 9, -1], OPP = [2, 3, 0, 1];
-  const BASE = new Uint8Array(81);
-  for (let p = 0; p < 81; p++) {
-    const r = (p / 9) | 0, c = p % 9;
-    BASE[p] = (r > 0 ? 1 : 0) | (c < 8 ? 2 : 0) | (r < 8 ? 4 : 0) | (c > 0 ? 8 : 0);
+  size = size ?? 9; count = count ?? 2;
+  if (![7, 9].includes(size) || ![2, 3, 4].includes(count)) throw new Error('盤面または人数が正しくありません。');
+  const N = size, P = count, M = N - 1, V = N * N, W = M * M,
+    STOCK = (N === 7 ? {2:8,3:5,4:4} : {2:10,3:6,4:5})[P],
+    STEP = [-N, 1, N, -1], OPP = [2, 3, 0, 1],
+    ORDER = (P === 2 ? [0,1] : P === 3 ? [0,2,1] : [0,2,1,3]),
+    BASE = new Uint8Array(V);
+  for (let p = 0; p < V; p++) {
+    const r = (p / N) | 0, c = p % N;
+    BASE[p] = (r > 0 ? 1 : 0) | (c < M ? 2 : 0) | (r < M ? 4 : 0) | (c > 0 ? 8 : 0);
   }
+  function nextPlayer(p) { return ORDER[(ORDER.indexOf(p) + 1) % P]; }
+  function turnOffset(from, to) { return (ORDER.indexOf(to) - ORDER.indexOf(from) + P) % P; }
   function initial(first = 0) {
-    return { pos: [76, 4], left: [10, 10], h: new Uint8Array(64), v: new Uint8Array(64),
-      edges: BASE.slice(), turn: first === 1 ? 1 : 0, ply: 0 };
+    if (!Number.isInteger(first) || first < 0 || first >= P) throw new Error('開始手番が正しくありません。');
+    const middle = M / 2;
+    return {size:N, count:P, pos:[M*N+middle,middle,middle*N,middle*N+M].slice(0,P),
+      left:Array(P).fill(STOCK), h:new Uint8Array(W), v:new Uint8Array(W),
+      edges:BASE.slice(), turn:first, ply:0};
   }
-  function clone(s) {
-    return { pos: s.pos.slice(), left: s.left.slice(), h: new Uint8Array(s.h), v: new Uint8Array(s.v),
-      edges: new Uint8Array(s.edges), turn: s.turn, ply: s.ply };
-  }
-  function goal(p, player) { return player === 0 ? p < 9 : p >= 72; }
-  function winner(s) { return goal(s.pos[0], 0) ? 0 : goal(s.pos[1], 1) ? 1 : -1; }
+  function clone(s) { return {size:N,count:P,pos:s.pos.slice(),left:s.left.slice(),h:new Uint8Array(s.h),
+    v:new Uint8Array(s.v),edges:new Uint8Array(s.edges),turn:s.turn,ply:s.ply}; }
+  function goal(pos, p) { return p === 0 ? pos < N : p === 1 ? pos >= M*N : p === 2 ? pos%N === M : pos%N === 0; }
+  function winner(s) { for (let p=0;p<P;p++) if(goal(s.pos[p],p))return p; return -1; }
   function moves(s, player = s.turn) {
-    const a = s.pos[player], b = s.pos[1 - player], out = [];
-    for (let d = 0; d < 4; d++) {
-      if (!(s.edges[a] & (1 << d))) continue;
-      const n = a + STEP[d];
-      if (n !== b) { out.push(n); continue; }
-      if (s.edges[b] & (1 << d)) out.push(b + STEP[d]);
-      else {
-        // A diagonal is allowed ONLY when a straight jump is blocked by a wall/edge.
-        for (const k of [(d + 1) % 4, (d + 3) % 4])
-          if (s.edges[b] & (1 << k)) out.push(b + STEP[k]);
+    const a = s.pos[player], occupied = new Set(s.pos), out = [];
+    for (let d=0;d<4;d++) {
+      if (!(s.edges[a] & (1<<d))) continue;
+      const b = a + STEP[d];
+      if (!occupied.has(b)) { out.push(b); continue; }
+      const straight = b + STEP[d];
+      if ((s.edges[b] & (1<<d)) && !occupied.has(straight)) out.push(straight);
+      else for (const k of [(d+1)%4,(d+3)%4]) {
+        // No jumping a chain of pawns. A third pawn also blocks the straight jump.
+        const side = b + STEP[k];
+        if ((s.edges[b] & (1<<k)) && !occupied.has(side)) out.push(side);
       }
     }
     return [...new Set(out)];
   }
-  function geometry(s, w) {
-    if (!w || w.t !== 'w' || (w.o !== 'h' && w.o !== 'v') || !Number.isInteger(w.r) ||
-        !Number.isInteger(w.c) || w.r < 0 || w.r > 7 || w.c < 0 || w.c > 7) return false;
-    const k = w.r * 8 + w.c;
-    if (s.h[k] || s.v[k]) return false;
-    if (w.o === 'h') return !(w.c > 0 && s.h[k - 1]) && !(w.c < 7 && s.h[k + 1]);
-    return !(w.r > 0 && s.v[k - 8]) && !(w.r < 7 && s.v[k + 8]);
+  function geometry(s,w) {
+    if (!w || w.t !== 'w' || !['h','v'].includes(w.o) || !Number.isInteger(w.r) || !Number.isInteger(w.c) ||
+        w.r<0 || w.r>=M || w.c<0 || w.c>=M) return false;
+    const k=w.r*M+w.c;
+    if(s.h[k] || s.v[k])return false;
+    if(w.o==='h')return !(w.c>0&&s.h[k-1]) && !(w.c<M-1&&s.h[k+1]);
+    return !(w.r>0&&s.v[k-M]) && !(w.r<M-1&&s.v[k+M]);
   }
-  function rawWall(s, w, on) {
-    const k = w.r * 8 + w.c, a = w.r * 9 + w.c;
-    (w.o === 'h' ? s.h : s.v)[k] = on ? 1 : 0;
-    const d = w.o === 'h' ? 2 : 1, offset = w.o === 'h' ? 1 : 9;
-    for (const p of [a, a + offset]) {
-      const q = p + STEP[d];
-      if (on) { s.edges[p] &= ~(1 << d); s.edges[q] &= ~(1 << OPP[d]); }
-      else { s.edges[p] |= 1 << d; s.edges[q] |= 1 << OPP[d]; }
+  function rawWall(s,w,on) {
+    const k=w.r*M+w.c,a=w.r*N+w.c,d=w.o==='h'?2:1,offset=w.o==='h'?1:N;
+    (w.o==='h'?s.h:s.v)[k]=on?1:0;
+    for(const p of [a,a+offset]) { const q=p+STEP[d];
+      if(on){s.edges[p]&=~(1<<d);s.edges[q]&=~(1<<OPP[d]);}
+      else{s.edges[p]|=1<<d;s.edges[q]|=1<<OPP[d];}
     }
   }
-  // Distances ignore pawn occupancy. Wall legality requires a route, not an unobstructed turn.
-  function distanceMap(s, player) {
-    const dist = new Int16Array(81); dist.fill(-1);
-    const queue = new Uint8Array(81); let head = 0, tail = 0;
-    const start = player === 0 ? 0 : 72;
-    for (let c = 0; c < 9; c++) { dist[start + c] = 0; queue[tail++] = start + c; }
-    while (head < tail) {
-      const p = queue[head++], bits = s.edges[p], next = dist[p] + 1;
-      for (let d = 0; d < 4; d++) if (bits & (1 << d)) {
-        const n = p + STEP[d];
-        if (dist[n] < 0) { dist[n] = next; queue[tail++] = n; }
-      }
+  // Paths deliberately ignore temporary pawn occupancy when checking fence legality.
+  function distanceMap(s,player) {
+    const dist=new Int16Array(V);dist.fill(-1);
+    const queue=new Uint8Array(V);let head=0,tail=0;
+    for(let i=0;i<N;i++) {
+      const p=player===0?i:player===1?M*N+i:player===2?i*N+M:i*N;
+      dist[p]=0;queue[tail++]=p;
+    }
+    while(head<tail) {
+      const p=queue[head++],bits=s.edges[p],next=dist[p]+1;
+      for(let d=0;d<4;d++)if(bits&(1<<d)){const q=p+STEP[d];if(dist[q]<0){dist[q]=next;queue[tail++]=q;}}
     }
     return dist;
   }
-  function distance(s, player) { return distanceMap(s, player)[s.pos[player]]; }
-  function wallError(s, w, player = s.turn) {
-    if (s.left[player] <= 0) return '使える壁が残っていません。';
-    if (!geometry(s, w)) return '壁が重なるか、交差する位置には置けません。';
-    rawWall(s, w, true);
-    let valid;
-    try { valid = distance(s, 0) >= 0 && distance(s, 1) >= 0; }
-    finally { rawWall(s, w, false); }
-    return valid ? '' : 'どちらかのゴールへの道を完全に塞ぐ壁は置けません。';
+  function distance(s,p){return distanceMap(s,p)[s.pos[p]];}
+  function wallError(s,w,player=s.turn) {
+    if(s.left[player]<=0)return 'フェンスが残っていません。';
+    if(!geometry(s,w))return 'フェンスが重なるか、交差する位置には置けません。';
+    rawWall(s,w,true);let valid=true;
+    try{for(let p=0;p<P;p++)if(distance(s,p)<0){valid=false;break;}}
+    finally{rawWall(s,w,false);}
+    return valid?'':'誰かのゴールへの道を完全に塞ぐことはできません。';
   }
-  function legal(s, a, player = s.turn) {
-    if (winner(s) >= 0 || !a || (player !== 0 && player !== 1)) return false;
-    if (a.t === 'm') return Number.isInteger(a.to) && moves(s, player).includes(a.to);
-    return a.t === 'w' && !wallError(s, a, player);
-  }
-  function make(s, a) {
-    const undo = { player: s.turn, pos: s.pos[s.turn], ply: s.ply };
-    if (a.t === 'm') s.pos[s.turn] = a.to;
-    else { rawWall(s, a, true); s.left[s.turn]--; }
-    s.turn = 1 - s.turn; s.ply++;
-    return undo;
-  }
-  function unmake(s, a, undo) {
-    s.turn = undo.player; s.ply = undo.ply;
-    if (a.t === 'm') s.pos[s.turn] = undo.pos;
-    else { rawWall(s, a, false); s.left[s.turn]++; }
-  }
-  function apply(s, a) {
-    if (!legal(s, a)) throw new Error('不正な着手です。');
-    const next = clone(s); make(next, a); return next;
-  }
-  function key(s) {
-    return s.pos.join(',') + '/' + s.left.join(',') + '/' + s.turn + '/' +
-      Array.from(s.h).join('') + Array.from(s.v).join('');
-  }
-  function square(p) { return 'abcdefghi'[p % 9] + (9 - ((p / 9) | 0)); }
-  function actionName(a) {
-    if (a.t === 'm') return square(a.to) + 'へ移動';
-    return 'abcdefghi'[a.c] + (8 - a.r) + ' ' + (a.o === 'h' ? '横壁' : '縦壁');
-  }
-  function shortestPath(s, player) {
-    const map = distanceMap(s, player), out = [s.pos[player]];
-    let cur = out[0];
-    for (let i = 0; i < 81 && map[cur] > 0; i++) {
-      let next = -1;
-      for (let d = 0; d < 4; d++) if (s.edges[cur] & (1 << d)) {
-        const n = cur + STEP[d];
-        if (map[n] === map[cur] - 1) { next = n; break; }
-      }
-      if (next < 0) break;
-      out.push(next); cur = next;
+  function firstAction(s,player=s.turn) {
+    if(winner(s)>=0)return null;
+    const ms=moves(s,player);if(ms.length)return {t:'m',to:ms[0]};
+    if(s.left[player]>0)for(const o of ['h','v'])for(let k=0;k<W;k++){
+      const w={t:'w',o,r:(k/M)|0,c:k%M};if(!wallError(s,w,player))return w;
     }
-    return out;
+    return null;
   }
-  function pack(s) {
-    return { pos: s.pos.slice(), left: s.left.slice(), h: Array.from(s.h), v: Array.from(s.v), turn: s.turn, ply: s.ply };
+  function forcedPass(s,player=s.turn){return P>2 && winner(s)<0 && !firstAction(s,player);}
+  function legal(s,a,player=s.turn) {
+    if(winner(s)>=0 || !a || !Number.isInteger(player) || player<0 || player>=P)return false;
+    if(a.t==='m')return Number.isInteger(a.to)&&moves(s,player).includes(a.to);
+    if(a.t==='p')return forcedPass(s,player);
+    return a.t==='w' && !wallError(s,a,player);
   }
+  function make(s,a) {
+    const undo={player:s.turn,pos:s.pos[s.turn],ply:s.ply};
+    if(a.t==='m')s.pos[s.turn]=a.to;
+    else if(a.t==='w'){rawWall(s,a,true);s.left[s.turn]--;}
+    s.turn=nextPlayer(s.turn);s.ply++;return undo;
+  }
+  function unmake(s,a,u){s.turn=u.player;s.ply=u.ply;if(a.t==='m')s.pos[s.turn]=u.pos;else if(a.t==='w'){rawWall(s,a,false);s.left[s.turn]++;}}
+  function apply(s,a){if(!legal(s,a))throw new Error('不正な着手です。');const copy=clone(s);make(copy,a);return copy;}
+  function key(s){return N+':'+P+':'+s.pos.join(',')+'/'+s.left.join(',')+'/'+s.turn+'/'+Array.from(s.h).join('')+Array.from(s.v).join('');}
+  function square(p){return 'abcdefghi'[p%N]+(N-((p/N)|0));}
+  function actionName(a){return a.t==='p'?'着手不能のため順番を送る':a.t==='m'?square(a.to)+'へ移動':'abcdefghi'[a.c]+(M-a.r)+' '+(a.o==='h'?'横フェンス':'縦フェンス');}
+  function shortestPath(s,p) {
+    const map=distanceMap(s,p),out=[s.pos[p]];let cur=out[0];
+    for(let i=0;i<V&&map[cur]>0;i++) {
+      let next=-1;for(let d=0;d<4;d++)if(s.edges[cur]&(1<<d)){const q=cur+STEP[d];if(map[q]===map[cur]-1){next=q;break;}}
+      if(next<0)break;out.push(next);cur=next;
+    }return out;
+  }
+  function pack(s){return {size:N,count:P,pos:s.pos.slice(),left:s.left.slice(),h:Array.from(s.h),v:Array.from(s.v),turn:s.turn,ply:s.ply};}
   function unpack(data) {
-    if (!data || !Array.isArray(data.pos) || data.pos.length !== 2 || !Array.isArray(data.left) || data.left.length !== 2 ||
-        !Array.isArray(data.h) || data.h.length !== 64 || !Array.isArray(data.v) || data.v.length !== 64 ||
-        ![0, 1].includes(data.turn) || !Number.isInteger(data.ply) || data.ply < 0 || data.ply > 10000 ||
-        data.pos.some(p => !Number.isInteger(p) || p < 0 || p > 80) || data.pos[0] === data.pos[1] ||
-        data.left.some(n => !Number.isInteger(n) || n < 0 || n > 10) ||
-        [...data.h, ...data.v].some(n => n !== 0 && n !== 1)) throw new Error('局面データの形式が正しくありません。');
-    const s = initial(data.turn); s.pos = data.pos.slice(); s.left = data.left.slice(); s.ply = data.ply;
-    let count = 0;
-    for (const o of ['h', 'v']) for (let i = 0; i < 64; i++) if (data[o][i]) {
-      const w = { t: 'w', o, r: (i / 8) | 0, c: i % 8 };
-      if (!geometry(s, w)) throw new Error('重複または交差した壁があります。');
-      rawWall(s, w, true); count++;
+    if(!data || (data.size!==undefined&&data.size!==N)||(data.count!==undefined&&data.count!==P)||
+      !Array.isArray(data.pos)||data.pos.length!==P||!Array.isArray(data.left)||data.left.length!==P||
+      !Array.isArray(data.h)||data.h.length!==W||!Array.isArray(data.v)||data.v.length!==W||
+      !Number.isInteger(data.turn)||data.turn<0||data.turn>=P||!Number.isInteger(data.ply)||data.ply<0||data.ply>100000||
+      data.pos.some(p=>!Number.isInteger(p)||p<0||p>=V)||new Set(data.pos).size!==P||
+      data.left.some(n=>!Number.isInteger(n)||n<0||n>STOCK)||[...data.h,...data.v].some(n=>n!==0&&n!==1))throw new Error('局面データの形式が正しくありません。');
+    const s=initial(data.turn);s.pos=data.pos.slice();s.left=data.left.slice();s.ply=data.ply;let placed=0;
+    for(const o of ['h','v'])for(let k=0;k<W;k++)if(data[o][k]){
+      const w={t:'w',o,r:(k/M)|0,c:k%M};if(!geometry(s,w))throw new Error('重複または交差したフェンスがあります。');rawWall(s,w,true);placed++;
     }
-    if (count !== 20 - s.left[0] - s.left[1] || distance(s, 0) < 0 || distance(s, 1) < 0 ||
-        (goal(s.pos[0], 0) && goal(s.pos[1], 1))) throw new Error('成立しない局面です。');
+    if(placed!==P*STOCK-s.left.reduce((a,b)=>a+b,0)||s.pos.some((_,p)=>distance(s,p)<0)||s.pos.filter((pos,p)=>goal(pos,p)).length>1)throw new Error('成立しない局面です。');
     return s;
   }
-  return { N, STEP, initial, clone, goal, winner, moves, geometry, rawWall, distanceMap, distance,
-    wallError, legal, make, unmake, apply, key, square, actionName, shortestPath, pack, unpack };
+  return {N,P,M,V,W,STOCK,STEP,ORDER,nextPlayer,turnOffset,initial,clone,goal,winner,moves,geometry,rawWall,distanceMap,distance,
+    wallError,firstAction,forcedPass,legal,make,unmake,apply,key,square,actionName,shortestPath,pack,unpack};
 }
 
 </script>
+
 <script id="computer-code">
+
 /* Selective alpha-beta search, iterative deepening, and exact wall-free race endgames. */
 function createQuoridorComputer(E) {
   'use strict';
+  const N=E.N, M=E.M, V=E.V, W=E.W;
   const configs = [
     { ms: 45, depth: 1, width: 4, random: .75, pool: 5 },
     { ms: 75, depth: 1, width: 6, random: .45, pool: 4 },
@@ -276,7 +327,7 @@ function createQuoridorComputer(E) {
     const a = raceDistance(s, p, maps[p]), b = raceDistance(s, 1 - p, maps[1 - p]);
     // A wall is a limited resource; spending it also consumes the entire turn.
     return 100 * (b - a) + 14 * (s.left[p] - s.left[1 - p]) +
-      .3 * (Math.abs(s.pos[1 - p] % 9 - 4) - Math.abs(s.pos[p] % 9 - 4));
+      .3 * (Math.abs(s.pos[1 - p] % N - M/2) - Math.abs(s.pos[p] % N - M/2));
   }
   function ranked(s, check = () => {}) {
     const p = s.turn, maps = [E.distanceMap(s, 0), E.distanceMap(s, 1)], out = [];
@@ -285,9 +336,9 @@ function createQuoridorComputer(E) {
       out.push({ a, score: evaluate(s, p, maps), ds: [maps[0][s.pos[0]], maps[1][s.pos[1]]] });
       s.pos[p] = old;
     }
-    if (s.left[p] > 0) for (const o of ['h', 'v']) for (let k = 0; k < 64; k++) {
+    if (s.left[p] > 0) for (const o of ['h', 'v']) for (let k = 0; k < W; k++) {
       if (!(k % 16)) check();
-      const a = { t: 'w', o, r: (k / 8) | 0, c: k % 8 };
+      const a = { t: 'w', o, r: (k / M) | 0, c: k % M };
       if (!E.geometry(s, a)) continue;
       E.rawWall(s, a, true); s.left[p]--;
       try {
@@ -302,7 +353,7 @@ function createQuoridorComputer(E) {
   function sealedRouteWin(s, player) {
     const own = E.distance(s, player), other = E.distance(s, 1-player);
     if (own < 1 || own > 7 || own > other || (s.turn !== player && own === other)) return false;
-    const path = E.shortestPath(s, player), dist = new Int16Array(81); dist.fill(-1);
+    const path = E.shortestPath(s, player), dist = new Int16Array(V); dist.fill(-1);
     const queue = [s.pos[1-player]]; dist[queue[0]] = 0;
     for (let head = 0; head < queue.length; head++) {
       const p = queue[head];
@@ -363,21 +414,21 @@ function createQuoridorComputer(E) {
   function solveRace(original, check) {
     const signature = Array.from(original.h).join('') + Array.from(original.v).join('');
     if (raceCache && raceCache.signature === signature) return raceCache;
-    const size = 81 * 81 * 2, result = new Int8Array(size), distance = new Uint16Array(size),
+    const size = V * V * 2, result = new Int8Array(size), distance = new Uint16Array(size),
       remain = new Uint8Array(size), longest = new Uint16Array(size), pred = Array.from({ length: size }, () => []),
       queue = new Uint16Array(size), s = E.clone(original);
     let head = 0, tail = 0;
-    for (let a = 0; a < 81; a++) {
+    for (let a = 0; a < V; a++) {
       check();
-      for (let b = 0; b < 81; b++) {
+      for (let b = 0; b < V; b++) {
         if (a === b || (E.goal(a, 0) && E.goal(b, 1))) continue;
         s.pos[0] = a; s.pos[1] = b;
         for (let p = 0; p < 2; p++) {
-          const id = (a * 81 + b) * 2 + p, win = E.winner(s);
+          const id = (a * V + b) * 2 + p, win = E.winner(s);
           if (win >= 0) { result[id] = win === p ? 1 : -1; queue[tail++] = id; continue; }
           const legal = E.moves(s, p); remain[id] = legal.length;
           for (const to of legal) {
-            const next = (p === 0 ? to * 81 + b : a * 81 + to) * 2 + (1-p);
+            const next = (p === 0 ? to * V + b : a * V + to) * 2 + (1-p);
             pred[next].push(id);
           }
         }
@@ -400,6 +451,7 @@ function createQuoridorComputer(E) {
     return raceCache;
   }
   function choose(input, level = 5, options = {}) {
+    if (E.P > 2) return chooseMultiplayer(input, level, options);
     const s = E.clone(input), p = s.turn, index = Math.max(0, Math.min(9, Number(level) - 1)) | 0,
       cfg = configs[index], random = options.rng || Math.random, started = clock(),
       budget = Number.isFinite(options.ms) ? Math.max(15, options.ms) : cfg.ms, deadline = started + budget;
@@ -415,7 +467,7 @@ function createQuoridorComputer(E) {
         const solved = solveRace(s, check), choices = [];
         for (const to of legalMoves) {
           const old = s.pos[p]; s.pos[p] = to;
-          const id = (s.pos[0] * 81 + s.pos[1]) * 2 + (1-p), outcome = -solved.result[id],
+          const id = (s.pos[0] * V + s.pos[1]) * 2 + (1-p), outcome = -solved.result[id],
             score = outcome * 100000 + (outcome > 0 ? -solved.distance[id] : outcome < 0 ? solved.distance[id] : evaluate(s, p));
           choices.push({ a: { t: 'm', to }, score }); s.pos[p] = old;
         }
@@ -514,380 +566,588 @@ function createQuoridorComputer(E) {
     }
     return finish(best, bestScore);
   }
-  return { configs, choose, evaluate, ranked, solveRace, sealedRouteWin };
+  // Max-n: every player maximizes their own utility. Human/computer identities are
+  // intentionally NOT passed into the engine; computers do not form a team.
+  function vectorScore(s, maps) {
+    const won=E.winner(s), scores=new Array(E.P);
+    if(won>=0)return scores.fill(-100000).map((_,p)=>p===won?100000:-100000);
+    maps=maps||s.pos.map((_,p)=>E.distanceMap(s,p));
+    const d=s.pos.map((_,p)=>raceDistance(s,p,maps[p]));
+    const arrival=d.map((v,p)=>(v-1)*E.P+E.turnOffset(s.turn,p));
+    for(let p=0;p<E.P;p++) {
+      let rival=Infinity, stock=0;
+      for(let q=0;q<E.P;q++)if(q!==p){rival=Math.min(rival,arrival[q]);stock+=s.left[q];}
+      scores[p]=100*(rival-arrival[p])/E.P - 7*d[p] + 12*(s.left[p]-stock/(E.P-1));
+    }
+    return scores;
+  }
+  function rankedMulti(s,check=()=>{}) {
+    const p=s.turn,maps=s.pos.map((_,q)=>E.distanceMap(s,q)),out=[];
+    for(const to of E.moves(s,p)) {
+      const a={t:'m',to},u=E.make(s,a);
+      try {const value=vectorScore(s,maps);out.push({a,score:value[p],values:value,ds:maps.map((m,q)=>m[s.pos[q]])});}
+      finally {E.unmake(s,a,u);}
+    }
+    if(s.left[p]>0)for(const o of ['h','v'])for(let k=0;k<W;k++) {
+      if(!(k%8))check();
+      const a={t:'w',o,r:(k/M)|0,c:k%M};if(!E.geometry(s,a))continue;
+      const u=E.make(s,a);
+      try {
+        const after=s.pos.map((_,q)=>E.distanceMap(s,q)),ds=after.map((m,q)=>m[s.pos[q]]);
+        if(ds.every(x=>x>=0)){const value=vectorScore(s,after);out.push({a,score:value[p],values:value,ds});}
+      }finally {E.unmake(s,a,u);}
+    }
+    if(!out.length && E.winner(s)<0) {
+      const a={t:'p'},u=E.make(s,a);
+      try{const value=vectorScore(s);out.push({a,score:value[p],values:value,ds:s.pos.map((_,q)=>E.distance(s,q))});}
+      finally{E.unmake(s,a,u);}
+    }
+    out.sort((a,b)=>b.score-a.score);return out;
+  }
+  function protectMulti(s,items,check) {
+    const p=s.turn;
+    if(!s.left.some((n,q)=>q!==p&&n>0))return;
+    const base=s.pos.map((_,q)=>E.distance(s,q));
+    const threats=items.filter(x=>x.a.t==='w'&&x.ds[p]>base[p])
+      .sort((a,b)=>(b.ds[p]-base[p])-(a.ds[p]-base[p])).slice(0,6);
+    if(!threats.length)return;
+    for(const item of items) {
+      check();const u=E.make(s,item.a);let risk=0;
+      try {
+        const before=s.pos.map((_,q)=>E.distance(s,q));
+        for(const threat of threats) {
+          if(!E.geometry(s,threat.a))continue;
+          E.rawWall(s,threat.a,true);
+          try {
+            const after=s.pos.map((_,q)=>E.distance(s,q));
+            if(after.every(x=>x>=0)) {
+              let leastOwnCost=Infinity;
+              for(let q=0;q<E.P;q++)if(q!==p&&s.left[q]>0)leastOwnCost=Math.min(leastOwnCost,after[q]-before[q]);
+              risk=Math.max(risk,after[p]-before[p]-leastOwnCost-1);
+            }
+          }finally{E.rawWall(s,threat.a,false);}
+        }
+      }finally{E.unmake(s,item.a,u);}
+      item.order=item.score-60*risk;
+    }
+    items.sort((a,b)=>(b.order??b.score)-(a.order??a.score));
+  }
+  function chooseMultiplayer(input,level=5,options={}) {
+    const s=E.clone(input),p=s.turn,index=Math.max(0,Math.min(9,Number(level)-1))|0,
+      cfg=configs[index],rng=options.rng||Math.random,started=clock(),
+      deadline=started+(Number.isFinite(options.ms)?Math.max(15,options.ms):cfg.ms);
+    let nodes=0,completed=0;
+    const check=()=>{if(clock()>=deadline)throw timeout;};
+    const finish=(action,score,extra={})=>({action,score:Math.round(score),depth:completed,nodes,elapsed:Math.round(clock()-started),level:index+1,method:'max-n',...extra});
+    if(E.winner(s)>=0)return finish(null,0);
+    for(const to of E.moves(s,p))if(E.goal(to,p))return finish({t:'m',to},100000,{exact:true});
+    const items=rankedMulti(s);nodes+=items.length;
+    if(items.length===1&&items[0].a.t==='p')return finish({t:'p'},items[0].score);
+    const seen=new Map();for(const k of (options.recent||[]))seen.set(k,(seen.get(k)||0)+1);
+    function repetitionCost(a) {
+      if(a.t!=='m')return 0;
+      const u=E.make(s,a),k=E.key(s);E.unmake(s,a,u);return 90*(seen.get(k)||0);
+    }
+    for(const item of items)item.score-=repetitionCost(item.a);
+    items.sort((a,b)=>b.score-a.score);
+    if(cfg.random&&rng()<cfg.random) {
+      const pool=items.filter(x=>x.score>=items[0].score-(index<2?220:120)).slice(0,cfg.pool);
+      const item=pool[Math.min(pool.length-1,Math.floor(rng()*pool.length))];return finish(item.a,item.score,{varied:true});
+    }
+    const fallback=items[0];
+    if(index>=4&&clock()<deadline){try{protectMulti(s,items,check);}catch(err){if(err!==timeout)throw err;}}
+    const root=select(items,cfg.width);
+    if(!root.some(x=>aid(x.a)===aid(fallback.a)))root.push(fallback);
+    // Ordering can identify protective fences even if the time budget only permits one ply.
+    let best=root[0].a,bestScore=root[0].score;
+    const cache=new Map(),path=new Set([E.key(s)]);
+    function search(depth,ply) {
+      nodes++;if(!(nodes%8))check();
+      const won=E.winner(s);
+      if(won>=0)return Array.from({length:E.P},(_,q)=>q===won?100000-ply:-100000+ply);
+      if(depth<=0)return vectorScore(s);
+      const key=E.key(s)+'#'+depth;
+      if(cache.has(key))return cache.get(key);
+      const actor=s.turn,all=rankedMulti(s,check),list=select(all,Math.max(3,Math.floor(cfg.width/2)));
+      let chosen=null,score=-Infinity;
+      for(const item of list) {
+        check();const u=E.make(s,item.a);let values;
+        try {
+          const k=E.key(s);
+          if(path.has(k))values=vectorScore(s).map(v=>v-25);
+          else {path.add(k);try{values=search(depth-1,ply+1);}finally{path.delete(k);}}
+        }finally{E.unmake(s,item.a,u);}
+        if(values[actor]>score){score=values[actor];chosen=values;}
+        if(score>90000)break;
+      }
+      if(!chosen)chosen=vectorScore(s);
+      if(cache.size>12000)cache.clear();
+      // Terminal values depend on distance from root; avoid reusing them across lengths.
+      if(chosen.every(v=>Math.abs(v)<90000))cache.set(key,chosen);
+      return chosen;
+    }
+    const maxDepth=index>=4?Math.max(E.P,cfg.depth):cfg.depth;
+    for(let depth=1;depth<=maxDepth;depth++) {
+      let round=null,value=-Infinity;
+      try {
+        root.sort((a,b)=>(b.last??b.order??b.score)-(a.last??a.order??a.score));
+        for(const item of root) {
+          check();const penalty=repetitionCost(item.a),u=E.make(s,item.a);let v;
+          try{v=search(depth-1,1)[p]-penalty;}finally{E.unmake(s,item.a,u);}
+          item.last=v;
+          if(v>value){value=v;round=item.a;}
+        }
+        best=round;bestScore=value;completed=depth;
+        if(typeof options.progress==='function')options.progress({depth,nodes,elapsed:Math.round(clock()-started)});
+        if(value>90000)break;
+      }catch(err){if(err!==timeout)throw err;break;}
+    }
+    return finish(best,bestScore);
+  }
+
+  return { configs, choose, evaluate, ranked, solveRace, sealedRouteWin, vectorScore, rankedMulti };
+}
+
+
+</script>
+
+<script id="records-code">
+/* Versioned, replay-validated records. v1 remains readable, with v1 localStorage left intact. */
+function createQuoridorRecords() {
+  'use strict';
+  const FORMAT='quoridor-practice', VERSION=2;
+  function uid(){return typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);}
+  function cleanName(value,fallback){return typeof value==='string'&&value.trim()?value.replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,20):fallback;}
+  function defaults(count,humans){return Array.from({length:count},(_,p)=>p<humans?(humans===1?'あなた':'プレイヤー'+(p+1)):'コンピューター'+(p-humans+1));}
+  function firstFor(E,order,rng=Math.random){
+    if(order==='random')return E.ORDER[Math.min(E.P-1,Math.max(0,Math.floor(rng()*E.P)))];
+    const rank=['first','second','third','fourth'].indexOf(order);
+    if(rank<0||rank>=E.P)throw new Error('開始手番が正しくありません。');
+    return E.ORDER[(E.P-rank)%E.P];
+  }
+  function fresh(config,rng) {
+    const E=createQuoridorEngine(config.size??9,config.count??2),h=config.humans??1,level=config.level??5,order=config.order??'first';
+    if(!Number.isInteger(h)||h<1||h>E.P||!Number.isInteger(level)||level<1||level>10)throw new Error('人数またはレベルが正しくありません。');
+    const fallback=defaults(E.P,h),names=fallback.map((n,p)=>p<h?cleanName(config.names?.[p],n):n);
+    const g={id:uid(),startedAt:new Date().toISOString(),size:E.N,count:E.P,humans:h,level,order,
+      first:firstFor(E,order,rng),names,actions:[],termination:null};
+    const s=E.initial(g.first);
+    return {E,game:g,state:s,states:[s],preferences:{showPaths:false,handoff:true}};
+  }
+  function parse(data) {
+    if(!data||data.format!==FORMAT||![1,2].includes(data.version)||!data.game)throw new Error('このアプリの対局ファイルではありません。');
+    let g=data.game;
+    if(data.version===1){
+      if(typeof g.resigned!=='boolean')throw new Error('旧版の終局情報が正しくありません。');
+      g={...g,size:9,count:2,humans:1,names:['あなた','コンピューター1'],termination:g.resigned?{type:'resigned',player:0}:null};
+    }
+    if(![7,9].includes(g.size)||![2,3,4].includes(g.count)||!Number.isInteger(g.humans)||g.humans<1||g.humans>g.count||
+      !Number.isInteger(g.level)||g.level<1||g.level>10||!Number.isInteger(g.first)||g.first<0||g.first>=g.count||
+      !['first','second','third','fourth','random'].includes(g.order)||!Array.isArray(g.actions)||g.actions.length>10000||
+      !Array.isArray(g.names)||g.names.length!==g.count||g.names.some(n=>typeof n!=='string'||n.length>100))throw new Error('対局設定の形式が正しくありません。');
+    const E=createQuoridorEngine(g.size,g.count);
+    if(g.order!=='random'&&g.first!==firstFor(E,g.order))throw new Error('開始手番と設定が一致しません。');
+    const fallback=defaults(g.count,g.humans),clean={id:typeof g.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(g.id)?g.id:uid(),
+      startedAt:typeof g.startedAt==='string'&&g.startedAt.length<50&&Number.isFinite(Date.parse(g.startedAt))?g.startedAt:new Date().toISOString(),
+      size:g.size,count:g.count,humans:g.humans,level:g.level,order:g.order,first:g.first,
+      names:g.names.map((n,p)=>cleanName(n,fallback[p])),actions:[],termination:null};
+    let s=E.initial(g.first);const states=[s];
+    for(const a of g.actions){
+      if(!a||!['m','w','p'].includes(a.t))throw new Error('手順の形式が正しくありません。');
+      const action=a.t==='m'?{t:'m',to:a.to}:a.t==='w'?{t:'w',o:a.o,r:a.r,c:a.c}:{t:'p'};
+      if(!E.legal(s,action))throw new Error(states.length+'手目に不正な着手があります。');
+      s=E.apply(s,action);states.push(s);clean.actions.push(action);
+    }
+    if(g.termination!==null&&g.termination!==undefined){
+      const t=g.termination;
+      if(typeof t!=='object'||E.winner(s)>=0)throw new Error('終局情報が矛盾しています。');
+      if(t.type==='resigned'&&E.P===2&&Number.isInteger(t.player)&&t.player>=0&&t.player<g.humans)clean.termination={type:'resigned',player:t.player};
+      else if(t.type==='stopped')clean.termination={type:'stopped'};
+      else if(t.type==='blocked'&&Array.from({length:E.P},(_,p)=>E.forcedPass(s,p)).every(Boolean))clean.termination={type:'blocked'};
+      else throw new Error('終局情報の形式が正しくありません。');
+    }
+    return {E,game:clean,state:s,states,preferences:{showPaths:!!data.preferences?.showPaths,handoff:data.preferences?.handoff!==false}};
+  }
+  function record(game,preferences){return {format:FORMAT,version:VERSION,game,preferences:{showPaths:!!preferences.showPaths,handoff:preferences.handoff!==false}};}
+  return {FORMAT,VERSION,uid,cleanName,defaults,firstFor,fresh,parse,record};
 }
 
 </script>
+
 <script id="app-code">
 (() => {
   'use strict';
-  const E = createQuoridorEngine(), C = createQuoridorComputer(E), $ = id => document.getElementById(id);
-  const STORAGE = 'quoridor-practice-v1', FORMAT = 'quoridor-practice';
-  const S = 52, ORIGIN = 26, CENTER = 48;
-  let state = E.initial(), game, states = [state], mode = 'move', orientation = 'h', preview = null,
-    worker = null, workerURL = null, ticket = 0, busy = false, watchdog = null, delayed = null,
-    fallbackTimer = null, noticeTimer = null, pathView = false, progress = null, feedback = '', storageOK = true;
-  function uid() { return (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2); }
-  function text(id, value) { $(id).textContent = value; }
-  function notify(message, temporary = false) { clearTimeout(noticeTimer); text('notice', message); $('notice').hidden = !message; if (temporary) noticeTimer = setTimeout(() => notify(''), 4500); }
-  function openDialog(id) { const d = $(id); if (!d.open) d.showModal(); }
-  function closeDialog(id) { $(id).close(); }
-  function ended() { return game.resigned || E.winner(state) >= 0; }
-  function canPlay() { return !ended() && state.turn === 0 && !busy; }
-  function record() { return { format: FORMAT, version: 1, game, preferences: { showPaths: pathView } }; }
-  function save() {
-    try { localStorage.setItem(STORAGE, JSON.stringify(record())); storageOK = true; }
-    catch (_) { storageOK = false; notify('この環境では自動保存できません。対局を残すには「保存・読込」から書き出してください。'); }
-    text('saveState', storageOK ? '自動保存' : '保存不可');
+  const $=id=>document.getElementById(id),R=createQuoridorRecords(),STORAGE='quoridor-practice-v2',OLD_STORAGE='quoridor-practice-v1';
+  const COLORS=['#157879','#b55d3b','#6555a7','#397bb7'],LIGHTS=['#e4f2ee','#f8e9df','#eeebf9','#e7f0fa'],
+    ARROWS=['↑','↓','→','←'],GOALS=['上','下','右','左'],STARTS=['下','上','左','右'];
+  const SIZE=580,GRID=56,SPAN=468,GAP=8;
+  let bundle=R.fresh({}),E=bundle.E,C=createQuoridorComputer(E),state=bundle.state,game=bundle.game,states=bundle.states,
+    prefs=bundle.preferences,mode='move',orientation='h',preview=null,feedback='',progress=null,handoffPending=false,
+    worker=null,workerURL=null,ticket=0,busy=false,watchdog=null,delayed=null,fallbackTimer=null,noticeTimer=null,storageOK=true,
+    pointerStart=null,draftNames=[];
+  const human=p=>p<game.humans;
+  const dialogsOpen=()=>!!document.querySelector('dialog[open]');
+  const ended=()=>!!game.termination||E.winner(state)>=0;
+  const canPlay=()=>!ended()&&human(state.turn)&&!busy&&!handoffPending&&!dialogsOpen();
+  const name=p=>game.names[p];
+  const text=(id,value)=>{$(id).textContent=value;};
+  const rec=()=>R.record(game,prefs);
+  function notify(message,temporary=false){clearTimeout(noticeTimer);text('notice',message);$('notice').hidden=!message;if(temporary)noticeTimer=setTimeout(()=>notify(''),5500);}
+  function save(){
+    try{localStorage.setItem(STORAGE,JSON.stringify(rec()));storageOK=true;}
+    catch(_){storageOK=false;notify('この環境では自動保存できません。残したい対局は「保存・読込」から書き出してください。');}
+    text('saveState',storageOK?'自動保存':'保存不可');
   }
-  function parseRecord(data) {
-    if (!data || data.format !== FORMAT || data.version !== 1 || !data.game) throw new Error('このアプリの対局ファイルではありません。');
-    const g = data.game;
-    if (![0, 1].includes(g.first) || !Number.isInteger(g.level) || g.level < 1 || g.level > 10 ||
-        !['first','second','random'].includes(g.order) || !Array.isArray(g.actions) || g.actions.length > 2000 ||
-        typeof g.resigned !== 'boolean' || (g.order==='first' && g.first!==0) || (g.order==='second' && g.first!==1)) throw new Error('対局設定の形式が正しくありません。');
-    const clean = { id: typeof g.id === 'string' && /^[a-zA-Z0-9_-]{1,80}$/.test(g.id) ? g.id : uid(),
-      startedAt: typeof g.startedAt === 'string' && g.startedAt.length < 50 && Number.isFinite(Date.parse(g.startedAt)) ? g.startedAt : new Date().toISOString(),
-      first: g.first, level: g.level, order: g.order, actions: [], resigned: g.resigned };
-    let s = E.initial(clean.first); const list = [s];
-    for (const a of g.actions) {
-      if (!a || !['m','w'].includes(a.t)) throw new Error('手順の形式が正しくありません。');
-      const action = a.t === 'm' ? { t: 'm', to: a.to } : { t: 'w', o: a.o, r: a.r, c: a.c };
-      if (!E.legal(s, action)) throw new Error((list.length) + '手目に不正な着手があります。');
-      s = E.apply(s, action); list.push(s); clean.actions.push(action);
-    }
-    if (clean.resigned && E.winner(s) >= 0) throw new Error('終局情報が矛盾しています。');
-    return { game: clean, state: s, states: list, pathView: !!(data.preferences && data.preferences.showPaths) };
+  function stopComputer(){
+    ticket++;busy=false;progress=null;clearTimeout(watchdog);clearTimeout(delayed);clearTimeout(fallbackTimer);
+    watchdog=delayed=fallbackTimer=null;
+    if(worker){worker.terminate();worker=null;}if(workerURL){URL.revokeObjectURL(workerURL);workerURL=null;}
   }
-  function installRecord(parsed) {
-    stopComputer(); game = parsed.game; state = parsed.state; states = parsed.states; pathView = parsed.pathView;
-    mode = 'move'; preview = null; feedback = ''; $('pathToggle').checked = pathView; save(); render(); scheduleComputer();
+  function openDialog(id){stopComputer();if(!$(id).open)$(id).showModal();render();}
+  function closeDialog(id){if($(id).open)$(id).close();}
+  function install(parsed,saveNow=true){
+    stopComputer();E=parsed.E;C=createQuoridorComputer(E);state=parsed.state;game=parsed.game;states=parsed.states;prefs=parsed.preferences;
+    mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
+    $('pathToggle').checked=prefs.showPaths;if(saveNow)save();render();scheduleComputer();
   }
-  function startGame(level, order) {
-    stopComputer();
-    let first = 0;
-    if (order === 'second') first = 1;
-    else if (order === 'random') {
-      if (typeof crypto !== 'undefined' && crypto.getRandomValues) { const n = new Uint8Array(1); crypto.getRandomValues(n); first = n[0] & 1; }
-      else first = Math.random() < .5 ? 0 : 1;
-    }
-    state = E.initial(first); states = [state];
-    game = { id: uid(), startedAt: new Date().toISOString(), first, order, level, actions: [], resigned: false };
-    preview = null; mode = 'move'; orientation = 'h'; feedback = ''; progress = null;
-    notify(''); save(); render(); scheduleComputer();
+  function blockedMatch(){return E.P>2&&E.moves(state).length===0&&Array.from({length:E.P},(_,p)=>E.forcedPass(state,p)).every(Boolean);}
+  function commit(action){
+    if(ended()||!E.legal(state,action)){feedback='この手は指せません。別の位置を選んでください。';render();return false;}
+    state=E.apply(state,action);states.push(state);game.actions.push({...action});
+    preview=null;mode='move';feedback='';progress=null;handoffPending=game.humans>1&&prefs.handoff&&human(state.turn);
+    if(E.winner(state)<0&&blockedMatch())game.termination={type:'blocked'};
+    save();render();scheduleComputer();return true;
   }
-  function commit(action) {
-    if (ended() || !E.legal(state, action)) { feedback = 'この手は指せません。別の位置を選んでください。'; render(); return false; }
-    state = E.apply(state, action); states.push(state); game.actions.push({ ...action });
-    preview = null; mode = 'move'; feedback = ''; progress = null;
-    save(); render(); scheduleComputer(); return true;
-  }
-  function stopComputer() {
-    ticket++; busy = false; progress = null;
-    clearTimeout(watchdog); clearTimeout(delayed); clearTimeout(fallbackTimer);
-    watchdog = delayed = fallbackTimer = null;
-    if (worker) { worker.terminate(); worker = null; }
-    if (workerURL) { URL.revokeObjectURL(workerURL); workerURL = null; }
-  }
-  function createWorker() {
-    if (worker) return worker;
-    const source = createQuoridorEngine.toString() + '\n' + createQuoridorComputer.toString() + `
-      const E = createQuoridorEngine(), C = createQuoridorComputer(E);
-      self.onmessage = event => {
-        const m = event.data;
-        try {
-          const result = C.choose(E.unpack(m.state), m.level, { recent: m.recent,
-            progress: stats => self.postMessage({ id: m.id, type: 'progress', stats }) });
-          self.postMessage({ id: m.id, type: 'result', result });
-        } catch (error) { self.postMessage({ id: m.id, type: 'error', message: String(error.message || error) }); }
+  function createWorker(){
+    if(worker)return worker;
+    const source=createQuoridorEngine.toString()+'\n'+createQuoridorComputer.toString()+`
+      let E=null,C=null,signature='';
+      self.onmessage=event=>{
+        const m=event.data;
+        try{
+          const key=m.state.size+':'+m.state.count;
+          if(signature!==key){E=createQuoridorEngine(m.state.size,m.state.count);C=createQuoridorComputer(E);signature=key;}
+          const result=C.choose(E.unpack(m.state),m.level,{recent:m.recent,
+            progress:stats=>self.postMessage({id:m.id,type:'progress',stats})});
+          self.postMessage({id:m.id,type:'result',result});
+        }catch(error){self.postMessage({id:m.id,type:'error',message:String(error.message||error)});}
       };`;
-    workerURL = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-    worker = new Worker(workerURL);
-    return worker;
+    workerURL=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));worker=new Worker(workerURL);return worker;
   }
-  function lightFallback(id) {
-    if (id !== ticket || ended() || state.turn !== 1) return;
-    if (worker) { worker.terminate(); worker = null; }
-    if (workerURL) { URL.revokeObjectURL(workerURL); workerURL = null; }
+  function fallback(id){
+    if(id!==ticket||ended()||human(state.turn)||dialogsOpen())return;
+    if(worker){worker.terminate();worker=null;}if(workerURL){URL.revokeObjectURL(workerURL);workerURL=null;}
     clearTimeout(watchdog);
     notify('この環境では軽量計算で対戦しています。指定レベルより先読みが浅くなる場合があります。');
-    fallbackTimer = setTimeout(() => {
-      if (id !== ticket || ended() || state.turn !== 1) return;
+    fallbackTimer=setTimeout(()=>{
+      if(id!==ticket||ended()||human(state.turn)||dialogsOpen())return;
       let action;
-      try { action = C.choose(state, game.level, { ms: 100, recent: states.slice(-18).map(E.key) }).action; }
-      catch (_) {
-        const map = E.distanceMap(state, 1), moves = E.moves(state, 1);
-        moves.sort((a, b) => map[a] - map[b]); action = { t: 'm', to: moves[0] };
-      }
-      busy = false;
-      if (action && E.legal(state, action)) commit(action);
-      else { feedback = '計算を完了できませんでした。対局を保存してページを再読み込みしてください。'; render(); }
-    }, 40);
+      try{action=C.choose(state,game.level,{ms:90,recent:states.slice(-28).map(E.key)}).action;}
+      catch(_){const map=E.distanceMap(state,state.turn),ms=E.moves(state);ms.sort((a,b)=>map[a]-map[b]);action=ms.length?{t:'m',to:ms[0]}:E.firstAction(state)||{t:'p'};}
+      busy=false;
+      if(action&&E.legal(state,action))commit(action);
+      else{feedback='計算を完了できませんでした。「保存・読込」で書き出してから再読み込みしてください。';render();}
+    },30);
   }
-  function scheduleComputer() {
-    if (!game || ended() || state.turn !== 1 || busy) return;
-    busy = true; const id = ++ticket; progress = null; render();
-    delayed = setTimeout(() => {
-      if (id !== ticket || ended() || state.turn !== 1) return;
-      try {
-        const w = createWorker();
-        w.onmessage = event => {
-          const m = event.data; if (m.id !== ticket || m.id !== id || ended() || state.turn !== 1) return;
-          if (m.type === 'progress') { progress = m.stats; renderTurn(); return; }
-          if (m.type === 'error') { lightFallback(id); return; }
+  function scheduleComputer(){
+    if(ended()||human(state.turn)||busy||dialogsOpen()||document.visibilityState==='hidden')return;
+    if(blockedMatch()){game.termination={type:'blocked'};save();render();return;}
+    busy=true;const id=++ticket,actor=state.turn;progress=null;render();
+    delayed=setTimeout(()=>{
+      if(id!==ticket||ended()||human(state.turn)||dialogsOpen())return;
+      try{
+        const w=createWorker();
+        w.onmessage=event=>{
+          const m=event.data;
+          if(m.id!==id||id!==ticket||ended()||state.turn!==actor||human(state.turn)||dialogsOpen())return;
+          if(m.type==='progress'){progress=m.stats;renderTurn();return;}
+          if(m.type==='error'){fallback(id);return;}
           clearTimeout(watchdog);
-          if (!m.result || !m.result.action || !E.legal(state, m.result.action)) { lightFallback(id); return; }
-          busy = false; commit(m.result.action);
+          if(!m.result?.action||!E.legal(state,m.result.action)){fallback(id);return;}
+          busy=false;commit(m.result.action);
         };
-        w.onerror = event => { event.preventDefault(); lightFallback(id); };
-        w.postMessage({ id, state: E.pack(state), level: game.level, recent: states.slice(-20).map(E.key) });
-        watchdog = setTimeout(() => { if (id === ticket && busy) lightFallback(id); }, 10000);
-      } catch (_) { lightFallback(id); }
-    }, 160);
+        w.onerror=e=>{e.preventDefault();fallback(id);};
+        w.postMessage({id,state:E.pack(state),level:game.level,recent:states.slice(-28).map(E.key)});
+        watchdog=setTimeout(()=>{if(id===ticket&&busy)fallback(id);},10000);
+      }catch(_){fallback(id);}
+    },220);
   }
-  function undo() {
-    let at = game.actions.length - 1;
-    while (at >= 0 && states[at].turn !== 0) at--;
-    if (at < 0) return;
-    stopComputer(); game.actions = game.actions.slice(0, at); states = states.slice(0, at + 1);
-    state = states[states.length - 1]; game.resigned = false; preview = null; mode = 'move'; feedback = '';
-    save(); render();
+  function undoIndex(){let i=game.actions.length-1;while(i>=0&&!human(states[i].turn))i--;return i;}
+  function undo(){
+    const i=undoIndex();if(i<0&&!game.termination)return;
+    stopComputer();
+    if(i>=0){game.actions=game.actions.slice(0,i);states=states.slice(0,i+1);state=states.at(-1);}
+    game.termination=null;preview=null;mode='move';handoffPending=false;feedback=name(state.turn)+'の着手をやり直せます。';save();render();scheduleComputer();
   }
-  function renderTurn() {
-    const done = ended();
-    $('humanCard').classList.toggle('active', !done && state.turn === 0);
-    $('computerCard').classList.toggle('active', !done && state.turn === 1);
-    $('turnDot').classList.toggle('thinking', !done && state.turn === 1);
-    if (done) {
-      const win = game.resigned ? 1 : E.winner(state);
-      text('turnText', win === 0 ? 'あなたの勝ちです' : 'コンピューターの勝ちです');
-      text('turnDetail', game.resigned ? '投了で対局が終了しました。' : '反対側の端に到達しました。');
-      text('resultText', 'レベル' + game.level + 'との対局 · ' + game.actions.length + '手');
-    } else if (state.turn === 1) {
-      text('turnText', 'コンピューターが考えています');
-      text('turnDetail', feedback || (progress ? progress.depth + '手先まで比較済み · レベル' + game.level : 'レベル' + game.level + 'で先読みしています。'));
-    } else {
-      text('turnText', 'あなたの番です');
-      text('turnDetail', feedback || (mode === 'move' ? '移動先を選んで、確定してください。' : '盤面に仮置きし、方向ボタンで調整できます。'));
+  function moveInDirection(dr,dc){
+    const from=state.pos[state.turn],r=(from/E.N)|0,c=from%E.N;
+    return E.moves(state).find(p=>Math.sign(((p/E.N)|0)-r)===dr&&Math.sign(p%E.N-c)===dc);
+  }
+  function defaultWall(){const a=(E.N-3)/2;return {t:'w',o:orientation,r:a,c:a};}
+  function setMode(next){if(!canPlay()||(next==='wall'&&state.left[state.turn]<=0))return;mode=next;preview=mode==='wall'?defaultWall():null;feedback='';render();}
+  function changeOrientation(o){if(!canPlay())return;orientation=o;if(preview?.t==='w')preview.o=o;render();}
+  function direction(dr,dc){
+    if(!canPlay())return;
+    if(mode==='move'){const to=moveInDirection(dr,dc);if(to===undefined)return;preview={t:'m',to};}
+    else{if(dr&&dc)return;const w=preview?.t==='w'?preview:defaultWall();preview={...w,r:Math.max(0,Math.min(E.M-1,w.r+dr)),c:Math.max(0,Math.min(E.M-1,w.c+dc))};}
+    feedback='';render();
+  }
+  function wallLabel(w){const a='abcdefghi'[w.c],b='abcdefghi'[w.c+1],r=E.N-w.r;return w.o==='h'?`${a}・${b}列の${r}／${r-1}段の間`:`${a}／${b}列の間の${r}・${r-1}段`;}
+  function winnerName(){
+    if(game.termination?.type==='resigned')return name(1-game.termination.player)+'の勝ちです';
+    const win=E.winner(state);return win>=0?name(win)+'の勝ちです':'対局を終了しました';
+  }
+  function renderTurn(){
+    const done=ended(),p=state.turn;
+    $('turnDot').classList.toggle('thinking',!done&&!human(p)&&busy);
+    if(done){
+      text('turnText',winnerName());text('turnDetail',game.termination?.type==='resigned'?'投了で終了しました。':game.termination?'勝者を決めずに終了しました。':'ゴールの辺に到達しました。');
+      text('resultText',`${E.N}×${E.N}・${E.P}人対戦／${game.actions.length}手`);
+    }else if(!human(p)){
+      text('turnText',name(p)+(busy?'が考えています':'の番です'));
+      text('turnDetail',feedback||(dialogsOpen()?'画面を閉じると再開します。':progress?`全員共通レベル${game.level}／${progress.depth}手先まで比較済み`:`全員共通レベル${game.level}で先読みしています。`));
+    }else{
+      text('turnText',`${p+1} ${name(p)}の番です`);
+      text('turnDetail',feedback||(handoffPending?`${name(p)}に端末を渡してください。ゴールは${GOALS[p]}側です。`:`${ARROWS[p]} ${GOALS[p]}側の辺がゴールです。`)+(handoffPending?'':mode==='move'?' 移動先を選んで確定してください。':' フェンスを仮置きして確定してください。'));
     }
-    $('resultArea').hidden = !done; $('playControls').hidden = done;
+    $('resultArea').hidden=!done;
+    const handoff=!done&&human(p)&&handoffPending;
+    $('handoffPanel').hidden=!handoff;
+    if(handoff){text('handoffText',`${p+1} ${name(p)}の操作です。${ARROWS[p]} ${GOALS[p]}側のゴールを目指します。`);text('readyBtn',name(p)+'の番をはじめる');}
+    const pass=!done&&!handoff&&human(p)&&E.moves(state).length===0&&E.forcedPass(state);
+    $('passPanel').hidden=!pass;$('passBtn').disabled=!canPlay();
+    $('playControls').hidden=done||handoff||pass;
   }
-  function wallLabel(w) {
-    const a = 'abcdefghi'[w.c], b = 'abcdefghi'[w.c + 1], r = 9 - w.r;
-    return w.o === 'h' ? `${a}・${b}列の ${r}／${r-1}段の間` : `${a}／${b}列の間の ${r}・${r-1}段`;
-  }
-  function moveInDirection(dr, dc) {
-    const from = state.pos[0], r = (from / 9) | 0, c = from % 9;
-    return E.moves(state, 0).find(p => Math.sign(((p / 9) | 0) - r) === dr && Math.sign(p % 9 - c) === dc);
-  }
-  function defaultWall() {
-    const enemy = state.pos[1];
-    return { t: 'w', o: orientation, r: Math.max(0, Math.min(7, ((enemy / 9) | 0))), c: Math.max(0, Math.min(7, enemy % 9 - 1)) };
-  }
-  function setMode(next) {
-    if (!canPlay() || (next === 'wall' && state.left[0] <= 0)) return;
-    mode = next; preview = mode === 'wall' ? defaultWall() : null; feedback = ''; render();
-  }
-  function changeOrientation(o) {
-    if (!canPlay()) return;
-    orientation = o; if (preview && preview.t === 'w') preview.o = o;
-    render();
-  }
-  function direction(dr, dc) {
-    if (!canPlay()) return;
-    if (mode === 'move') {
-      const to = moveInDirection(dr, dc); if (to === undefined) return;
-      preview = { t: 'm', to };
-    } else {
-      if (dr && dc) return;
-      if (!preview || preview.t !== 'w') preview = defaultWall();
-      preview = { ...preview, r: Math.max(0, Math.min(7, preview.r + dr)), c: Math.max(0, Math.min(7, preview.c + dc)) };
+  function renderControls(){
+    const active=canPlay(),p=state.turn;
+    $('moveMode').disabled=!active;$('wallMode').disabled=!active||state.left[p]<=0;
+    $('moveMode').setAttribute('aria-pressed',mode==='move');$('wallMode').setAttribute('aria-pressed',mode==='wall');
+    $('orientation').hidden=mode!=='wall';text('padCenter',mode==='wall'?'壁の位置':'移動先');
+    for(const [id,o] of [['horizontalBtn','h'],['verticalBtn','v']]){$(id).setAttribute('aria-pressed',orientation===o);$(id).disabled=!active;}
+    for(const b of document.querySelectorAll('#directionPad button')){
+      const dr=+b.dataset.dr,dc=+b.dataset.dc;let enabled=false,chosen=false;
+      if(active&&mode==='move'){const to=moveInDirection(dr,dc);enabled=to!==undefined;chosen=preview?.t==='m'&&preview.to===to;}
+      else if(active&&mode==='wall'&&(!dr||!dc)){const w=preview||defaultWall();enabled=w.r+dr>=0&&w.r+dr<E.M&&w.c+dc>=0&&w.c+dc<E.M;}
+      b.disabled=!enabled;b.classList.toggle('chosen',!!chosen);
     }
-    feedback = ''; render();
-  }
-  function renderControls() {
-    const active = canPlay();
-    $('moveMode').disabled = !active; $('wallMode').disabled = !active || state.left[0] <= 0;
-    $('moveMode').setAttribute('aria-pressed', mode === 'move'); $('wallMode').setAttribute('aria-pressed', mode === 'wall');
-    $('orientation').hidden = mode !== 'wall'; text('padCenter', mode === 'wall' ? '壁の位置' : '移動先');
-    for (const [id, o] of [['horizontalBtn','h'],['verticalBtn','v']]) {
-      $(id).setAttribute('aria-pressed', orientation === o); $(id).disabled = !active;
-    }
-    for (const button of document.querySelectorAll('#directionPad button')) {
-      const dr = +button.dataset.dr, dc = +button.dataset.dc; let enabled = false, chosen = false;
-      if (active && mode === 'move') {
-        const to = moveInDirection(dr, dc); enabled = to !== undefined; chosen = !!(preview && preview.t === 'm' && preview.to === to);
-      } else if (active && mode === 'wall' && (!dr || !dc)) {
-        const w = preview || defaultWall(); enabled = w.r + dr >= 0 && w.r + dr <= 7 && w.c + dc >= 0 && w.c + dc <= 7;
+    let valid=false,message='';text('selectionLabel',mode==='wall'?'フェンスを仮置き':'移動先を選択');
+    if(preview&&active){
+      if(preview.t==='m'){
+        valid=E.legal(state,preview);text('selectionLabel',E.square(preview.to)+'へ移動');
+        const from=state.pos[p],dr=Math.abs(((from/E.N)|0)-((preview.to/E.N)|0)),dc=Math.abs(from%E.N-preview.to%E.N);
+        message=dr+dc===2?'隣の駒を跳び越えるか、横へ回り込みます。':'「移動を確定」で1手進めます。';
+      }else{
+        const error=E.wallError(state,preview);valid=!error;message=error||wallLabel(preview)+'\nこの位置に置けます。';
+        if(valid&&prefs.showPaths){const after=E.apply(state,preview);message=wallLabel(preview)+'\n経路：'+state.pos.map((_,q)=>`${q+1} +${E.distance(after,q)-E.distance(state,q)}`).join('／')+'歩';}
       }
-      button.disabled = !enabled; button.classList.toggle('chosen', chosen);
+    }else message=mode==='wall'?'盤面をタップして仮置きします。':'駒と同じ色のマス、または方向ボタンで選べます。';
+    if(!active&&!ended())message=human(p)?'操作する人を確認してください。':'コンピューターの手番です。';
+    text('selectionText',message);$('selectionText').classList.toggle('invalid',!!preview&&active&&!valid);
+    $('confirmBtn').disabled=!active||!valid;text('confirmBtn',mode==='wall'?'フェンスを確定':'移動を確定');$('clearBtn').disabled=!active||!preview;
+    $('mobileBar').hidden=ended()||dialogsOpen();
+    text('mobileSelection',`${p+1} ${name(p)}：`+(preview&&active?E.actionName(preview):handoffPending?'操作する人を確認してください':human(p)?`${ARROWS[p]} ${GOALS[p]}側の辺がゴール`:'考えています'));
+    text('mobileMode',mode==='wall'?'駒に切替':'フェンス');$('mobileMode').disabled=!active||(mode==='move'&&state.left[p]<=0);
+    $('mobileRotate').disabled=!active||mode!=='wall';
+    const forced=active&&E.moves(state).length===0&&E.forcedPass(state);
+    text('mobileConfirm',handoffPending&&human(p)?`${p+1}番の操作を開始`:forced?'順番を送る':!human(p)?'考えています':mode==='wall'?'フェンスを確定':'移動を確定');
+    $('mobileConfirm').disabled=!((handoffPending&&human(p)&&!ended()&&!dialogsOpen())||forced||(active&&valid));
+    $('undoBtn').disabled=undoIndex()<0&&!game.termination;$('resignBtn').disabled=ended();text('resignBtn',E.P===2&&game.humans===1?'投了':'対局を終了');
+  }
+  function renderPlayers(){
+    const area=$('players');area.replaceChildren();
+    for(let p=0;p<E.P;p++){
+      const card=document.createElement('div');card.className='player'+(!ended()&&state.turn===p?' active':'');card.style.setProperty('--seat',COLORS[p]);card.id='playerCard'+p;
+      const line=document.createElement('div');line.className='player-line';
+      const badge=document.createElement('span');badge.className='player-id';badge.textContent=p+1;
+      const title=document.createElement('strong');title.textContent=name(p);title.title=name(p);
+      const kind=document.createElement('span');kind.className='player-kind';kind.textContent=human(p)?'人間':'レベル'+game.level;
+      line.append(badge,title,kind);card.append(line);
+      const goal=document.createElement('div');goal.className='player-goal';goal.innerHTML=`<b>${ARROWS[p]}</b> ${GOALS[p]}側の辺がゴール`;
+      const walls=document.createElement('div');walls.className='wall-line';walls.innerHTML=`<span>フェンス <b id="walls${p}">${state.left[p]}</b> / ${E.STOCK}</span><span class="stock" aria-hidden="true">${Array.from({length:E.STOCK},(_,i)=>`<i class="${i<state.left[p]?'on':''}"></i>`).join('')}</span>`;
+      card.append(goal,walls);
+      if(prefs.showPaths){const d=document.createElement('div');d.className='player-distance';d.textContent='経路の目安：'+E.distance(state,p)+'歩';card.append(d);}
+      area.append(card);
     }
-    let valid = false, message = '';
-    text('selectionLabel', mode === 'wall' ? '壁を仮置き' : '移動先を選択');
-    if (preview && active) {
-      if (preview.t === 'm') {
-        valid = E.legal(state, preview); text('selectionLabel', E.square(preview.to) + 'へ移動');
-        const from = state.pos[0];
-        const dr = Math.abs(((from / 9) | 0) - ((preview.to / 9) | 0)), dc = Math.abs(from % 9 - preview.to % 9);
-        message = dr + dc === 2 ? '相手の駒を跳び越えるか、横へ回り込みます。' : '「移動を確定」で1手進めます。';
-      } else {
-        const error = E.wallError(state, preview, 0); valid = !error;
-        message = error || wallLabel(preview) + '\nこの位置に置けます。';
-        if (valid && pathView) {
-          const after = E.apply(state, preview), da = E.distance(after, 0) - E.distance(state, 0), db = E.distance(after, 1) - E.distance(state, 1);
-          message = wallLabel(preview) + `\n経路：自分+${da}／相手+${db}歩`;
-        }
+    const flow=$('turnOrder');flow.replaceChildren();const label=document.createElement('span');label.textContent='手番：';flow.append(label);
+    const order=Array.from({length:E.P},(_,i)=>E.ORDER[(E.ORDER.indexOf(game.first)+i)%E.P]);
+    order.forEach((p,i)=>{if(i){const sep=document.createElement('span');sep.textContent='→';flow.append(sep);}const n=document.createElement('span');n.textContent=p+1+' '+name(p);n.className=!ended()&&p===state.turn?'current':'';flow.append(n);});
+    const end=document.createElement('span');end.textContent='↻';flow.append(end);
+  }
+  function geometry(){const step=SPAN/E.N;return {step,cell:step-GAP,center:GRID+(step-GAP)/2,cross:GRID+step-GAP/2,end:GRID+SPAN-GAP};}
+  function cheese(x,y,color,p,angle=0){
+    return `<g class="cheese-goal" data-player="${p}" transform="translate(${x} ${y}) rotate(${angle})"><path d="M-13 9L-13-6L9-12L14 2L14 12Z" fill="${color}" stroke="#fffef8" stroke-width="1.5"/><path d="M-13-6L9-12L14 2L-13 9Z" fill="#fffef8" opacity=".25"/><circle cx="-6" cy="0" r="2.3" fill="#fffef8" opacity=".7"/><circle cx="6" cy="-3" r="2" fill="#fffef8" opacity=".7"/><circle cx="7" cy="7" r="2.6" fill="#fffef8" opacity=".7"/></g>`;
+  }
+  function renderBoard(){
+    const active=canPlay(),legal=active&&mode==='move'?E.moves(state):[],parts=[],g=geometry(),S=g.step,CS=g.center,actor=state.turn;
+    const point=p=>[CS+(p%E.N)*S,CS+((p/E.N)|0)*S];
+    function wallSvg(w,color,extra=''){
+      const x=w.o==='h'?GRID+w.c*S:g.cross+w.c*S-5,y=w.o==='h'?g.cross+w.r*S-5:GRID+w.r*S;
+      return `<rect x="${x}" y="${y}" width="${w.o==='h'?2*S-GAP:10}" height="${w.o==='h'?10:2*S-GAP}" rx="4" fill="${color}" ${extra}/>`;
+    }
+    for(let r=0;r<E.N;r++)for(let c=0;c<E.N;c++){
+      const p=r*E.N+c,selected=preview?.t==='m'&&preview.to===p&&active;
+      parts.push(`<rect data-cell="${p}" x="${GRID+c*S}" y="${GRID+r*S}" width="${g.cell}" height="${g.cell}" rx="${E.N===7?9:6}" class="cell ${legal.includes(p)?'legal-cell':''} ${selected?'selected-cell':''}"/>`);
+      if(legal.includes(p)&&!selected)parts.push(`<circle cx="${CS+c*S}" cy="${CS+r*S}" r="4.5" fill="${COLORS[actor]}" opacity=".65"/>`);
+    }
+    const lines=[`M${GRID} 44H${g.end}`,`M${GRID} 528H${g.end}`,`M528 ${GRID}V${g.end}`,`M44 ${GRID}V${g.end}`];
+    const positions=[[286,20,0],[286,559,0],[558,286,90],[16,286,-90]];
+    for(let p=0;p<E.P;p++){
+      parts.push(`<path class="goal-line" data-player="${p}" d="${lines[p]}" stroke="${COLORS[p]}" stroke-width="${p===actor&&!ended()?5:3}" opacity="${p===actor&&!ended()?'.9':'.5'}" stroke-linecap="round"/>`);
+      const [x,y,a]=positions[p];
+      parts.push(`<g transform="translate(${x} ${y}) rotate(${a})">${E.N===7?cheese(-55,0,COLORS[p],p):''}<text x="${E.N===7?8:0}" y="5" text-anchor="middle" font-size="13" font-weight="650" fill="${COLORS[p]}">${p+1}のゴール</text></g>`);
+    }
+    for(let i=0;i<E.N;i++){
+      parts.push(`<text x="${CS+i*S}" y="543" text-anchor="middle" font-size="10" fill="#7f8c85">${'abcdefghi'[i]}</text>`);
+      parts.push(`<text x="34" y="${CS+i*S+4}" text-anchor="middle" font-size="10" fill="#7f8c85">${E.N-i}</text>`);
+    }
+    if(prefs.showPaths)for(let p=0;p<E.P;p++){
+      const d=E.shortestPath(state,p).map((q,i)=>`${i?'L':'M'}${point(q).join(' ')}`).join(' ');
+      parts.push(`<path class="route-path" d="${d}" fill="none" stroke="${COLORS[p]}" stroke-width="3" stroke-dasharray="5 8" stroke-linecap="round" opacity=".6"/>`);
+    }
+    const last=game.actions.at(-1),lastActor=game.actions.length?states.at(-2).turn:0;
+    for(const o of ['h','v'])for(let k=0;k<E.W;k++)if(state[o][k]){
+      const w={t:'w',o,r:(k/E.M)|0,c:k%E.M},latest=last?.t==='w'&&last.o===o&&last.r===w.r&&last.c===w.c;
+      parts.push(wallSvg(w,latest?COLORS[lastActor]:'#49585c',`class="placed-wall${latest?' last-wall':''}"`));
+    }
+    if(active&&mode==='wall'){
+      for(let r=0;r<E.M;r++)for(let c=0;c<E.M;c++)parts.push(`<circle cx="${g.cross+c*S}" cy="${g.cross+r*S}" r="3" fill="#8a9991" opacity=".4"/>`);
+      if(preview?.t==='w'){
+        const valid=!E.wallError(state,preview),color=valid?COLORS[actor]:'#b63045';
+        parts.push(wallSvg(preview,color,`fill-opacity=".55" stroke="${color}" stroke-width="2" class="preview-wall"`));
+        parts.push(`<circle cx="${g.cross+preview.c*S}" cy="${g.cross+preview.r*S}" r="7" fill="#fffefa" stroke="${color}" stroke-width="2"/>`);
       }
-    } else message = mode === 'wall' ? '盤面をタップして壁を仮置きします。' : '盤面の青いマス、または方向ボタンで選べます。';
-    if (!active && !ended()) message = 'コンピューターの手番です。';
-    text('selectionText', message); $('selectionText').classList.toggle('invalid', !!preview && active && !valid);
-    $('confirmBtn').disabled = !active || !valid; text('confirmBtn', mode === 'wall' ? '壁を確定' : '移動を確定');
-    $('clearBtn').disabled = !active || !preview;
-    $('undoBtn').disabled = !game.actions.some((_, i) => states[i].turn === 0);
-    $('resignBtn').disabled = ended();
+    }
+    if(active&&preview?.t==='m'){const [x,y]=point(preview.to);parts.push(`<circle cx="${x}" cy="${y}" r="17" fill="${COLORS[actor]}" fill-opacity=".2" stroke="${COLORS[actor]}" stroke-width="2" stroke-dasharray="4 4"/>`);}
+    for(let p=0;p<E.P;p++){
+      const [x,y]=point(state.pos[p]),color=COLORS[p];
+      if(p===actor&&!ended())parts.push(`<circle cx="${x}" cy="${y}" r="${E.N===7?26:21}" fill="none" stroke="${color}" opacity=".8" stroke-width="2" stroke-dasharray="3 4"/>`);
+      parts.push(`<g class="pawn" data-player="${p}"><title>${p+1}番の駒、${GOALS[p]}側へ</title>`);
+      if(E.N===7){
+        const angle=[0,180,90,-90][p];
+        parts.push(`<g class="mouse-pawn" transform="translate(${x} ${y}) rotate(${angle})"><path d="M0 18Q18 29 20 16" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="4" rx="14" ry="18" fill="${color}" stroke="#fffefa" stroke-width="2"/><circle cx="-10" cy="-9" r="8" fill="${color}" stroke="#fffefa" stroke-width="1.8"/><circle cx="10" cy="-9" r="8" fill="${color}" stroke="#fffefa" stroke-width="1.8"/><circle cx="-10" cy="-9" r="4.5" fill="#fffefa" opacity=".45"/><circle cx="10" cy="-9" r="4.5" fill="#fffefa" opacity=".45"/><ellipse cx="0" cy="-3" rx="10" ry="12" fill="${color}"/><circle cx="-4" cy="-6" r="2.2" fill="#fffefa"/><circle cx="4" cy="-6" r="2.2" fill="#fffefa"/><circle cx="-4" cy="-6.8" r="1" fill="#243739"/><circle cx="4" cy="-6.8" r="1" fill="#243739"/><circle cx="0" cy="-15" r="2.5" fill="#f4dbbc"/></g><circle cx="${x+17}" cy="${y-20}" r="9" fill="#fffefa" stroke="${color}" stroke-width="1.5"/><text x="${x+17}" y="${y-16.5}" font-size="11" font-weight="700" text-anchor="middle" fill="${color}">${p+1}</text>`);
+      }else parts.push(`<circle cx="${x}" cy="${y+3}" r="18" class="pawn-shadow"/><circle cx="${x}" cy="${y}" r="17" fill="${color}" class="pawn-top"/><circle cx="${x}" cy="${y}" r="11" fill="none" stroke="#fffefa" stroke-width="1" opacity=".4"/><text x="${x}" y="${y+4}" font-size="12" font-weight="700" text-anchor="middle" fill="#fffefa">${p+1}</text>`);
+      parts.push('</g>');
+    }
+    $('board').setAttribute('aria-label',`${E.N}×${E.N}マス、${E.P}人対戦。${name(actor)}の番。${GOALS[actor]}側の辺がゴールです。`);
+    $('board').innerHTML=parts.join('');
   }
-  function renderBoard() {
-    const active = canPlay(), legal = active && mode === 'move' ? E.moves(state, 0) : [], parts = [];
-    const wallSvg = (w, color, extra = '') => {
-      const x = w.o === 'h' ? ORIGIN + w.c * S : ORIGIN + 48 + w.c * S - 5;
-      const y = w.o === 'h' ? ORIGIN + 48 + w.r * S - 5 : ORIGIN + w.r * S;
-      return `<rect x="${x}" y="${y}" width="${w.o==='h'?96:10}" height="${w.o==='h'?10:96}" rx="4" fill="${color}" ${extra}/>`;
-    };
-    for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
-      const p = r * 9 + c, selected = preview && preview.t === 'm' && preview.to === p;
-      parts.push(`<rect x="${ORIGIN+c*S}" y="${ORIGIN+r*S}" width="44" height="44" rx="6" class="cell ${legal.includes(p)?'legal-cell':''} ${selected?'selected-cell':''}"/>`);
-      if (legal.includes(p) && !selected) parts.push(`<circle cx="${CENTER+c*S}" cy="${CENTER+r*S}" r="4" fill="#157879" opacity=".55"/>`);
-    }
-    parts.push('<path d="M30 20H482" stroke="#157879" stroke-width="3" stroke-linecap="round" opacity=".55"/><path d="M30 492H482" stroke="#b55d3b" stroke-width="3" stroke-linecap="round" opacity=".55"/>');
-    for (let i = 0; i < 9; i++) {
-      parts.push(`<text x="${CENTER+i*S}" y="511" text-anchor="middle" font-size="11" fill="#809088">${'abcdefghi'[i]}</text>`);
-      parts.push(`<text x="12" y="${CENTER+i*S+4}" text-anchor="middle" font-size="11" fill="#809088">${9-i}</text>`);
-    }
-    if (pathView) for (let p = 0; p < 2; p++) {
-      const path = E.shortestPath(state, p), d = path.map((n, i) => `${i?'L':'M'}${CENTER+n%9*S} ${CENTER+((n/9)|0)*S}`).join(' ');
-      parts.push(`<path d="${d}" fill="none" stroke="${p===0?'#157879':'#b55d3b'}" stroke-width="4" stroke-linecap="round" stroke-dasharray="5 9" opacity=".5"/>`);
-    }
-    const last = game.actions[game.actions.length - 1];
-    for (const o of ['h','v']) for (let i = 0; i < 64; i++) if (state[o][i]) {
-      const w = { t: 'w', o, r: (i/8)|0, c: i%8 }, latest = last && last.t==='w' && last.o===o && last.r===w.r && last.c===w.c;
-      const who = game.actions.length ? states[states.length-2].turn : 0;
-      parts.push(wallSvg(w, latest ? (who===0?'#157879':'#b55d3b') : '#49585c', latest?'class="last-wall"':''));
-    }
-    if (active && mode === 'wall') {
-      for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++)
-        parts.push(`<circle cx="${74+c*S}" cy="${74+r*S}" r="3" fill="#8a9991" opacity=".4"/>`);
-      if (preview && preview.t === 'w') {
-        const ok = !E.wallError(state, preview, 0), color = ok ? '#157879' : '#b63045';
-        parts.push(wallSvg(preview, color, `fill-opacity=".5" stroke="${color}" stroke-width="2" class="preview-wall"`));
-        parts.push(`<circle cx="${74+preview.c*S}" cy="${74+preview.r*S}" r="7" fill="#fffefa" stroke="${color}" stroke-width="2"/>`);
-      }
-    }
-    if (preview && preview.t === 'm' && active) {
-      const p = preview.to; parts.push(`<circle cx="${CENTER+p%9*S}" cy="${CENTER+((p/9)|0)*S}" r="15" fill="#157879" opacity=".3" stroke="#157879" stroke-width="2" stroke-dasharray="3 3"/>`);
-    }
-    for (let player = 0; player < 2; player++) {
-      const p = state.pos[player], x = CENTER + p%9*S, y = CENTER + ((p/9)|0)*S, color = player===0?'#157879':'#b55d3b';
-      parts.push(`<circle cx="${x}" cy="${y+3}" r="18" class="pawn-shadow"/><circle cx="${x}" cy="${y}" r="17" fill="${color}" class="pawn-top"/><circle cx="${x}" cy="${y}" r="11" fill="none" stroke="#fffefa" stroke-width="1" opacity=".35"/><text x="${x}" y="${y+4}" font-size="12" font-weight="650" text-anchor="middle" fill="#fffefa">${player===0?'人':'機'}</text>`);
-    }
-    $('board').innerHTML = parts.join('');
+  function render(){
+    document.body.classList.toggle('kids',E.N===7);
+    const win=E.winner(state),actor=win>=0?win:game.termination?.type==='resigned'?1-game.termination.player:state.turn;
+    document.documentElement.style.setProperty('--actor',COLORS[actor]);document.documentElement.style.setProperty('--actor-light',LIGHTS[actor]);
+    text('modeBadge',(E.N===7?'キッズ ':'通常 ')+E.N+'×'+E.N);
+    text('matchInfo',`${E.P}人対戦 · 人間${game.humans}人`+(game.humans<E.P?`＋コンピューター${E.P-game.humans}人 · 全員レベル${game.level}`:' · コンピューターなし'));
+    renderPlayers();renderTurn();renderControls();renderBoard();
+    text('plyLabel',game.actions.length+'手目');text('historyCount',game.actions.length+'手');
+    text('lastMove',game.actions.length?`${name(states.at(-2).turn)}：${E.actionName(game.actions.at(-1))}`:name(game.first)+'から開始します。');
+    text('saveState',storageOK?'自動保存':'保存不可');$('pathNote').hidden=!prefs.showPaths;$('localNote').hidden=game.humans===1;
+    const list=$('historyList');list.replaceChildren();
+    for(let i=game.actions.length-1;i>=Math.max(0,game.actions.length-500);i--){const li=document.createElement('li');li.value=i+1;li.style.color=COLORS[states[i].turn];li.textContent=name(states[i].turn)+'：'+E.actionName(game.actions[i]);list.append(li);}
   }
-  function render() {
-    if (!game) return;
-    text('humanOrder', game.first === 0 ? '先手' : '後手'); text('levelBadge', game.level + ' / 10');
-    $('levelBadge').setAttribute('aria-label', 'コンピューターのレベル' + game.level);
-    for (const [p, name] of [[0,'human'],[1,'computer']]) {
-      text(name+'Walls', state.left[p]); $(name+'Stock').innerHTML = Array.from({ length: 10 },(_,i)=>`<i class="${i<state.left[p]?'on':''}"></i>`).join('');
-      $(name+'Distance').hidden = !pathView; text(name+'Distance', '経路の目安：' + E.distance(state, p) + '歩');
+  function selectedSize(){return +document.querySelector('input[name=boardSize]:checked').value;}
+  function collectNames(){for(const input of document.querySelectorAll('#nameFields input'))draftNames[+input.dataset.player]=input.value;}
+  function updateLevel(){
+    const l=+$('levelRange').value,n=+$('playerCount').value,h=+$('humanCount').value,cfg=C.configs[l-1];text('levelNumber',l);
+    const descriptions=['操作を覚えるための設定です。よさそうな手の中でも、ばらつきを持たせて選びます。','前進とフェンスを比べます。ときどき遠回りになる手も選びます。','相手の次の手を考慮します。手の選択にはまだばらつきがあります。','相手の反撃を確認し、移動とフェンスを選びます。','自分の道を守るフェンスと、他のプレイヤーの手も検討します。','候補数を増やし、手の選択のばらつきを減らします。','意図的なばらつきなしで、候補と反撃を比較します。','先読みを増やします。2人戦ではフェンスなしの終盤も計算します。','さらに多くの候補と先読みを設定します。','このアプリで最も多くの候補と深さを設定しています。'];
+    text('levelDescription',n===h?'人間だけで対戦します。コンピューターの設定は使いません。':descriptions[l-1]+` 最大${n>2&&l>=5?Math.max(n,cfg.depth):cfg.depth}手先（時間制限あり）。`);
+    $('levelField').disabled=n===h;$('levelMinus').disabled=l===1||n===h;$('levelPlus').disabled=l===10||n===h;
+  }
+  function updateSettings(){
+    collectNames();const n=+$('playerCount').value,h=Math.min(n,+$('humanCount').value||1),oldOrder=$('orderSelect').value;
+    $('humanCount').replaceChildren();for(let i=1;i<=n;i++)$('humanCount').add(new Option(i+'人'+(i===n?'（全員）':''),String(i)));$('humanCount').value=h;
+    const values=['first','second','third','fourth'];$('orderSelect').replaceChildren();
+    for(let i=0;i<n;i++)$('orderSelect').add(new Option(n===2?(i===0?'先手（最初）':'後手'):i+1+'番目'+(i===0?'（最初）':''),values[i]));
+    $('orderSelect').add(new Option('ランダム','random'));$('orderSelect').value=values.slice(0,n).includes(oldOrder)||oldOrder==='random'?oldOrder:'first';
+    const tmp=createQuoridorEngine(selectedSize(),n);text('settingsSummary',`人間${h}人＋コンピューター${n-h}人 ／ フェンス各${tmp.STOCK}枚`);
+    $('threeNote').hidden=n!==3;$('handoffOption').hidden=h<2;
+    const area=$('nameFields');area.replaceChildren();const fallback=R.defaults(n,h);
+    for(let p=0;p<h;p++){
+      const label=document.createElement('label');label.textContent=`${p+1}番（${STARTS[p]}から${GOALS[p]}へ）`;
+      const input=document.createElement('input');input.dataset.player=p;input.id='name'+p;input.maxLength=20;input.autocomplete='off';input.placeholder=fallback[p];input.value=draftNames[p]??'';input.setAttribute('aria-label',`${p+1}番の人の名前`);label.append(input);area.append(label);
     }
-    text('plyLabel', game.actions.length + '手目'); text('historyCount', game.actions.length + '手');
-    if (game.actions.length) {
-      const who = states[states.length-2].turn === 0 ? 'あなた' : '相手';
-      text('lastMove', who + '：' + E.actionName(game.actions[game.actions.length-1]));
-    } else text('lastMove', (game.first===0?'あなた':'コンピューター') + 'が先手です。');
-    text('saveState', storageOK ? '自動保存' : '保存不可');
-    $('pathNote').hidden = !pathView;
-    renderTurn(); renderControls(); renderBoard();
-    const list = $('historyList'); list.replaceChildren();
-    game.actions.slice().reverse().forEach((a, reverseIndex) => {
-      const i = game.actions.length - 1 - reverseIndex, li = document.createElement('li');
-      li.value = i + 1; li.className = states[i].turn===0?'log-human':'log-computer';
-      li.textContent = (states[i].turn===0?'あなた':'コンピューター') + '：' + E.actionName(a); list.appendChild(li);
-    });
+    updateLevel();
   }
-  function settings() {
-    $('levelRange').value = game.level; document.querySelector(`input[name=order][value="${game.order}"]`).checked = true;
-    $('replaceNote').hidden = game.actions.length===0 && !game.resigned; updateLevel(); openDialog('settingsDialog');
+  function settings(){
+    draftNames=game.names.map((n,p)=>human(p)?n:'');$('nameFields').replaceChildren();
+    document.querySelector(`input[name=boardSize][value="${E.N}"]`).checked=true;
+    $('playerCount').value=E.P;$('humanCount').replaceChildren();for(let i=1;i<=E.P;i++)$('humanCount').add(new Option(i+'人',String(i)));$('humanCount').value=game.humans;
+    $('levelRange').value=game.level;$('orderSelect').replaceChildren();$('orderSelect').add(new Option(game.order,game.order));$('orderSelect').value=game.order;
+    $('handoffToggle').checked=prefs.handoff;$('replaceNote').hidden=game.actions.length===0&&!game.termination;
+    updateSettings();openDialog('settingsDialog');
   }
-  function updateLevel() {
-    const l = +$('levelRange').value, cfg = C.configs[l-1]; text('levelNumber', l);
-    const explanations = ['前進を中心に、ときどき遠回りも選びます。操作とルールの練習に。','よさそうな手の中から、ばらつきを持たせて選びます。','相手の次の手を考慮します。ときどき次善の手も選びます。','移動と壁を比較し、相手の反撃を確認します。','自分の道を守る壁も候補に加えます。','比較する候補を増やし、選択のばらつきを減らします。','意図的なばらつきなしで、より多くの反撃を比較します。','双方の壁がなくなると、駒の接触を含む終盤を厳密に計算します。','候補数と先読みの深さをさらに増やします。','このアプリで最も多くの候補と深さを設定したモードです。'];
-    text('levelDescription', explanations[l-1] + ' 目標：最大' + cfg.depth + '手先（時間制限あり）。');
-    $('levelMinus').disabled = l===1; $('levelPlus').disabled = l===10;
+  function startFromSettings(){
+    collectNames();const next=R.fresh({size:selectedSize(),count:+$('playerCount').value,humans:+$('humanCount').value,level:+$('levelRange').value,order:$('orderSelect').value,names:draftNames});
+    next.preferences={showPaths:prefs.showPaths,handoff:$('handoffToggle').checked};closeDialog('settingsDialog');notify('');install(next);
   }
-  let pointerStart = null;
-  $('board').addEventListener('pointerdown', e => { if (e.isPrimary) pointerStart = { x:e.clientX, y:e.clientY, id:e.pointerId }; });
-  $('board').addEventListener('pointercancel', () => { pointerStart=null; });
-  $('board').addEventListener('pointerup', e => {
-    const start = pointerStart; pointerStart = null;
-    if (!start || start.id!==e.pointerId || Math.hypot(e.clientX-start.x,e.clientY-start.y)>14 || !canPlay()) return;
-    const b = $('board').getBoundingClientRect(), x=(e.clientX-b.left)*520/b.width, y=(e.clientY-b.top)*520/b.height;
-    if(x<20||x>493||y<20||y>493)return;
-    if (mode === 'move') {
-      const r=Math.max(0,Math.min(8,Math.round((y-CENTER)/S))),c=Math.max(0,Math.min(8,Math.round((x-CENTER)/S))),to=r*9+c;
-      if (!E.moves(state,0).includes(to)) { feedback='青いマスが移動できる場所です。'; renderTurn(); return; }
+  $('board').addEventListener('pointerdown',e=>{if(e.isPrimary)pointerStart={x:e.clientX,y:e.clientY,id:e.pointerId};});
+  $('board').addEventListener('pointercancel',()=>pointerStart=null);
+  $('board').addEventListener('pointerup',e=>{
+    const start=pointerStart;pointerStart=null;if(!start||start.id!==e.pointerId||Math.hypot(e.clientX-start.x,e.clientY-start.y)>14||!canPlay())return;
+    const b=$('board').getBoundingClientRect(),x=(e.clientX-b.left)*SIZE/b.width,y=(e.clientY-b.top)*SIZE/b.height,g=geometry();
+    if(x<GRID-8||x>g.end+8||y<GRID-8||y>g.end+8)return;
+    if(mode==='move'){
+      const r=Math.max(0,Math.min(E.M,Math.round((y-g.center)/g.step))),c=Math.max(0,Math.min(E.M,Math.round((x-g.center)/g.step))),to=r*E.N+c;
+      if(!E.moves(state).includes(to)){feedback='駒と同じ色で光るマスが、移動できる場所です。';renderTurn();return;}
       preview={t:'m',to};
-    } else preview={t:'w',o:orientation,r:Math.max(0,Math.min(7,Math.round((y-74)/S))),c:Math.max(0,Math.min(7,Math.round((x-74)/S)))};
+    }else preview={t:'w',o:orientation,r:Math.max(0,Math.min(E.M-1,Math.round((y-g.cross)/g.step))),c:Math.max(0,Math.min(E.M-1,Math.round((x-g.cross)/g.step)))};
     feedback='';render();
   });
-  $('moveMode').addEventListener('click',()=>setMode('move')); $('wallMode').addEventListener('click',()=>setMode('wall'));
-  $('horizontalBtn').addEventListener('click',()=>changeOrientation('h')); $('verticalBtn').addEventListener('click',()=>changeOrientation('v'));
+  $('moveMode').addEventListener('click',()=>setMode('move'));$('wallMode').addEventListener('click',()=>setMode('wall'));
+  $('horizontalBtn').addEventListener('click',()=>changeOrientation('h'));$('verticalBtn').addEventListener('click',()=>changeOrientation('v'));
   for(const b of document.querySelectorAll('#directionPad button'))b.addEventListener('click',()=>direction(+b.dataset.dr,+b.dataset.dc));
-  $('confirmBtn').addEventListener('click',()=>{ if(canPlay()&&preview&&E.legal(state,preview))commit(preview); });
+  $('confirmBtn').addEventListener('click',()=>{if(canPlay()&&preview&&E.legal(state,preview))commit(preview);});
   $('clearBtn').addEventListener('click',()=>{preview=null;feedback='';render();});
+  $('readyBtn').addEventListener('click',()=>{if(!ended()&&human(state.turn)){handoffPending=false;feedback='';render();}});
+  $('passBtn').addEventListener('click',()=>{if(canPlay()&&E.forcedPass(state))commit({t:'p'});});
+  $('mobileMode').addEventListener('click',()=>setMode(mode==='wall'?'move':'wall'));
+  $('mobileRotate').addEventListener('click',()=>changeOrientation(orientation==='h'?'v':'h'));
+  $('mobileConfirm').addEventListener('click',()=>{if(handoffPending&&human(state.turn))$('readyBtn').click();else if(canPlay()&&E.forcedPass(state))$('passBtn').click();else $('confirmBtn').click();});
   $('undoBtn').addEventListener('click',undo);
-  $('pathToggle').addEventListener('change',()=>{pathView=$('pathToggle').checked;save();render();});
-  $('newBtn').addEventListener('click',settings); $('againBtn').addEventListener('click',settings);
+  $('pathToggle').addEventListener('change',()=>{prefs.showPaths=$('pathToggle').checked;save();render();});
+  $('newBtn').addEventListener('click',settings);$('againBtn').addEventListener('click',settings);
   $('helpBtn').addEventListener('click',()=>openDialog('helpDialog'));
   $('dataBtn').addEventListener('click',()=>{text('dataMessage','');openDialog('dataDialog');});
-  $('resignBtn').addEventListener('click',()=>openDialog('resignDialog'));
-  $('confirmResign').addEventListener('click',()=>{if(!ended()){stopComputer();game.resigned=true;preview=null;save();render();}closeDialog('resignDialog');});
-  $('levelRange').addEventListener('input',updateLevel);
-  $('levelMinus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value-1;updateLevel();});
-  $('levelPlus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value+1;updateLevel();});
-  $('startBtn').addEventListener('click',()=>{const level=+$('levelRange').value,order=document.querySelector('input[name=order]:checked').value;closeDialog('settingsDialog');startGame(level,order);});
+  $('resignBtn').addEventListener('click',()=>{
+    const resign=E.P===2&&game.humans===1;text('resignTitle',resign?'投了しますか？':'この対局を終了しますか？');
+    text('endDescription',resign?'この対局を終了し、コンピューターの勝ちにします。':'勝者を決めずに終了します。再開したい場合は、先に対局データを書き出してください。');
+    text('confirmResign',resign?'投了して終了':'勝者なしで終了');openDialog('resignDialog');
+  });
+  $('confirmResign').addEventListener('click',()=>{if(!ended()){stopComputer();game.termination=E.P===2&&game.humans===1?{type:'resigned',player:0}:{type:'stopped'};preview=null;handoffPending=false;save();}closeDialog('resignDialog');render();});
+  $('levelRange').addEventListener('input',updateLevel);$('levelMinus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value-1;updateLevel();});$('levelPlus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value+1;updateLevel();});
+  $('playerCount').addEventListener('change',updateSettings);$('humanCount').addEventListener('change',updateSettings);
+  for(const input of document.querySelectorAll('input[name=boardSize]'))input.addEventListener('change',updateSettings);
+  $('startBtn').addEventListener('click',startFromSettings);
   for(const b of document.querySelectorAll('[data-close]'))b.addEventListener('click',()=>closeDialog(b.dataset.close));
+  for(const d of document.querySelectorAll('dialog'))d.addEventListener('close',()=>{render();scheduleComputer();});
   $('exportBtn').addEventListener('click',()=>{
-    const blob=new Blob([JSON.stringify(record(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download='quoridor-'+new Date().toISOString().slice(0,10)+'-'+game.actions.length+'moves.json';document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','対局データを書き出しました。');
+    const blob=new Blob([JSON.stringify(rec(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`quoridor-${E.N}x${E.N}-${E.P}players-${new Date().toISOString().slice(0,10)}-${game.actions.length}moves.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','対局データを書き出しました。');
   });
   $('importBtn').addEventListener('click',()=>{$('importFile').value='';$('importFile').click();});
   $('importFile').addEventListener('change',async e=>{
     const file=e.target.files[0];if(!file)return;
-    try{if(file.size>300000)throw new Error('ファイルが大きすぎます。300KB以下の対局ファイルを選んでください。');
-      const parsed=parseRecord(JSON.parse(await file.text()));installRecord(parsed);closeDialog('dataDialog');notify('対局データを読み込みました。', true);
-    }catch(error){text('dataMessage','読み込めませんでした：'+error.message);}
+    try{if(file.size>2000000)throw new Error('2MB以下の対局ファイルを選んでください。');const parsed=R.parse(JSON.parse(await file.text()));install(parsed);closeDialog('dataDialog');notify('対局データを読み込みました。',true);}
+    catch(error){text('dataMessage','読み込めませんでした：'+error.message);}
   });
   document.addEventListener('keydown',e=>{
-    if(document.querySelector('dialog[open]')||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(dialogsOpen()||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
     const dirs={ArrowUp:[-1,0],ArrowRight:[0,1],ArrowDown:[1,0],ArrowLeft:[0,-1]};
     if(dirs[e.key]){e.preventDefault();direction(...dirs[e.key]);$('board').focus({preventScroll:true});}
     else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){e.preventDefault();$('confirmBtn').click();}
     else if(e.key==='Escape'){preview=null;render();}
-    else if(e.key.toLowerCase()==='m')setMode('move');
-    else if(e.key.toLowerCase()==='w')setMode('wall');
+    else if(e.key.toLowerCase()==='m')setMode('move');else if(e.key.toLowerCase()==='w')setMode('wall');
     else if(e.key.toLowerCase()==='r'&&mode==='wall')changeOrientation(orientation==='h'?'v':'h');
   });
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')save();});
-  window.addEventListener('pagehide',save);
-  // Read-only inspection is useful for automated browser tests and local troubleshooting.
-  window.Quoridor = Object.freeze({ engine:E, inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),mode,preview:preview?{...preview}:null,busy}) });
-  let restored=false;
-  try{const raw=localStorage.getItem(STORAGE);if(raw){const parsed=parseRecord(JSON.parse(raw));game=parsed.game;state=parsed.state;states=parsed.states;pathView=parsed.pathView;restored=true;}}
-  catch(_){notify('保存データを復元できなかったため、新しい盤面を表示します。書き出した対局ファイルは「保存・読込」から復元できます。');}
-  if(!restored){game={id:uid(),startedAt:new Date().toISOString(),first:0,order:'first',level:5,actions:[],resigned:false};}
-  $('pathToggle').checked=pathView;render();
-  if(restored)scheduleComputer();else settings();
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){save();stopComputer();}else{render();scheduleComputer();}});
+  window.addEventListener('pagehide',()=>{save();stopComputer();});
+  window.addEventListener('pageshow',()=>{render();scheduleComputer();});
+  // Read-only snapshots for testing and troubleshooting. No ability to mutate a live game.
+  window.Quoridor=Object.freeze({version:'2.0.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending})});
+  let restored=null,migrated=false;
+  try{const raw=localStorage.getItem(STORAGE);if(raw)restored=R.parse(JSON.parse(raw));else{const old=localStorage.getItem(OLD_STORAGE);if(old){restored=R.parse(JSON.parse(old));migrated=true;}}}
+  catch(_){notify('保存データを復元できなかったため、新しい盤面を表示します。書き出したファイルは「保存・読込」から復元できます。');}
+  if(restored){install(restored);if(migrated)notify('旧版の対局を引き継ぎました。「新しい対局」からキッズや人数を選べます。',true);}
+  else{$('pathToggle').checked=prefs.showPaths;render();settings();}
 })();
 
 </script>
