@@ -99,15 +99,32 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 #variationDialog{width:min(600px,calc(100vw - 20px))}#variationBoard{display:block;width:100%;max-height:58svh;aspect-ratio:1;background:var(--paper);border:1px solid var(--line);border-radius:12px}
 .variation-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.variation-controls button{min-height:46px;border:1px solid var(--line);background:var(--paper)}#variationStep{font-size:12px;color:var(--ink);min-height:38px}#variationDistances{font-size:10px}
 
+
+/* v2.4: rotate a viewport, not a long page; top-layer dialogs rotate separately. */
+.view-controls{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:0 0 12px;padding:9px 12px;border:1px solid var(--line);background:var(--paper);border-radius:12px;font-size:11px}
+.view-controls label{display:flex;align-items:center;gap:7px;min-height:36px}.view-controls input{width:18px;height:18px;accent-color:var(--human)}.view-controls button{min-height:38px;padding:6px 12px;border:1px solid var(--line);background:#f0f2eb;font-size:11px}.view-controls small{color:var(--muted);font-size:10px;flex-basis:100%}.study-launch{background:var(--human-light);color:var(--human);border:1px solid #aecfc3}
+body.view-mode{height:100vh;height:100dvh;overflow:hidden}body.view-mode #viewFrame{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;transform:rotate(0deg);transform-origin:center center}body.view-mode #viewScroll{height:100%;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+body.view-mode #viewFrame.flipped{transform:rotate(180deg)}body[data-view-angle="180"] dialog{transform:rotate(180deg);transform-origin:center}
+body.view-mode .app{padding-top:10px}body.view-mode .header{margin-bottom:8px}body.view-mode .board-wrap{max-width:min(100%,max(260px,calc(100dvh - 275px)))}
+body.view-mode #mobileBar{position:absolute}body.view-mode .view-controls{margin-bottom:8px;padding-top:3px;padding-bottom:3px;gap:2px 14px}body.view-mode .view-controls small{font-size:9px}
+#studyDialog{width:min(1020px,calc(100vw - 20px));max-height:calc(100dvh - 20px)}#studyDialog .dialog-body{padding:20px}#studyDialog h2{font-size:24px}#studyDialog p{line-height:1.7}
+.study-top{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 8px}.study-top label{font-size:10px;color:var(--muted)}.study-top select{margin-top:4px;font-size:12px}.study-picker{display:flex;gap:8px;align-items:center;margin-bottom:8px}.study-picker select{font-size:12px;flex:1;min-width:0}.study-picker button{min-height:44px;border:1px solid var(--line);background:#f0f2eb;padding:0 14px;font-size:12px;flex-shrink:0}
+#studyProgress{font-size:11px;color:var(--human);margin:8px 0}#studySource{font-size:10px;margin:6px 0;color:var(--muted)}
+.study-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(290px,1fr);gap:20px;align-items:start;margin-top:12px}.study-board-column{min-width:0;max-width:min(100%,max(275px,calc(100dvh - 320px)));margin-inline:auto}#studyBoard{display:block;width:100%;height:auto;background:#fffefa;border:1px solid var(--line);border-radius:14px;touch-action:pan-y;user-select:none;-webkit-user-select:none}#studyBoard text{pointer-events:none}#studyCounts,#studyBoardCaption{font-size:10px!important;line-height:1.6!important;margin:8px 0!important}#studyProblemTitle{font-size:18px;margin:0 0 6px}#studyPrompt{font-size:14px!important;color:var(--ink)!important;margin:6px 0 10px}#studyActor{color:var(--actor)!important;font-size:11px!important;font-weight:650}.study-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.study-mode button{min-height:42px;font-size:12px;background:#f0f2eb;border:1px solid var(--line)}.study-mode button[aria-pressed=true]{background:var(--actor);color:white;border-color:var(--actor)}
+.study-input{display:flex;gap:14px;align-items:center}.study-input>div:last-child{flex:1;min-width:0}#studySelection{font-size:11px!important;min-height:42px;color:var(--ink)}#studySubmit{width:100%}.study-more{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.study-more button{min-height:42px;font-size:11px;background:#f5f4ed;border:1px solid var(--line);padding:6px}.study-more button:first-child{grid-column:1/-1}#studyHintText{font-size:12px!important;background:#fff3d6;border-left:3px solid #ad7c1f;padding:10px 12px;border-radius:4px}#studyFeedback{font-size:13px!important;color:var(--ink)!important;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f1f2eb}#studyFeedback[data-result=correct]{background:#e5f1e9;border-color:#9bbba7}#studyFeedback[data-result=retry]{background:#fff3de;border-color:#d9c398}#studyScope{font-size:10px!important;margin:10px 0!important}#studyHistory{font-size:10px!important}#studySolutionChoices{display:flex;gap:6px;flex-wrap:wrap}#studySolutionChoices button{font-size:11px;background:#fff3d6;padding:8px;border:1px solid #d4ba7a}.study-footer{display:flex;gap:10px;margin-top:12px}.study-footer button{flex:1}.study-records{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}.study-records summary{font-size:11px;cursor:pointer}.study-records button{font-size:11px;min-height:40px;padding:6px 12px;background:#f0f2eb;border:1px solid var(--line);margin:8px 6px 0 0}.study-records p{font-size:10px!important}.study-empty{padding:20px;background:#f1f2eb;border-radius:10px}
+@media(max-width:760px){.header{flex-wrap:wrap}.header-actions{margin-left:auto}.header .small-btn{font-size:11px;padding:0 10px}.view-controls{font-size:10px;padding:6px 9px;margin-bottom:8px;gap:2px 8px}.view-controls small{font-size:9px}#studyDialog .dialog-body{padding:14px}.study-top{grid-template-columns:1fr 1fr}.study-grid{grid-template-columns:minmax(0,1fr);gap:12px}.study-board-column{max-width:420px;margin:auto;width:100%}#studyPrompt{font-size:13px!important}.study-input{gap:20px}.study-picker select{font-size:11px}.study-picker button{padding:0 10px;font-size:11px}.study-footer{position:sticky;bottom:-14px;background:var(--paper);padding:8px 0 2px;z-index:2}.study-top select{min-height:40px}.study-footer button{font-size:12px}}
+@media(max-width:360px){.brand h1{font-size:16px}.header .small-btn{padding:0 8px}.header-actions{gap:4px}.study-input{gap:10px}.study-picker{gap:4px}}
+
 </style></head>
-<body>
-<div class="app">
+<body data-view-angle="0">
+<div id="viewFrame"><div id="viewScroll"><div class="app">
 <header class="header">
   <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><h1>QUORIDOR</h1><p>コリドール <span>／ みんなで対戦</span></p></div></div>
-  <div class="header-actions"><button id="helpBtn" class="icon-btn" aria-label="ルールと操作方法">?</button><button id="newBtn" class="small-btn">新しい対局</button></div>
+  <div class="header-actions"><button id="helpBtn" class="icon-btn" aria-label="ルールと操作方法">?</button><button id="studyBtn" class="small-btn study-launch">勉強モード</button><button id="newBtn" class="small-btn">新しい対局</button></div>
 </header>
 <div id="notice" class="notice" role="status" hidden></div>
 <div class="game-info"><span id="modeBadge" class="mode-badge">通常 9×9</span><span id="matchInfo"></span></div>
+<div class="view-controls"><label><input id="autoRotateToggle" type="checkbox"><span>自動180°回転（向かい合う2人）</span></label><button id="flipViewBtn" type="button">画面を180°回転</button><small id="viewStatus">人間2人での対局で自動回転を使えます。手動回転はいつでも使えます。</small></div>
 <main class="game-layout">
 <section class="board-column" aria-label="対局盤">
   <div class="players" id="players"></div>
@@ -158,9 +175,11 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <details class="history-box"><summary>手順を見る <span id="historyCount">0手</span></summary><ol id="historyList"></ol></details>
 </section>
 </main>
-<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.3.0</span></footer>
+<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.4.0</span></footer>
+</div>
 </div>
 <div id="mobileBar" class="mobile-bar" aria-label="スマートフォン用の操作"><div id="mobileSelection" class="mobile-selection"></div><div class="mobile-buttons"><button id="mobileMode" class="mobile-mode">フェンス</button><button id="mobileHint" class="hint-button mobile-hint" aria-controls="hintPanel">ヒント</button><button id="mobileRotate" class="mobile-rotate" aria-label="フェンスの向きを変える">↻</button><button id="mobileConfirm" class="primary-btn">移動を確定</button></div></div>
+</div>
 <dialog id="settingsDialog" aria-labelledby="settingsTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">NEW GAME</p><h2 id="settingsTitle">対局をはじめる</h2></div><button class="icon-btn" data-close="settingsDialog" aria-label="設定を閉じる">×</button></div>
   <p class="dialog-lead">ひとりでも、家族でも。反対側の辺のどこかに、最初に着いた人の勝ちです。</p>
@@ -187,7 +206,7 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <label class="option-check" id="handoffOption"><input id="handoffToggle" type="checkbox" checked><span>人間の手番で「自分の番をはじめる」を表示する</span></label>
   <p class="small-note">レベルを5にすると、コンピューターは全員レベル5です。レベルは本アプリ内の設定で、対人棋力や勝率を保証しません。</p>
   <p id="replaceNote" class="replace-note" hidden>開始すると現在の対局を置き換えます。残す場合は先に対局データを書き出してください。</p>
-  <div class="start-sticky"><button id="startBtn" class="primary-btn full">この設定で開始</button><button class="text-btn full" data-close="settingsDialog">現在の盤面に戻る</button></div>
+  <div class="start-sticky"><button id="startBtn" class="primary-btn full">この設定で開始</button><button class="outline-btn full" id="studyFromSettings">次の一手を練習する</button><button class="text-btn full" data-close="settingsDialog">現在の盤面に戻る</button></div>
 </div></dialog>
 <dialog id="helpDialog" aria-labelledby="helpTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">HOW TO PLAY</p><h2 id="helpTitle">ルールと操作</h2></div><button class="icon-btn" data-close="helpDialog" aria-label="説明を閉じる">×</button></div>
@@ -200,9 +219,10 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <h3>全員の道を残す</h3><p>フェンスは重ねたり途中で十字に交差させたりできません。誰か1人でも、ゴールへの道を完全になくす配置は禁止です。残り道を調べる際には、一時的な駒の占有を無視し、フェンスだけでつながりを確認します。</p>
   <h3>指で操作する</h3><p>移動できるマスは、手番の駒と同じ色で光ります。タップまたは方向ボタンで選んで「移動を確定」を押します。フェンスは近くをタップし、縦横と方向ボタンで調整して確定します。タップだけでは着手されません。スマートフォンでは、画面下の固定ボタンでも確定・駒とフェンスの切り替え・回転ができます。</p>
   <h3>ヒント</h3><p>自分の手番に「ヒント」を押すと、移動先またはフェンスの候補を金色の枠で表示します。理由と歩数の変化を確認し、使う場合だけ「確定」を押してください。「自分で考える」で候補を消せます。人間だけの対戦でも、手番の人が使えます。相手のレベルは変わりません。</p><p>ヒントはレベル10の思考設定で検討します。計算時間に制限があり、全ての手を読み切るものではありません。理由は選ばれた手の歩数変化などを実際に計算して表示するもので、探索の全過程を説明するものではありません。軽量計算に切り替わった場合はその旨を表示します。ヒントの表示や取消では対局の手数は増えません。</p>
-  <h3>親子で同じ端末を使う</h3><p>「自分で操作する人数」を2人以上にすると、番号の小さい駒から順に人間が操作します。3・4人戦では人間の開始位置を上・左・右から選べます。使用中の位置を選ぶと入れ替わり、コンピューターは残りの位置に入ります。「ランダム」ではプレイヤー1以外を対局開始時に抽選します。名前・色・番号は人と一緒に移ります。手番の名前とゴール方向を確かめてから操作してください。交代確認は設定で外せます。画面の向きは固定です。別々の端末を接続するオンライン対戦ではありません。</p>
+  <h3>親子で同じ端末を使う</h3><p>「自分で操作する人数」を2人以上にすると、番号の小さい駒から順に人間が操作します。3・4人戦では人間の開始位置を上・左・右から選べます。使用中の位置を選ぶと入れ替わり、コンピューターは残りの位置に入ります。「ランダム」ではプレイヤー1以外を対局開始時に抽選します。名前・色・番号は人と一緒に移ります。手番の名前とゴール方向を確かめてから操作してください。交代確認は設定で外せます。「自動180°回転」は、人間がちょうど2人のときに使えます。プレイヤー1を手前、プレイヤー2を向かい側に座る人として、画面内の盤面・文字・ボタンが交代時に回転します。ゲーム内の開始位置とは別の設定です。コンピューターの手番中は直前の人の向きを保ちます。手動回転ボタンを押すと自動回転を解除します。Safariのアドレスバーなどブラウザー自体は回転しません。別々の端末を接続するオンライン対戦ではありません。</p>
   <h3>戻す・保存・旧版からの移行</h3><p>「1手戻す」は、直前に人間が確定した着手と、その後のコンピューターの着手をまとめて取り消します。人間が複数でも同じです。途中の対局は同じブラウザーに自動保存します。旧版の9×9・2人戦データも読み込めます。別端末へ移す場合は「保存・読込」を使ってください。</p>
   <h3>キーボード</h3><p>矢印キーで位置を選び、Enterで確定します。Mで駒、Wでフェンス、Rでフェンスの回転、Escapeで選択を取り消します。Hでヒントを表示・中止します。斜めの移動は画面の斜めボタンを使ってください。</p>
+  <h3>勉強モード</h3><p>20題の作成局面で、実際に駒やフェンスを選んで「回答する」を押します。問題ごとに示した条件で判定し、条件を満たす別解も受け付けます。ヒントや答えを見ることもできます。通常の対局は一時停止し、問題を解いても対局の盤面や手順は変わりません。</p><p>学習者1～4の記録を分けられます。自力正解は、その挑戦でヒントを使わず最初の回答が正解したことを表します。誤答・ヒント使用・答え表示の問題は「要復習」で選び直せます。学習記録は対局データとは別に保存・書き出しします。</p>
   <h3>コンピューター</h3><p>2人戦は相手の反撃を、3・4人戦は各プレイヤーが自分の勝利を目指す手を先読みします。全員同じレベル設定ですが、盤面の位置によって選ぶ手は異なります。全合法手の完全な読みや必勝を保証するものではありません。</p>
   <h3>着手不能時の補助ルール</h3><p>3・4人戦で駒同士が詰まり、合法な移動もフェンス配置も1つもない場合だけ、順番を送れます。全員が着手不能なら勝者なしで終了します。これは公開説明で扱いを確認できなかった例外に対する本アプリの処理です。通常のパスはできません。</p>
   <p class="rule-source">ルール参考：<a href="https://www.play-departmentstore.com/fs/castjapan/gc006" target="_blank" rel="noopener noreferrer">日本販売元・通常版</a> ／ <a href="https://www.play-departmentstore.com/fs/castjapan/gk003" target="_blank" rel="noopener noreferrer">日本販売元・キッズ版</a></p>
@@ -217,6 +237,32 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 </div></dialog>
 <dialog id="resignDialog" aria-labelledby="resignTitle"><div class="dialog-body"><div class="dialog-heading"><h2 id="resignTitle">この対局を終了しますか？</h2><button class="icon-btn" data-close="resignDialog" aria-label="閉じる">×</button></div><p id="endDescription">勝者を決めずに現在の対局を終了します。再開したい場合は、先にデータを書き出してください。</p><button id="confirmResign" class="primary-btn full">終了する</button><button class="text-btn full" data-close="resignDialog">対局を続ける</button></div></dialog>
 <dialog id="variationDialog" aria-labelledby="variationTitle"><div class="dialog-body"><div class="dialog-heading"><h2 id="variationTitle">検討手順</h2><button class="icon-btn" data-close="variationDialog" aria-label="検討画面を閉じる">×</button></div><p id="variationNote"></p><svg id="variationBoard" viewBox="0 0 552 552" role="img" aria-label="実際の対局とは別の検討用盤面"></svg><p id="variationStep" aria-live="polite"></p><div class="variation-controls"><button id="variationPrev">← 1手前</button><button id="variationNext">次の1手 →</button></div><p id="variationDistances"></p><button class="primary-btn full" data-close="variationDialog">実際の盤面に戻る</button></div></dialog>
+
+<dialog id="studyDialog" aria-labelledby="studyTitle"><div class="dialog-body">
+<div class="dialog-heading"><div><p class="eyebrow">PRACTICE</p><h2 id="studyTitle">次の一手</h2></div><button class="icon-btn" data-close="studyDialog" aria-label="勉強モードを閉じる">×</button></div>
+<p id="studySource">対局を一時停止して練習できます。実際の対局は変更しません。</p>
+<div class="study-top">
+<label>学習者<select id="studyProfile"><option value="0">学習者1</option><option value="1">学習者2</option><option value="2">学習者3</option><option value="3">学習者4</option></select></label>
+<label>盤面<select id="studySize"><option value="">両方</option><option value="7">キッズ7×7</option><option value="9">通常9×9</option></select></label>
+<label>テーマ<select id="studyCategory"><option value="">すべて</option><option>基本</option><option>攻防</option><option>応用</option><option>多人数</option></select></label>
+<label>出題<select id="studyFilter"><option value="">すべて</option><option value="new">未挑戦</option><option value="review">要復習</option></select></label>
+</div><p id="studyProgress"></p>
+<div class="study-picker"><select id="studySelect" aria-label="練習する問題"></select><button id="studyShuffle">問題を抽選</button></div>
+<div id="studyEmpty" class="study-empty" hidden>この条件の問題はありません。「すべて」など、出題条件を変更してください。</div>
+<div id="studyWorkspace">
+<div class="study-grid"><section class="study-board-column"><svg id="studyBoard" viewBox="0 0 580 580" role="img" aria-label="練習問題の盤面" tabindex="0"></svg><p id="studyBoardCaption"></p><p id="studyCounts"></p></section>
+<section class="study-controls"><h3 id="studyProblemTitle"></h3><p id="studyActor"></p><p id="studyPrompt"></p>
+<div class="study-mode"><button id="studyMove" aria-pressed="true">駒を動かす</button><button id="studyWall" aria-pressed="false">フェンスを置く</button></div>
+<div id="studyOrientation" class="study-mode" hidden><button id="studyHorizontal" aria-pressed="true">横のフェンス</button><button id="studyVertical" aria-pressed="false">縦のフェンス</button></div>
+<div class="study-input"><div class="direction-pad" id="studyPad" aria-label="練習の移動先・フェンスの位置"><button data-dr="-1" data-dc="-1" aria-label="↖へ">↖</button><button data-dr="-1" data-dc="0" aria-label="↑へ">↑</button><button data-dr="-1" data-dc="1" aria-label="↗へ">↗</button><button data-dr="0" data-dc="-1" aria-label="←へ">←</button><span>候補</span><button data-dr="0" data-dc="1" aria-label="→へ">→</button><button data-dr="1" data-dc="-1" aria-label="↙へ">↙</button><button data-dr="1" data-dc="0" aria-label="↓へ">↓</button><button data-dr="1" data-dc="1" aria-label="↘へ">↘</button></div><div><p id="studySelection"></p><button id="studySubmit" class="primary-btn" disabled>回答する</button></div></div>
+<div id="studyFeedback" role="status" aria-live="polite" hidden></div><p id="studyHintText" hidden></p><div id="studySolutionChoices"></div>
+<div class="study-more"><button id="studyHint">ヒント1：着目する点</button><button id="studyAnswer">答えを見る</button><button id="studyReset">この問題をやり直す</button></div>
+<p id="studyScope"></p><p id="studyHistory"></p></section></div>
+<div class="study-footer"><button id="studyNext" class="primary-btn">次の問題</button><button class="outline-btn" data-close="studyDialog">対局に戻る</button></div>
+</div>
+<details class="study-records"><summary>学習記録の保存・読込</summary><button id="studyExport">学習記録を書き出す</button><button id="studyImport">学習記録を読み込む</button><input id="studyFile" type="file" accept=".json,application/json" hidden><p>読み込みは4人分の学習記録を置き換えます。対局データは変わりません。自力正解は、その挑戦でヒントなし・最初の回答で正解したことを表し、過去に答えを見たことがない、という意味ではありません。</p><p id="studySaveNote"></p></details>
+</div></dialog>
+
 <noscript><div class="notice">このアプリにはJavaScriptが必要です。Safariなどのブラウザーで開き、JavaScriptを有効にしてください。</div></noscript>
 
 <script id="engine-code">
@@ -963,8 +1009,169 @@ function createQuoridorHints(E) {
   }
   return {analyze,wallRisk,describe,strongestFence,explain};
 }
+
 </script>
 
+<script id="study-code">
+/* Authored exercises with explicit, mechanically verifiable objectives.
+   They are teaching positions, NOT claimed optimal-play solutions to the whole game. */
+function createQuoridorStudy() {
+  'use strict';
+  const bank=[];
+  const wall=(o,r,c)=>({t:'w',o,r,c});
+  function add(N,code,title,category,kind,position,fences,extra={}) {
+    bank.push({id:code+'-'+N,size:N,count:2,actor:0,title,category,kind,position,fences,
+      source:'練習用に作成した局面です。実戦の棋譜ではありません。',...extra});
+  }
+  for(const N of [7,9]) {
+    const m=(N-1)/2,cell=(r,c)=>r*N+c;
+    add(N,'goal','ゴールの辺を見つける','基本','win',[cell(1,m),cell(N-3,0)],[],{
+      prompt:'1番の手番です。この1手でゴールしてください。',
+      hint:'ゴールは上側の辺です。中央のマスだけでなく、辺のどのマスでも到達になります。',
+      lesson:'ゴールの辺までの距離と、今すぐ到達できる手を最初に確認しましょう。'});
+    add(N,'jump','跳び越えてゴール','基本','win',[cell(2,m),cell(1,m)],[],{
+      prompt:'1番の手番です。1回の移動でゴールしてください。',
+      hint:'間にフェンスがなく、となりの駒の向こう側が空いています。',
+      lesson:'となりの駒を直線に跳び越える動きも1手です。ジャンプを含めて到達を確認しましょう。'});
+    add(N,'diagonal','横に回り込んでゴール','基本','win',[cell(1,m),cell(0,m)],[],{
+      prompt:'1番の手番です。この1手でゴールしてください。正解は1つとは限りません。',
+      hint:'相手の向こう側は盤外です。この場合は、相手の左右に回り込めます。',
+      lesson:'直線ジャンプができないときの回り込みを使います。左右の到達先は、どちらも正解です。'});
+    add(N,'path','フェンスを避ける一歩','基本','path',[cell(N-2,m),cell(0,m)],
+      [wall('h',N-3,m-1),wall('v',N-2,m-2)],{
+      prompt:'駒を動かし、フェンスだけで数えた自分の最短マス数を最も減らしてください。',
+      hint:'正面だけでなく、左右へ回る経路を比べます。現在地はマス数に含めません。',
+      lesson:'横への移動も、フェンスを避ける最短経路の一部になることがあります。',
+      scope:'この課題の距離は他の駒・ジャンプ・将来のフェンスを除いて数えます。'});
+    add(N,'block','相手の目前のゴールを止める','攻防','block',[cell(2,m),cell(N-2,m)],[],{
+      prompt:'1番の手番です。次に指す2番が、1回の移動でゴールできないようにしてください。',
+      hint:'2番が次に入れるゴールのマスと、その直前に通る辺を調べましょう。',
+      lesson:'自分の前進より、次の手で負けることを防ぐ必要があります。',
+      scope:'「次の1回の移動でのゴール」を止める問題です。その後の勝利を保証しません。'});
+    const attackWalls=[];
+    for(let r=2;r<=N-3;r+=2)for(const c of [m-1,m])attackWalls.push(wall('v',r,c));
+    add(N,'delay','引き返しを増やすフェンス','攻防','delay',[cell(N-2,0),cell(N-3,m)],attackWalls,{
+      prompt:'フェンスを1枚置き、「相手の増加マス数－自分の増加マス数－1」を最大にしてください。',
+      hint:'相手が入った通路の出口を塞ぐと、どこまで引き返す必要があるでしょうか。',
+      lesson:'フェンスの損得は、相手の遠回りだけでなく、自分への影響と置くための1手も差し引いて比べます。',
+      scope:'今のフェンスだけから計算した指標です。以後の反撃まで含む最善手を問うものではありません。'});
+    const guardWalls=[];
+    for(let r=1;r<=N-4;r+=2)for(const c of [m-1,m])guardWalls.push(wall('v',r,c));
+    add(N,'protect','短い道を守るフェンス','応用','protect',[cell(3,m),cell(1,N-1)],guardWalls,{
+      prompt:'フェンスを1枚置き、自分の距離を増やさずに、相手のフェンス1枚では自分の距離が延びない状態を作ってください。',
+      hint:'自分の後ろ側が開いているため、相手は前を塞げます。後ろを閉じるとどうなるでしょうか。',
+      lesson:'後ろの遠回りを閉じれば、前まで塞ぐフェンスは完全封鎖になり、置けません。',
+      scope:'他の駒を動かさず、相手が今置ける全フェンスを調べます。複数枚の連続配置や将来の接触は含みません。'});
+    const sealed=[];for(const r of [0,2])for(const c of [m-1,m])sealed.push(wall('v',r,c));sealed.push(wall('h',3,m-1));
+    add(N,'finish','守られた道では前進','応用','force2',[cell(2,m),cell(1,N-1)],sealed,{
+      prompt:'1番の手番です。相手の次の合法な手がどれでも、自分の次の手でゴールできる手を選んでください。',
+      hint:'この通路は、もう後ろが閉じています。相手が前を完全に塞げるか確認しましょう。',
+      lesson:'守られた経路では、不要なフェンスを置くより前進します。この問題では相手の全応手を確認しています。',
+      scope:'出題局面で、自分の候補→相手の全合法手→自分の1手でのゴールを判定します。'});
+    add(N,'multi3','3人戦：次に指すのは誰？','多人数','block',null,[],{count:3,actor:0,
+      position:[cell(N-1,m),cell(0,m),cell(m,N-2)],
+      prompt:'1番の手番です。次に指す3番が、1回の移動でゴールできないようにしてください。',
+      hint:'手番は盤面の位置に沿った時計回りです。番号順ではありません。3番は右側がゴールです。',
+      lesson:'多人数戦では、番号や対面の相手だけでなく、次に誰が到達できるかを確認します。',
+      scope:'次に指す人の即時の到達を止める課題で、全員に対して勝てることは保証しません。'});
+    add(N,'multi4','4人戦：横方向のゴールを止める','多人数','block',null,[],{count:4,actor:1,
+      position:[cell(N-1,m),cell(1,m),cell(1,1),cell(m,1)],
+      prompt:'2番の手番です。次に指す4番が、1回の移動でゴールできないようにしてください。',
+      hint:'4番のゴールは左側です。目の前の空きマスに到達させないフェンスを考えましょう。',
+      lesson:'手番の人とゴールの方角を確認しましょう。自分以外の3人を一緒の相手として扱う問題ではありません。',
+      scope:'次に指す人の即時の到達だけを判定します。'});
+  }
+  const byId=new Map(bank.map(p=>[p.id,p]));
+  function get(id){const p=byId.get(id);if(!p)throw new Error('問題が見つかりません。');return p;}
+  function build(id) {
+    const p=typeof id==='string'?get(id):id,E=createQuoridorEngine(p.size,p.count),s=E.initial(p.actor);
+    s.pos=p.position.slice();
+    p.fences.forEach((a,i)=>{if(!E.geometry(s,a))throw new Error('出題フェンスが重複しています。');E.rawWall(s,a,true);s.left[i%E.P]--;});
+    s.ply=p.fences.length;E.unpack(E.pack(s));if(E.winner(s)>=0)throw new Error('出題局面が終局しています。');
+    return {p,E,s};
+  }
+  const actionKey=a=>a.t==='m'?'m'+a.to:a.t==='w'?a.o+a.r+','+a.c:'p';
+  function actions(E,s,player=s.turn) {
+    if(E.winner(s)>=0)return [];
+    const all=E.moves(s,player).map(to=>({t:'m',to}));
+    if(s.left[player]>0)for(const o of ['h','v'])for(let r=0;r<E.M;r++)for(let c=0;c<E.M;c++){
+      const a=wall(o,r,c);if(!E.wallError(s,a,player))all.push(a);
+    }
+    if(!all.length&&E.forcedPass(s,player))all.push({t:'p'});return all;
+  }
+  function immediate(E,s,p){return E.moves(s,p).filter(to=>E.goal(to,p)).map(to=>({t:'m',to}));}
+  function risk(E,input,p) {
+    const s=E.clone(input),base=E.distance(s,p);let delta=0,action=null,actor=-1;
+    const q=s.left.findIndex((n,i)=>i!==p&&n>0);if(q<0)return {delta,action,actor};
+    for(const a of actions(E,s,q))if(a.t==='w'){
+      E.rawWall(s,a,true);const d=E.distance(s,p)-base;E.rawWall(s,a,false);
+      if(d>delta){delta=d;action=a;actor=q;}
+    }
+    return {delta,action,actor};
+  }
+  const cache=new Map();
+  function solve(id) {
+    if(cache.has(id))return cache.get(id);
+    const {p,E,s}=build(id),actor=s.turn,q=E.nextPlayer(actor),base=s.pos.map((_,i)=>E.distance(s,i));
+    const all=actions(E,s),rows=[];
+    for(const a of all){
+      const t=E.apply(s,a),after=t.pos.map((_,i)=>E.distance(t,i));let accepted=false,value=null,reply=null;
+      if(p.kind==='win')accepted=E.winner(t)===actor;
+      else if(p.kind==='path'&&a.t==='m')value=-after[actor];
+      else if(p.kind==='delay'&&a.t==='w')value=after[q]-base[q]-(after[actor]-base[actor])-1;
+      else if(p.kind==='block'){
+        const threats=immediate(E,t,q);accepted=E.winner(t)===actor||!threats.length;reply=threats[0]||null;
+      }else if(p.kind==='protect'&&a.t==='w'&&after[actor]<=base[actor])accepted=risk(E,t,actor).delta===0;
+      else if(p.kind==='force2'){
+        if(E.winner(t)===actor)accepted=true;
+        else if(immediate(E,t,actor).length){
+          accepted=true;
+          for(const b of actions(E,t)){
+            const u=E.apply(t,b);
+            if(E.winner(u)===q||!immediate(E,u,actor).length){accepted=false;reply=b;break;}
+          }
+        }
+      }
+      rows.push({a,accepted,value,reply,after});
+    }
+    const scored=rows.filter(x=>x.value!==null),max=scored.length?Math.max(...scored.map(x=>x.value)):null;
+    if(max!==null)for(const x of scored)x.accepted=x.value===max;
+    const good=rows.filter(x=>x.accepted).map(x=>x.a);
+    if(!good.length||good.length===all.length)throw new Error('問題の正解・不正解の分離に失敗しました：'+id);
+    const result={rows,good,max,base};cache.set(id,result);return result;
+  }
+  function assess(id,a) {
+    const {p,E,s}=build(id);if(!E.legal(s,a))return {legal:false,ok:false,message:a?.t==='w'?E.wallError(s,a):'このマスには動けません。'};
+    const result=solve(id),row=result.rows.find(x=>actionKey(x.a)===actionKey(a)),q=E.nextPlayer(s.turn);
+    let message=row.accepted?'課題の条件を満たしています。'+p.lesson:'この課題の条件を満たしていません。';
+    if(!row.accepted){
+      if(p.kind==='win')message+='この1手では、ゴールに到達していません。';
+      if(p.kind==='block'&&row.reply)message+=`${q+1}番は次に${E.square(row.reply.to)}へ動くとゴールします。`;
+      if(p.kind==='path')message+=`駒を動かした後の最短距離は${-result.max}マスまで減らせます。`;
+      if(p.kind==='delay')message+=a.t==='w'?`このフェンスの値は${row.value}です。${result.max}まで増やせるフェンスがあります。`:'今回はフェンスを1枚置く課題です。';
+      if(p.kind==='protect')message+='距離を増やさず、相手の1枚でも距離が延びないようにするフェンスを探します。';
+      if(p.kind==='force2')message+='この問題では、相手のどの合法手の後でも、自分が次の1手で到達できる必要があります。';
+    } else if(p.kind==='delay')message+=`この候補の値は${row.value}です。`;
+    return {legal:true,ok:row.accepted,message,before:result.base.slice(),after:row.after.slice(),reply:row.reply,
+      solutionCount:result.good.length,scope:p.scope||'現在の合法な移動で、ゴールに到達するかを確認します。'};
+  }
+  function blankProgress(){return {format:'quoridor-study',version:1,profile:0,profiles:Array.from({length:4},()=>({results:{}}))};}
+  function parseProgress(data){
+    if(!data||data.format!=='quoridor-study'||data.version!==1||!Array.isArray(data.profiles)||data.profiles.length!==4)throw new Error('学習記録の形式が違います。');
+    const out=blankProgress();out.profile=Number.isInteger(data.profile)&&data.profile>=0&&data.profile<4?data.profile:0;
+    data.profiles.forEach((profile,i)=>{
+      if(!profile||typeof profile.results!=='object'||!profile.results)throw new Error('学習者の記録が不正です。');
+      for(const [id,r] of Object.entries(profile.results)){
+        if(!byId.has(id))continue;
+        if(!r||!['independent','assisted','review','shown'].includes(r.status)||!Number.isInteger(r.attempts)||r.attempts<0||r.attempts>1e6||!Number.isInteger(r.correct)||r.correct<0||r.correct>r.attempts)throw new Error('解答記録が不正です。');
+        out.profiles[i].results[id]={status:r.status,attempts:r.attempts,correct:r.correct,lastAt:typeof r.lastAt==='string'?r.lastAt.slice(0,35):''};
+      }
+    });return out;
+  }
+  return {bank,get,build,actions,immediate,risk,solve,assess,actionKey,blankProgress,parseProgress};
+}
+
+</script>
 <script id="app-code">
 (() => {
   'use strict';
@@ -977,6 +1184,8 @@ function createQuoridorHints(E) {
     worker=null,workerURL=null,ticket=0,busy=false,watchdog=null,delayed=null,fallbackTimer=null,noticeTimer=null,storageOK=true,
     pointerStart=null,draftNames=[],draftSeats=[0,1],
     hintWorker=null,hintURL=null,hintTicket=0,hintBusy=false,hintResult=null,hintProgress=null,hintError='',hintWatchdog=null,hintTimer=null,hintChoice=0,hintStage=1,variation=null,decisionLog=[];
+  let viewAngle=0,autoRotate=false,viewActor=0;
+  try{autoRotate=localStorage.getItem('quoridor-auto-rotate')==='true';}catch(_){}
   const human=p=>p<game.humans;
   const dialogsOpen=()=>!!document.querySelector('dialog[open]');
   const ended=()=>!!game.termination||E.winner(state)>=0;
@@ -984,6 +1193,39 @@ function createQuoridorHints(E) {
   const name=p=>game.names[p];
   const text=(id,value)=>{$(id).textContent=value;};
   const rec=()=>R.record(game,prefs);
+
+  function updateView(reset=false){
+    if(reset){viewAngle=0;viewActor=0;}
+    const enabled=autoRotate&&game.humans===2;
+    if(enabled&&!ended()&&human(state.turn)){viewActor=state.turn;viewAngle=state.turn===0?0:180;}
+    const mode=enabled||viewAngle!==0,was=document.body.classList.contains('view-mode'),old=document.body.dataset.viewAngle;
+    const scroll=was?$('viewScroll').scrollTop:window.scrollY;
+    document.body.classList.toggle('view-mode',mode);document.body.dataset.viewAngle=String(viewAngle);
+    $('viewFrame').classList.toggle('flipped',viewAngle===180);
+    $('autoRotateToggle').disabled=game.humans!==2;$('autoRotateToggle').checked=enabled;
+    text('viewStatus',enabled?`${game.names[0]}は手前、${game.names[1]}は向かい側。コンピューターの手番では向きを維持します。`:game.humans!==2?'自動回転は人間がちょうど2人の対局で使えます。手動回転はいつでも可能です。':viewAngle?'手動で180°回転中。もう一度押すと元に戻ります。':'自動回転はOFFです。開始位置に関係なく、2人が向かい合う使い方です。');
+    if(mode!==was){if(mode){window.scrollTo(0,0);$('viewScroll').scrollTop=scroll;}else{window.scrollTo(0,scroll);}}
+    if(old!==String(viewAngle)&&enabled){$('viewScroll').scrollTop=0;pointerStart=null;}
+  }
+
+  function fitViewBoard(){
+    const b=$('board').parentElement;
+    const mobile=window.innerWidth<=760,reserve=mobile?92:38;
+    if(!document.body.classList.contains('view-mode')){
+      if(!mobile){b.style.maxWidth='';return;}
+      // Keep the starting pawn above the fixed mobile controls when possible.
+      // A narrow/short screen can still scroll; the direction pad remains available.
+      const top=b.getBoundingClientRect().top+window.scrollY;
+      b.style.maxWidth=Math.min(420,Math.max(230,window.innerHeight-top-reserve))+'px';return;
+    }
+    const fr=$('viewFrame').getBoundingClientRect(),br=b.getBoundingClientRect();
+    const top=(viewAngle===180?fr.bottom-br.bottom:br.top-fr.top)+$('viewScroll').scrollTop;
+    const available=Math.max(230,$('viewFrame').clientHeight-top-reserve);
+    b.style.maxWidth=Math.min(556,available)+'px';
+  }
+
+  function saveView(){try{localStorage.setItem('quoridor-auto-rotate',String(autoRotate));}catch(_){notify('画面の向きの設定を保存できません。次に開いたときは設定し直してください。',true);}}
+
   function notify(message,temporary=false){clearTimeout(noticeTimer);text('notice',message);$('notice').hidden=!message;if(temporary)noticeTimer=setTimeout(()=>notify(''),5500);}
   function save(){
     try{localStorage.setItem(STORAGE,JSON.stringify(rec()));storageOK=true;}
@@ -1001,7 +1243,7 @@ function createQuoridorHints(E) {
   function install(parsed,saveNow=true){
     stopComputer();E=parsed.E;C=createQuoridorComputer(E);state=parsed.state;game=parsed.game;states=parsed.states;prefs=parsed.preferences;
     decisionLog=[];mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
-    $('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;if(saveNow)save();render();scheduleComputer();
+    $('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;updateView(true);if(saveNow)save();render();scheduleComputer();
   }
   function blockedMatch(){return E.P>2&&E.moves(state).length===0&&Array.from({length:E.P},(_,p)=>E.forcedPass(state,p)).every(Boolean);}
   function commit(action){
@@ -1405,12 +1647,13 @@ function createQuoridorHints(E) {
     $('board').innerHTML=parts.join('');
   }
   function render(){
+    updateView();
     document.body.classList.toggle('kids',E.N===7);
     const win=E.winner(state),actor=win>=0?win:game.termination?.type==='resigned'?1-game.termination.player:state.turn;
     document.documentElement.style.setProperty('--actor',COLORS[actor]);document.documentElement.style.setProperty('--actor-light',LIGHTS[actor]);
     text('modeBadge',(E.N===7?'キッズ ':'通常 ')+E.N+'×'+E.N);
     text('matchInfo',`${E.P}人対戦 · 人間${game.humans}人`+(game.humans<E.P?`＋コンピューター${E.P-game.humans}人 · 全員レベル${game.level}`:' · コンピューターなし'));
-    renderPlayers();renderTurn();renderControls();renderHint();renderBoard();
+    renderPlayers();renderTurn();renderControls();renderHint();renderBoard();fitViewBoard();
     text('plyLabel',game.actions.length+'手目');text('historyCount',game.actions.length+'手');
     text('lastMove',game.actions.length?`${name(states.at(-2).turn)}：${E.actionName(game.actions.at(-1))}`:name(game.first)+'から開始します。');
     text('saveState',storageOK?'自動保存':'保存不可');$('pathNote').hidden=!prefs.showPaths;$('distanceNote').hidden=!prefs.showDistances;$('localNote').hidden=game.humans===1;
@@ -1506,7 +1749,9 @@ function createQuoridorHints(E) {
   $('board').addEventListener('pointercancel',()=>pointerStart=null);
   $('board').addEventListener('pointerup',e=>{
     const start=pointerStart;pointerStart=null;if(!start||start.id!==e.pointerId||Math.hypot(e.clientX-start.x,e.clientY-start.y)>14||!canPlay())return;
-    const b=$('board').getBoundingClientRect(),x=(e.clientX-b.left)*SIZE/b.width,y=(e.clientY-b.top)*SIZE/b.height,g=geometry();
+    const svg=$('board'),matrix=svg.getScreenCTM();if(!matrix)return;
+    let point;try{const xy=svg.createSVGPoint();xy.x=e.clientX;xy.y=e.clientY;point=xy.matrixTransform(matrix.inverse());}catch(_){return;}
+    const {x,y}=point,g=geometry();
     if(x<GRID-8||x>g.end+8||y<GRID-8||y>g.end+8)return;
     if(mode==='move'){
       const r=Math.max(0,Math.min(E.M,Math.round((y-g.center)/g.step))),c=Math.max(0,Math.min(E.M,Math.round((x-g.center)/g.step))),to=r*E.N+c;
@@ -1534,6 +1779,10 @@ function createQuoridorHints(E) {
   $('undoBtn').addEventListener('click',undo);
   $('pathToggle').addEventListener('change',()=>{prefs.showPaths=$('pathToggle').checked;save();render();});
   $('distanceToggle').addEventListener('change',()=>{prefs.showDistances=$('distanceToggle').checked;save();render();});
+  $('autoRotateToggle').addEventListener('change',()=>{autoRotate=$('autoRotateToggle').checked;viewAngle=0;saveView();updateView();render();});
+  $('flipViewBtn').addEventListener('click',()=>{autoRotate=false;viewAngle=viewAngle===0?180:0;pointerStart=null;saveView();updateView();render();});
+  $('studyBtn').addEventListener('click',()=>{openDialog('studyDialog');window.QuoridorStudyUI.open();});
+  $('studyFromSettings').addEventListener('click',()=>{closeDialog('settingsDialog');openDialog('studyDialog');window.QuoridorStudyUI.open();});
   $('newBtn').addEventListener('click',settings);$('againBtn').addEventListener('click',settings);
   $('helpBtn').addEventListener('click',()=>openDialog('helpDialog'));
   $('dataBtn').addEventListener('click',()=>{text('dataMessage','');openDialog('dataDialog');});
@@ -1556,7 +1805,7 @@ function createQuoridorHints(E) {
     a.href=url;a.download=`quoridor-${E.N}x${E.N}-${E.P}players-${new Date().toISOString().slice(0,10)}-${game.actions.length}moves.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','対局データを書き出しました。');
   });
   $('exportAnalysisBtn').addEventListener('click',()=>{
-    const data={...rec(),diagnostic:{appVersion:'2.3.0',capturedAt:new Date().toISOString(),environment:navigator.userAgent,decisions:decisionLog.filter(x=>x.gameId===game.id)}};
+    const data={...rec(),diagnostic:{appVersion:'2.4.0',capturedAt:new Date().toISOString(),environment:navigator.userAgent,decisions:decisionLog.filter(x=>x.gameId===game.id)}};
     const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='quoridor-analysis-'+game.actions.length+'moves.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','現在の対局と、このページで記録した検討内容を書き出しました。外部へ自動送信はしません。');
   });
   $('importBtn').addEventListener('click',()=>{$('importFile').value='';$('importFile').click();});
@@ -1576,16 +1825,140 @@ function createQuoridorHints(E) {
     else if(e.key.toLowerCase()==='r'&&mode==='wall')changeOrientation(orientation==='h'?'v':'h');
   });
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){save();stopComputer();}else{render();scheduleComputer();}});
+  window.addEventListener('resize',()=>{fitViewBoard();});
   window.addEventListener('pagehide',()=>{save();stopComputer();});
   window.addEventListener('pageshow',()=>{render();scheduleComputer();});
   // Read-only snapshots for testing and troubleshooting. No ability to mutate a live game.
-  window.Quoridor=Object.freeze({version:'2.3.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError,hintChoice,hintStage,diagnosticCount:decisionLog.length})});
+  window.Quoridor=Object.freeze({version:'2.4.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError,hintChoice,hintStage,diagnosticCount:decisionLog.length,view:{angle:viewAngle,auto:autoRotate&&game.humans===2,viewer:viewActor}})});
   try{$('studyHintToggle').checked=localStorage.getItem('quoridor-coach-steps')==='true';}catch(_){}
   let restored=null,migrated=false;
   try{const raw=localStorage.getItem(STORAGE);if(raw)restored=R.parse(JSON.parse(raw));else{const old=localStorage.getItem(PREVIOUS_STORAGE)||localStorage.getItem(OLD_STORAGE);if(old){restored=R.parse(JSON.parse(old));migrated=true;}}}
   catch(_){notify('保存データを復元できなかったため、新しい盤面を表示します。書き出したファイルは「保存・読込」から復元できます。');}
   if(restored){install(restored);if(migrated)notify('旧版の対局を引き継ぎました。最短マス数を表示し、「新しい対局」で開始位置を選べます。',true);}
   else{$('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;render();settings();}
+})();
+
+</script>
+<script id="study-ui-code">
+/* A separate teaching board. Never writes to the live match, replay, or its storage. */
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id),S=createQuoridorStudy(),KEY='quoridor-study-v1',COLORS=['#157879','#b55d3b','#6555a7','#397bb7'],GOALS=['上','下','右','左'];
+  const LABELS={independent:'自力正解',assisted:'ヒント・再回答で正解',review:'要復習',shown:'答えを表示'};
+  let progress=S.blankProgress(),p=null,E=null,root=null,shown=null,selected=null,mode='move',orientation='h',hints=0,tries=0,done=false,revealed=false,feedback='',ok=null,pointer=null,saveOK=true,lastAnswer=null;
+  try{const raw=localStorage.getItem(KEY);if(raw)progress=S.parseProgress(JSON.parse(raw));}catch(_){saveOK=false;}
+  const text=(id,t)=>$(id).textContent=t;
+  const results=()=>progress.profiles[progress.profile].results;
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(progress));saveOK=true;}catch(_){saveOK=false;}text('studySaveNote',saveOK?'学習記録はこのブラウザーに保存します。':'この環境では学習記録を自動保存できません。書き出して保管してください。');}
+  function available(){return S.bank.filter(x=>(!$('studySize').value||x.size===+$('studySize').value)&&(!$('studyCategory').value||x.category===$('studyCategory').value)&&(!$('studyFilter').value||($('studyFilter').value==='new'?!results()[x.id]:!!results()[x.id]&&results()[x.id].status!=='independent')));}
+  function summary(){
+    const rs=Object.values(results()),good=rs.filter(x=>x.status==='independent').length;
+    text('studyProgress',`全${S.bank.length}題 ／ 未挑戦${S.bank.length-rs.length} ／ 自力正解${good} ／ 要復習${rs.length-good}`);
+    if(p)text('studyHistory',results()[p.id]?`この問題の記録：${LABELS[results()[p.id].status]}（回答${results()[p.id].attempts}回）`:'この問題は未挑戦です。');
+  }
+  function refreshList(prefer) {
+    const list=available(),sel=$('studySelect');sel.replaceChildren();
+    for(const x of list){const index=S.bank.indexOf(x)+1;sel.add(new Option(`${String(index).padStart(2,'0')}｜${x.size}×${x.size} ${x.title}`,x.id));}
+    const id=list.some(x=>x.id===prefer)?prefer:list[0]?.id;
+    $('studyWorkspace').hidden=!id;$('studyEmpty').hidden=!!id;sel.disabled=!id;$('studyShuffle').disabled=!id;
+    if(id){sel.value=id;load(id);}else{p=null;root=null;shown=null;summary();}
+  }
+  function load(id) {
+    const b=S.build(id);p=b.p;E=b.E;root=b.s;shown=E.clone(root);selected=null;mode='move';orientation='h';hints=0;tries=0;done=false;revealed=false;feedback='';ok=null;lastAnswer=null;S.solve(id);
+    $('studyDialog').style.setProperty('--actor',COLORS[p.actor]);text('studyProblemTitle',p.title);text('studyPrompt',p.prompt);
+    text('studySource',p.source);text('studyScope',p.scope||'この1手でのゴールを、全合法な移動から確認します。');text('studyActor',`${p.actor+1}番を操作 ／ ${GOALS[E.SEATS[p.actor]]}側がゴール ／ 手番順 ${E.ORDER.map(x=>x+1).join(' → ')}`);
+    $('studyHintText').hidden=true;text('studyHintText','');$('studySolutionChoices').replaceChildren();render();summary();
+  }
+  function geometry(){const step=468/E.N;return {step,cell:step-8,center:56+(step-8)/2,cross:56+step-4};}
+  function draw(){
+    if(!p)return;const s=shown,g=geometry(),parts=[],ms=!done&&mode==='move'?E.moves(root):[],color=COLORS[p.actor];
+    const fence=(a,fill,other='')=>`<rect x="${56+a.c*g.step+(a.o==='v'?g.step-9:0)}" y="${56+a.r*g.step+(a.o==='h'?g.step-9:0)}" width="${a.o==='h'?g.step*2-8:10}" height="${a.o==='v'?g.step*2-8:10}" rx="4" fill="${fill}" ${other}/>`;
+    for(let r=0;r<E.N;r++)for(let c=0;c<E.N;c++){
+      const i=r*E.N+c,isSelected=selected?.t==='m'&&selected.to===i;
+      parts.push(`<rect data-study-cell="${i}" x="${56+c*g.step}" y="${56+r*g.step}" width="${g.cell}" height="${g.cell}" rx="6" fill="${ms.includes(i)?'#e0eee7':'#ecebe4'}" stroke="${isSelected?color:'#dce0d5'}" stroke-width="${isSelected?3:1}"/>`);
+      if(ms.includes(i))parts.push(`<circle cx="${g.center+c*g.step}" cy="${g.center+r*g.step}" r="4" fill="${color}"/>`);
+    }
+    const lines=['M56 44H516','M56 530H516','M530 56V516','M44 56V516'],coords=[[286,24,0],[286,557,0],[557,286,90],[22,286,-90]];
+    for(let i=0;i<E.P;i++){const [x,y,a]=coords[E.SEATS[i]];parts.push(`<path d="${lines[E.SEATS[i]]}" stroke="${COLORS[i]}" stroke-width="5"/><text x="0" y="0" transform="translate(${x} ${y}) rotate(${a})" text-anchor="middle" font-size="13" fill="${COLORS[i]}">${i+1}番のゴール</text>`);}
+    for(const o of ['h','v'])for(let k=0;k<E.W;k++)if(s[o][k])parts.push(fence({o,r:Math.floor(k/E.M),c:k%E.M},'#49585c'));
+    if(selected?.t==='w'&&!done){const valid=E.legal(root,selected);parts.push(fence(selected,valid?color:'#b63045','class="study-preview-wall" fill-opacity=".55" stroke="'+(valid?color:'#b63045')+'" stroke-width="2" stroke-dasharray="6 3"'));}
+    if(done&&lastAnswer?.t==='w')parts.push(fence(lastAnswer,'none','stroke="#a57412" stroke-width="3" stroke-dasharray="5 3"'));
+    for(let i=0;i<E.P;i++){
+      const x=g.center+s.pos[i]%E.N*g.step,y=g.center+Math.floor(s.pos[i]/E.N)*g.step,angle=[0,180,90,-90][E.SEATS[i]],radius=E.N===7?23:20;
+      parts.push(`<g class="study-pawn" data-player="${i}" transform="translate(${x} ${y})"><title>${i+1}番、${GOALS[E.SEATS[i]]}へ</title>`);
+      if(E.N===7)parts.push(`<g transform="rotate(${angle})"><path d="M0 17Q20 30 20 15" fill="none" stroke="${COLORS[i]}" stroke-width="3"/><ellipse cy="3" rx="13" ry="18" fill="${COLORS[i]}" stroke="white" stroke-width="2"/><circle cx="-10" cy="-8" r="8" fill="${COLORS[i]}" stroke="white" stroke-width="2"/><circle cx="10" cy="-8" r="8" fill="${COLORS[i]}" stroke="white" stroke-width="2"/><circle cy="-13" r="3" fill="#f4dbbc"/></g>`);
+      else parts.push(`<path d="M0 ${-radius}L${radius} ${radius*.85}Q0 ${radius*.35} ${-radius} ${radius*.85}Z" fill="${COLORS[i]}" stroke="white" stroke-width="2" transform="rotate(${angle})"/>`);
+      parts.push(`<text y="8" text-anchor="middle" font-size="12" font-weight="700" fill="white">${i+1}</text></g>`);
+    }
+    for(let i=0;i<E.N;i++)parts.push(`<text x="${g.center+i*g.step}" y="543" font-size="10" fill="#647575" text-anchor="middle">${'abcdefghi'[i]}</text><text x="36" y="${g.center+i*g.step+4}" font-size="10" fill="#647575" text-anchor="middle">${E.N-i}</text>`);
+    $('studyBoard').innerHTML=parts.join('');$('studyBoard').setAttribute('aria-label',`${E.N}×${E.N}の練習問題。${p.actor+1}番を操作。${GOALS[E.SEATS[p.actor]]}側がゴール。`);
+    text('studyCounts',s.pos.map((_,i)=>`${i+1}番：フェンス${s.left[i]}枚、最短${E.distance(s,i)}マス`).join(' ／ '));
+    text('studyBoardCaption',done?'回答後の盤面（実際の対局は進みません）':'出題局面（数字はジャンプを除く距離です）');
+  }
+  function moved(dr,dc){const from=root.pos[p.actor];return E.moves(root).find(x=>Math.sign(Math.floor(x/E.N)-Math.floor(from/E.N))===dr&&Math.sign(x%E.N-from%E.N)===dc);}
+  const defaultWall=()=>({t:'w',o:orientation,r:Math.floor((E.N-2)/2),c:Math.floor((E.N-2)/2)});
+  function render(){
+    if(!p)return;draw();$('studyMove').setAttribute('aria-pressed',mode==='move');$('studyWall').setAttribute('aria-pressed',mode==='wall');
+    $('studyMove').disabled=done;$('studyWall').disabled=done||!root.left[p.actor];$('studyOrientation').hidden=mode!=='wall';
+    for(const [id,o]of [['studyHorizontal','h'],['studyVertical','v']]){$(id).disabled=done;$(id).setAttribute('aria-pressed',orientation===o);}
+    for(const b of document.querySelectorAll('#studyPad button')){
+      const dr=+b.dataset.dr,dc=+b.dataset.dc,w=selected||defaultWall();
+      b.disabled=done||(mode==='move'?moved(dr,dc)===undefined:!!(dr&&dc)||w.r+dr<0||w.r+dr>=E.M||w.c+dc<0||w.c+dc>=E.M);
+    }
+    const valid=selected&&E.legal(root,selected);$('studySubmit').disabled=done||!valid;
+    text('studySelection',done?'答えを確認しました。次の問題か、やり直しを選べます。':selected?(valid?E.actionName(selected):E.wallError(root,selected)):'盤面をタップするか、方向ボタンで候補を選んでください。');
+    $('studyFeedback').hidden=!feedback;text('studyFeedback',feedback);$('studyFeedback').dataset.result=ok===true?'correct':ok===false?'retry':'info';
+    $('studyHint').disabled=done||hints>=2;$('studyAnswer').disabled=done;text('studyHint',hints===0?'ヒント1：着目する点':'ヒント2：もう少し詳しく');
+  }
+  function record(status,correct,attempt=true){const r=results()[p.id]||{attempts:0,correct:0};results()[p.id]={status,attempts:r.attempts+(attempt?1:0),correct:r.correct+(correct?1:0),lastAt:new Date().toISOString()};save();summary();}
+  function submit(){
+    if(!p||done||!selected)return;const a=S.assess(p.id,selected);if(!a.legal){feedback=a.message;ok=false;render();return;}
+    tries++;feedback=(a.ok?'正解です。':'もう一度考えてみましょう。')+' '+a.message;ok=a.ok;
+    record(a.ok?(tries===1&&!hints&&!revealed?'independent':'assisted'):'review',a.ok);
+    if(a.ok){done=true;lastAnswer={...selected};shown=E.apply(root,selected);feedback+=` 条件を満たす手は${a.solutionCount}通りです。`;}
+    render();
+  }
+  function showHint(){
+    if(!p||done)return;hints++;$('studyHintText').hidden=false;
+    text('studyHintText',hints===1?p.hint:p.kind==='protect'?'自分の後ろ側を閉じるフェンスを探してください。誰かの道を完全に塞ぐフェンスは置けません。':p.kind==='delay'?'通路の出口に横のフェンスを置く場合と、ほかの場所へ置く場合の距離の増加を比べましょう。':p.kind==='block'?`次に動く${E.nextPlayer(p.actor)+1}番の、ゴールへ通る辺をフェンスで塞ぎます。`:'ゴールに近づく移動を実際に選んでみましょう。斜めのボタンは回り込みが合法なときだけ使えます。');
+    // Looking at hints alone also marks this exercise for review.
+    record('review',false,false);render();
+  }
+  function answer(){
+    if(!p||done)return;revealed=true;hints=Math.max(hints,1);done=true;ok=null;record('shown',false,false);
+    const solution=S.solve(p.id),a=solution.good[0];selected={...a};lastAnswer={...a};shown=E.apply(root,a);
+    feedback=`答えを表示しました。条件を満たす手は${solution.good.length}通りです。`+p.lesson;
+    const area=$('studySolutionChoices');area.replaceChildren();for(const move of solution.good){const b=document.createElement('button');b.type='button';b.textContent=E.actionName(move);b.addEventListener('click',()=>{lastAnswer={...move};shown=E.apply(root,move);render();});area.append(b);}render();
+  }
+  function chooseMode(m){if(!p||done)return;mode=m;selected=m==='wall'?defaultWall():null;feedback='';ok=null;render();}
+  function direction(dr,dc){if(!p||done)return;if(mode==='move'){const to=moved(dr,dc);if(to===undefined)return;selected={t:'m',to};}else{if(dr&&dc)return;const w=selected||defaultWall();selected={...w,r:Math.max(0,Math.min(E.M-1,w.r+dr)),c:Math.max(0,Math.min(E.M-1,w.c+dc))};}feedback='';ok=null;render();}
+  $('studyMove').onclick=()=>chooseMode('move');$('studyWall').onclick=()=>chooseMode('wall');
+  for(const [id,o] of [['studyHorizontal','h'],['studyVertical','v']])$(id).onclick=()=>{if(!done){orientation=o;if(selected?.t==='w')selected.o=o;render();}};
+  for(const b of document.querySelectorAll('#studyPad button'))b.onclick=()=>direction(+b.dataset.dr,+b.dataset.dc);
+  $('studySubmit').onclick=submit;$('studyHint').onclick=showHint;$('studyAnswer').onclick=answer;$('studyReset').onclick=()=>p&&load(p.id);
+  $('studySelect').onchange=()=>load($('studySelect').value);
+  for(const id of ['studySize','studyCategory','studyFilter'])$(id).onchange=()=>refreshList(p?.id);
+  $('studyProfile').value=progress.profile;$('studyProfile').onchange=()=>{progress.profile=+$('studyProfile').value;save();refreshList(p?.id);};
+  function next(shuffle=false){const list=available();if(!list.length){refreshList();return;}const pool=shuffle&&list.length>1?list.filter(x=>x.id!==p?.id):list;const id=shuffle?pool[Math.floor(Math.random()*pool.length)].id:list[(list.findIndex(x=>x.id===p?.id)+1)%list.length].id;refreshList(id);}
+  $('studyNext').onclick=()=>next();$('studyShuffle').onclick=()=>next(true);
+  $('studyBoard').addEventListener('pointerdown',e=>{if(e.isPrimary)pointer={x:e.clientX,y:e.clientY,id:e.pointerId};});
+  $('studyBoard').addEventListener('pointercancel',()=>pointer=null);
+  $('studyBoard').addEventListener('pointerup',e=>{
+    const start=pointer;pointer=null;if(!p||done||!start||e.pointerId!==start.id||Math.hypot(e.clientX-start.x,e.clientY-start.y)>14)return;
+    const svg=$('studyBoard'),matrix=svg.getScreenCTM();if(!matrix)return;let point;try{const xy=svg.createSVGPoint();xy.x=e.clientX;xy.y=e.clientY;point=xy.matrixTransform(matrix.inverse());}catch(_){return;}
+    const {x,y}=point,g=geometry();if(x<48||y<48||x>524||y>524)return;
+    if(mode==='move'){const r=Math.max(0,Math.min(E.M,Math.round((y-g.center)/g.step))),c=Math.max(0,Math.min(E.M,Math.round((x-g.center)/g.step))),to=r*E.N+c;if(!E.moves(root).includes(to)){feedback='光っているマスから移動先を選んでください。';ok=null;render();return;}selected={t:'m',to};}
+    else selected={t:'w',o:orientation,r:Math.max(0,Math.min(E.M-1,Math.round((y-g.cross)/g.step))),c:Math.max(0,Math.min(E.M-1,Math.round((x-g.cross)/g.step)))};
+    feedback='';ok=null;render();
+  });
+  $('studyDialog').addEventListener('keydown',e=>{
+    if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;const dirs={ArrowUp:[-1,0],ArrowRight:[0,1],ArrowDown:[1,0],ArrowLeft:[0,-1]};
+    if(dirs[e.key]){e.preventDefault();direction(...dirs[e.key]);}else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){e.preventDefault();submit();}
+  });
+  $('studyExport').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(progress,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='quoridor-study-progress.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('studySaveNote','学習記録を書き出しました。通常の対局データとは別のファイルです。');};
+  $('studyImport').onclick=()=>{$('studyFile').value='';$('studyFile').click();};
+  $('studyFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>250000)throw new Error('学習記録は250KB以下です。');const parsed=S.parseProgress(JSON.parse(await f.text()));progress=parsed;$('studyProfile').value=progress.profile;save();refreshList(p?.id);text('studySaveNote','学習記録を読み込みました。対局は変更していません。');}catch(err){text('studySaveNote','読み込めませんでした：'+err.message);}};
+  window.QuoridorStudyUI=Object.freeze({open(){if(!p)refreshList();else{summary();render();}save();},inspect:()=>({id:p?.id??null,selected:selected?{...selected}:null,done,hints,tries,mode,profile:progress.profile,root:root?E.pack(root):null,shown:shown?E.pack(shown):null,progress:JSON.parse(JSON.stringify(progress))})});
 })();
 
 </script>
