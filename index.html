@@ -115,7 +115,20 @@ body.view-mode #mobileBar{position:absolute}body.view-mode .view-controls{margin
 @media(max-width:760px){.header{flex-wrap:wrap}.header-actions{margin-left:auto}.header .small-btn{font-size:11px;padding:0 10px}.view-controls{font-size:10px;padding:6px 9px;margin-bottom:8px;gap:2px 8px}.view-controls small{font-size:9px}#studyDialog .dialog-body{padding:14px}.study-top{grid-template-columns:1fr 1fr}.study-grid{grid-template-columns:minmax(0,1fr);gap:12px}.study-board-column{max-width:420px;margin:auto;width:100%}#studyPrompt{font-size:13px!important}.study-input{gap:20px}.study-picker select{font-size:11px}.study-picker button{padding:0 10px;font-size:11px}.study-footer{position:sticky;bottom:-14px;background:var(--paper);padding:8px 0 2px;z-index:2}.study-top select{min-height:40px}.study-footer button{font-size:12px}}
 @media(max-width:360px){.brand h1{font-size:16px}.header .small-btn{padding:0 8px}.header-actions{gap:4px}.study-input{gap:10px}.study-picker{gap:4px}}
 
-.study-stage{background:#e8eee6;border-radius:8px;padding:8px 10px;font-size:12px!important;color:#243739!important;font-weight:650}.study-trail{font-size:11px!important;overflow-wrap:anywhere;border-left:3px solid #a3b6a6;padding-left:10px}#studyReference{font-size:11px!important}#studyReference a,.strategy-notes a{color:#157879}.strategy-notes{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0}.strategy-notes summary{font-size:13px;font-weight:650;cursor:pointer}.strategy-notes h4{font-size:12px;margin:12px 0 4px}.strategy-notes p{font-size:11px!important;margin:5px 0}.strategy-notes .source-note{font-size:10px!important;color:var(--muted)}#studyTrail{max-height:100px;overflow:auto}.study-board-column{width:100%}.study-mode button{transition:none}</style></head>
+.study-stage{background:#e8eee6;border-radius:8px;padding:8px 10px;font-size:12px!important;color:#243739!important;font-weight:650}.study-trail{font-size:11px!important;overflow-wrap:anywhere;border-left:3px solid #a3b6a6;padding-left:10px}#studyReference{font-size:11px!important}#studyReference a,.strategy-notes a{color:#157879}.strategy-notes{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0}.strategy-notes summary{font-size:13px;font-weight:650;cursor:pointer}.strategy-notes h4{font-size:12px;margin:12px 0 4px}.strategy-notes p{font-size:11px!important;margin:5px 0}.strategy-notes .source-note{font-size:10px!important;color:var(--muted)}#studyTrail{max-height:100px;overflow:auto}.study-board-column{width:100%}.study-mode button{transition:none}
+/* v2.6: visible handoff, proof-only notices, and a stable touch hit surface. */
+#board,#studyBoard{-webkit-tap-highlight-color:transparent;touch-action:pan-y pinch-zoom}
+.board-handoff{position:absolute;inset:0;z-index:4;display:grid;place-items:center;border-radius:18px;background:#fffefaab;padding:16px}
+.board-handoff-inner{max-width:300px;padding:15px;background:var(--paper);border:2px solid var(--actor);border-radius:15px;box-shadow:0 4px 24px #23353420;text-align:center}
+.board-handoff-inner p{margin:0 0 9px;font-size:14px;font-weight:700}.board-handoff-inner small{display:block;font-size:11px;margin:0 0 10px;color:var(--muted)}.board-handoff-inner button{min-height:46px;width:100%}
+.loss-setting{margin:12px 0 6px}.loss-options{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-size:11px}.loss-options select{width:auto;min-height:38px;font-size:11px}.loss-options small{font-size:10px;color:var(--muted)}
+.loss-panel{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);margin:6px 0 12px;font-size:11px}.loss-panel p{margin:0}.loss-panel details{margin-top:5px;color:var(--muted);font-size:10px}.loss-panel summary{cursor:pointer}.loss-panel details p{margin:6px 0;line-height:1.7}.loss-panel button{background:var(--paper);border:1px solid var(--line);min-height:36px;padding:6px 12px;font-size:11px}.loss-panel.verified{background:#fff1e8;border-color:#b66738}.loss-panel.verified>p{color:#873508;font-weight:700}
+#resignBtn.loss-mark{color:#77260d;background:#ffe0ca;border:2px solid #ae4927;font-weight:700}
+#resignBtn.loss-pulse{animation:loss-notice-pulse 2.6s ease-in-out infinite}
+@keyframes loss-notice-pulse{0%,100%{box-shadow:0 0 0 0 #ba542900;background:#ffe0ca}50%{box-shadow:0 0 0 4px #ba54293d;background:#fff2e8}}
+@media(prefers-reduced-motion:reduce){#resignBtn.loss-pulse{animation:none}}
+
+</style></head>
 <body data-view-angle="0">
 <div id="viewFrame"><div id="viewScroll"><div class="app">
 <header class="header">
@@ -133,6 +146,7 @@ body.view-mode #mobileBar{position:absolute}body.view-mode .view-controls{margin
   <div class="turn-order" id="turnOrder" aria-label="手番の順序"></div>
   <div class="board-wrap">
     <svg id="board" tabindex="0" viewBox="0 0 580 580" role="img" aria-label="コリドールの盤面。方向ボタンでも操作できます。"></svg>
+<div id="boardHandoff" class="board-handoff" hidden><div class="board-handoff-inner"><p id="boardHandoffText"></p><small>確認後、駒やフェンスを操作できます。</small><button id="boardReadyBtn" class="primary-btn">操作を開始</button></div></div>
   </div>
   <div class="board-caption"><span id="plyLabel">0手目</span><span id="lastMove"></span><span class="save-dot" id="saveState">自動保存</span></div>
 </section>
@@ -169,13 +183,17 @@ body.view-mode #mobileBar{position:absolute}body.view-mode .view-controls{margin
   </div>
   <div id="resultArea" class="result-area" hidden><p id="resultText"></p><button id="againBtn" class="primary-btn">もう一局</button></div>
   <div class="utility-row"><button id="undoBtn" class="utility-btn">↶ 1手戻す</button><button id="dataBtn" class="utility-btn">保存・読込</button><button id="resignBtn" class="utility-btn">対局を終了</button></div>
+
+<label class="path-option loss-setting"><input type="checkbox" id="lossNoticeToggle"><span>敗北を確認したら投了ボタンで知らせる</span></label>
+<div id="lossOptions" class="loss-options" hidden><label for="lossEffect">表示方法</label><select id="lossEffect"><option value="color">色を変える</option><option value="pulse">ゆっくり点滅する</option></select><small>相手が勝ち筋を逃さない前提での確認です。</small></div>
+<div id="lossPanel" class="loss-panel" hidden><p id="lossStatus" role="status" aria-live="polite"></p><details><summary>判定の範囲と再確認</summary><p id="lossDetail"></p><button id="lossRetryBtn">詳しく確認</button><p>時間と手数を限定して検証します。通知なしは、勝てることを保証しません。自動で投了はしません。3・4人戦は「対局を終了」ボタンに表示します。</p></details></div>
   <label class="path-option"><input type="checkbox" id="pathToggle"><span>最短経路の線を表示</span></label>
   <p class="path-note" id="pathNote" hidden>全員の経路を表示します。ジャンプや、これから置かれるフェンスは反映しません。</p>
   <p class="multi-help" id="localNote" hidden>同じ端末を交代で操作します。番号と色で駒を見分けてください。チーム戦ではなく、最初にゴールした1人の勝ちです。</p>
   <details class="history-box"><summary>手順を見る <span id="historyCount">0手</span></summary><ol id="historyList"></ol></details>
 </section>
 </main>
-<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.5.0</span></footer>
+<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.6.0</span></footer>
 </div>
 </div>
 <div id="mobileBar" class="mobile-bar" aria-label="スマートフォン用の操作"><div id="mobileSelection" class="mobile-selection"></div><div class="mobile-buttons"><button id="mobileMode" class="mobile-mode">フェンス</button><button id="mobileHint" class="hint-button mobile-hint" aria-controls="hintPanel">ヒント</button><button id="mobileRotate" class="mobile-rotate" aria-label="フェンスの向きを変える">↻</button><button id="mobileConfirm" class="primary-btn">移動を確定</button></div></div>
@@ -214,7 +232,7 @@ body.view-mode #mobileBar{position:absolute}body.view-mode .view-controls{margin
   <table class="rule-table"><thead><tr><th>1人あたりのフェンス</th><th>2人戦</th><th>3人戦</th><th>4人戦</th></tr></thead><tbody><tr><td>通常 9×9</td><td>10枚</td><td>6枚</td><td>5枚</td></tr><tr><td>キッズ 7×7</td><td>8枚</td><td>5枚</td><td>4枚</td></tr></tbody></table>
   <h3>2～4人の個人戦</h3><p>各辺の中央から、向かい側の辺を目指します。プレイヤー1は下から上へ進みます。ほかの人の開始位置は設定で指定・抽選でき、上側からは下へ、左側からは右へ、右側からは左へ進みます。手番は位置に沿って時計回りで、最初の人は手番設定で変わります。最初にゴールした1人の勝ちです。3人戦は4辺のうち3辺を使います。</p>
   <h3>自分の番にすること</h3><p>駒を上下左右に1マス動かすか、フェンスを1枚置くかのどちらかです。後退もできます。フェンスは2マス分の長さで、置いた後は動かせません。人間とコンピューターは同じルールで遊びます。</p>
-  <h3>ジャンプと斜め移動</h3><p>別の駒とフェンスを挟まず隣り合うと、その駒を直線に跳び越えられます。向こう側がフェンス・盤外・別の駒で塞がれている場合は、隣の駒の左右へ回り込めます。着地点は空きマスで、その間にフェンスがないことが必要です。2つの駒をまとめて跳び越えたり、駒と同じマスに入ったりはできません。</p>
+  <h3>敗北の通知（初期設定はOFF）</h3><p>「敗北を確認したら投了ボタンで知らせる」をONにすると、色の変化またはゆっくりした点滅で知らせます。評価値の低さではなく、相手が勝ち筋を逃さなければ勝てないと検証できた場合だけです。時間や手数が足りず判定できない場合は通知しません。通知がなくても勝てるとは限りません。3・4人戦では、相手1人が全員の妨害に対しても勝てる場合だけ確認します。「対局を終了」は1人の離脱ではなく全員の対局を終了します。</p><h3>手番の確認と回転中の操作</h3><p>交代確認がONの場合は、盤面中央の「操作を開始」を押してから操作してください。回転中も盤面をタップできます。盤面のどこを押しても着手が確定するわけではなく、最後に確定ボタンを押します。</p><h3>ジャンプと斜め移動</h3><p>別の駒とフェンスを挟まず隣り合うと、その駒を直線に跳び越えられます。向こう側がフェンス・盤外・別の駒で塞がれている場合は、隣の駒の左右へ回り込めます。着地点は空きマスで、その間にフェンスがないことが必要です。2つの駒をまとめて跳び越えたり、駒と同じマスに入ったりはできません。</p>
   <h3>最短マス数と駒の向き</h3><p>各プレイヤーの欄に「ゴールまで最短○マス」を表示します。現在のマスは数えず、フェンスの迂回を含め、ゴールの辺のどこかまでの最小のマス数を計算します。9×9の開始時は8マス、7×7では6マス、到達時は0マスです。</p><p>ほかの駒の占有・ジャンプ・今後のフェンスは計算に含めないため、勝つまでに必要な手数や先着順を示す数値ではありません。仮置きでは数字は変わらず、着手を確定すると全員分を更新します。数字の表示と経路の線の表示は別々に切り替えられます。通常の三角形の駒とキッズのネズミは、後退するときも自分のゴールの辺を向き続けます。</p>
   <h3>全員の道を残す</h3><p>フェンスは重ねたり途中で十字に交差させたりできません。誰か1人でも、ゴールへの道を完全になくす配置は禁止です。残り道を調べる際には、一時的な駒の占有を無視し、フェンスだけでつながりを確認します。</p>
   <h3>指で操作する</h3><p>移動できるマスは、手番の駒と同じ色で光ります。タップまたは方向ボタンで選んで「移動を確定」を押します。フェンスは近くをタップし、縦横と方向ボタンで調整して確定します。タップだけでは着手されません。スマートフォンでは、画面下の固定ボタンでも確定・駒とフェンスの切り替え・回転ができます。</p>
@@ -222,7 +240,7 @@ body.view-mode #mobileBar{position:absolute}body.view-mode .view-controls{margin
   <h3>親子で同じ端末を使う</h3><p>「自分で操作する人数」を2人以上にすると、番号の小さい駒から順に人間が操作します。3・4人戦では人間の開始位置を上・左・右から選べます。使用中の位置を選ぶと入れ替わり、コンピューターは残りの位置に入ります。「ランダム」ではプレイヤー1以外を対局開始時に抽選します。名前・色・番号は人と一緒に移ります。手番の名前とゴール方向を確かめてから操作してください。交代確認は設定で外せます。「自動180°回転」は、人間がちょうど2人のときに使えます。プレイヤー1を手前、プレイヤー2を向かい側に座る人として、画面内の盤面・文字・ボタンが交代時に回転します。ゲーム内の開始位置とは別の設定です。コンピューターの手番中は直前の人の向きを保ちます。手動回転ボタンを押すと自動回転を解除します。Safariのアドレスバーなどブラウザー自体は回転しません。別々の端末を接続するオンライン対戦ではありません。</p>
   <h3>戻す・保存・旧版からの移行</h3><p>「1手戻す」は、直前に人間が確定した着手と、その後のコンピューターの着手をまとめて取り消します。人間が複数でも同じです。途中の対局は同じブラウザーに自動保存します。旧版の9×9・2人戦データも読み込めます。別端末へ移す場合は「保存・読込」を使ってください。</p>
   <h3>キーボード</h3><p>矢印キーで位置を選び、Enterで確定します。Mで駒、Wでフェンス、Rでフェンスの回転、Escapeで選択を取り消します。Hでヒントを表示・中止します。斜めの移動は画面の斜めボタンを使ってください。</p>
-  <h3>勉強モード</h3><p>20題の作成局面で、実際に駒やフェンスを選んで「回答する」を押します。問題ごとに示した条件で判定し、条件を満たす別解も受け付けます。ヒントや答えを見ることもできます。通常の対局は一時停止し、問題を解いても対局の盤面や手順は変わりません。</p><p>学習者1～4の記録を分けられます。自力正解は、その挑戦でヒントを使わず最初の回答が正解したことを表します。誤答・ヒント使用・答え表示の問題は「要復習」で選び直せます。学習記録は対局データとは別に保存・書き出しします。</p>
+  <h3>勉強モード</h3><p>40題の作成局面で、実際に駒やフェンスを選んで「回答する」を押します。問題ごとに示した条件で判定し、条件を満たす別解も受け付けます。ヒントや答えを見ることもできます。通常の対局は一時停止し、問題を解いても対局の盤面や手順は変わりません。</p><p>学習者1～4の記録を分けられます。自力正解は、その挑戦でヒントを使わず最初の回答が正解したことを表します。誤答・ヒント使用・答え表示の問題は「要復習」で選び直せます。学習記録は対局データとは別に保存・書き出しします。</p>
   <h3>コンピューター</h3><p>2人戦は相手の反撃を、3・4人戦は各プレイヤーが自分の勝利を目指す手を先読みします。全員同じレベル設定ですが、盤面の位置によって選ぶ手は異なります。全合法手の完全な読みや必勝を保証するものではありません。</p>
   <h3>着手不能時の補助ルール</h3><p>3・4人戦で駒同士が詰まり、合法な移動もフェンス配置も1つもない場合だけ、順番を送れます。全員が着手不能なら勝者なしで終了します。これは公開説明で扱いを確認できなかった例外に対する本アプリの処理です。通常のパスはできません。</p>
   <p class="rule-source">ルール参考：<a href="https://www.play-departmentstore.com/fs/castjapan/gc006" target="_blank" rel="noopener noreferrer">日本販売元・通常版</a> ／ <a href="https://www.play-departmentstore.com/fs/castjapan/gk003" target="_blank" rel="noopener noreferrer">日本販売元・キッズ版</a></p>
@@ -966,7 +984,6 @@ function createQuoridorComputer(E) {
     secureSteps(input,p){const s=E.clone(input),b=board(s,topology(s));return secureSteps(s,b,p);},
     fastMoves:moves,riskEstimate(s,full=false){const z=E.clone(s),k=topology(z);return risks(z,k,board(z,k),()=>{},full);}};
 }
-
 </script>
 
 <script id="records-code">
@@ -1154,7 +1171,6 @@ function createQuoridorHints(E) {
   }
   return {analyze,wallRisk,describe,strongestFence,explain};
 }
-
 </script>
 
 <script id="study-code">
@@ -1339,7 +1355,182 @@ function createQuoridorStudy() {
   }
   return {bank,get,build,actions,immediate,risk,solve,assess,assessStep,line,actionKey,blankProgress,parseProgress};
 }
-
+</script>
+<script id="board-input-code">
+/* Shared board taps. This app supports 0/180 degree page rotation only.
+   Use the actual viewport rectangle, independently of SVG screen matrices and
+   ancestor transform reporting. Pointer/touch/click paths deduplicate a single tap. */
+function createQuoridorBoardInput() {
+  'use strict';
+  function point(svg, clientX, clientY, angle=0) {
+    const r=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;
+    if(!r.width||!r.height||!v.width||!v.height||![clientX,clientY].every(Number.isFinite))return null;
+    const scale=Math.min(r.width/v.width,r.height/v.height);
+    let x=clientX-r.left,y=clientY-r.top;
+    if(((angle%360)+360)%360===180){x=r.width-x;y=r.height-y;}
+    // All interactive boards use preserveAspectRatio="xMidYMid meet".
+    return {x:v.x+(x-(r.width-v.width*scale)/2)/scale,y:v.y+(y-(r.height-v.height*scale)/2)/scale};
+  }
+  function bind(svg, onTap, context=()=>({angle:0,key:''})) {
+    let pointer=null,touch=null,last=null,ignoreClickUntil=0;
+    const listeners=[],listen=(type,fn,opts)=>{svg.addEventListener(type,fn,opts);listeners.push([type,fn,opts]);};
+    const now=()=>Date.now();
+    function start(x,y,id){const c=context();return {x,y,id,angle:c.angle,key:c.key,at:now(),moved:false};}
+    function moved(s,x,y){if(s&&Math.hypot(s.x-x,s.y-y)>14)s.moved=true;}
+    function finish(s,x,y,event){
+      const c=context();
+      if(!s||s.moved||s.key!==c.key||s.angle!==c.angle||now()-s.at>1100||Math.hypot(s.x-x,s.y-y)>14)return false;
+      if(last&&last.kind!==event.type&&last.key===s.key&&last.angle===s.angle&&
+        Math.abs(last.startedAt-s.at)<80&&now()-last.at<550&&Math.hypot(last.x-x,last.y-y)<20)return true;
+      const p=point(svg,x,y,c.angle);if(!p)return false;
+      const used=onTap(p,event)!==false;
+      if(used){last={x,y,at:now(),startedAt:s.at,kind:event.type,key:s.key,angle:s.angle};ignoreClickUntil=now()+650;}
+      return used;
+    }
+    listen('pointerdown',e=>{
+      if(e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
+      pointer=start(e.clientX,e.clientY,e.pointerId);
+      // Capture on the stable outer SVG, not its replaceable cell elements.
+      try{svg.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    listen('pointermove',e=>{if(pointer?.id===e.pointerId)moved(pointer,e.clientX,e.clientY);});
+    listen('pointercancel',()=>{pointer=null;ignoreClickUntil=now()+700;});
+    listen('pointerup',e=>{
+      const s=pointer;pointer=null;
+      if(s?.id===e.pointerId){finish(s,e.clientX,e.clientY,e);ignoreClickUntil=now()+650;}
+      try{if(svg.hasPointerCapture(e.pointerId))svg.releasePointerCapture(e.pointerId);}catch(_){}
+    });
+    // Touch fallback also handles browsers where pointerup is not delivered.
+    listen('touchstart',e=>{touch=e.touches.length===1?start(e.touches[0].clientX,e.touches[0].clientY,e.touches[0].identifier):null;}, {passive:true});
+    listen('touchmove',e=>{if(e.touches.length!==1){if(touch)touch.moved=true;return;}moved(touch,e.touches[0].clientX,e.touches[0].clientY);}, {passive:true});
+    listen('touchcancel',()=>{touch=null;ignoreClickUntil=now()+700;}, {passive:true});
+    listen('touchend',e=>{
+      const s=touch;touch=null;const t=Array.from(e.changedTouches).find(t=>t.identifier===s?.id);
+      if(t&&finish(s,t.clientX,t.clientY,e)&&e.cancelable)e.preventDefault();
+      if(s)ignoreClickUntil=now()+700;
+    }, {passive:false});
+    // Fallback for click-only accessibility/browser input; never use a drag's click.
+    listen('click',e=>{
+      if(e.detail===0||now()<ignoreClickUntil||e.button!==0)return;
+      finish(start(e.clientX,e.clientY,-1),e.clientX,e.clientY,e);
+    });
+    return {reset(){pointer=touch=null;},destroy(){for(const x of listeners)svg.removeEventListener(...x);}};
+  }
+  return {point,bind};
+}
+</script>
+<script id="loss-code">
+/* Loss notifications require proof, never an evaluation threshold.
+   Two players: exhaustive finite-horizon AND/OR verification or exact retrograde
+   analysis with no fences left. 3/4 players: ONE rival must force THEIR OWN win
+   against EVERY reply of ALL other players. No cooperating-opponent assumption.
+   Proven loss is conditional on that rival following a winning strategy.
+   Failure to prove, including timeout/cycles, is UNKNOWN, not safety or a draw. */
+function createQuoridorLossAnalyzer(E) {
+  'use strict';
+  const clock=()=>typeof performance!=='undefined'?performance.now():Date.now();
+  const halt=Symbol('loss-analysis-budget'),V=E.V,P=E.P;
+  let raceCache=null;
+  function analyze(input,player=input.turn,options={}) {
+    if(!Number.isInteger(player)||player<0||player>=P)throw new Error('通知対象が正しくありません。');
+    const s=E.clone(input),start=clock(),ms=Number.isFinite(options.ms)?Math.max(0,options.ms):1100,
+      deadline=start+ms,maxNodes=Number.isFinite(options.maxNodes)?Math.max(0,options.maxNodes):90000,
+      maxPlies=Number.isInteger(options.maxPlies)?Math.max(0,Math.min(14,options.maxPlies)):(P===2?8:P*2),
+      positionKey=E.key(input);
+    let nodes=0,actionsChecked=0,completed=0;
+    const finish=(status,more={})=>({status,player,positionKey,nodes,actionsChecked,completedPlies:completed,
+      elapsed:Math.round(clock()-start),...more});
+    const check=()=>{if(clock()>=deadline||nodes>=maxNodes)throw halt;};
+    if(E.winner(s)>=0)return finish('not-applicable',{reason:'finished'});
+    // Never distract a player who can win immediately on this very turn.
+    if(s.turn===player&&E.moves(s,player).some(to=>E.goal(to,player)))return finish('not-proven',{reason:'immediate-own-win'});
+    try {
+      check();
+      if(P===2&&s.left.every(n=>n===0)&&options.race!==false){
+        const r=solveRace(s,check,()=>nodes++),id=(s.pos[0]*V+s.pos[1])*2+s.turn,verdict=r.result[id],
+          forcedWinner=verdict===0?-1:verdict===1?s.turn:1-s.turn;
+        if(forcedWinner>=0&&forcedWinner!==player)return finish('proven-loss',{winner:forcedWinner,method:'race',maxPlies:r.distance[id],conditional:true});
+        return finish('not-proven',{reason:forcedWinner===player?'own-forced-win':'unresolved-race'});
+      }
+      const memo=new Map(),actionCache=new Map();
+      function acts(){
+        const key=E.key(s);if(actionCache.has(key))return actionCache.get(key);
+        const out=E.moves(s).map(to=>({t:'m',to}));
+        if(s.left[s.turn]>0)for(const o of ['h','v'])for(let k=0;k<E.W;k++){
+          check();const a={t:'w',o,r:Math.floor(k/E.M),c:k%E.M};
+          if(!E.geometry(s,a))continue;actionsChecked++;
+          if(!E.wallError(s,a))out.push(a);
+        }
+        if(!out.length&&P>2)out.push({t:'p'});
+        if(actionCache.size>6000)actionCache.clear();actionCache.set(key,out);return out;
+      }
+      function force(rival,depth) {
+        check();nodes++;
+        const win=E.winner(s);if(win>=0)return win===rival;
+        if(depth<=0)return false;
+        const offset=E.turnOffset(s.turn,rival),turns=offset>=depth?0:1+Math.floor((depth-1-offset)/P);
+        // At most two graph edges per pawn move, including any legal jump.
+        if(E.distance(s,rival)>turns*2)return false;
+        const sig=rival+'#'+depth+'#'+E.key(s);if(memo.has(sig))return memo.get(sig);
+        const mine=s.turn===rival,moves=E.moves(s);
+        if(moves.some(to=>E.goal(to,s.turn))){memo.set(sig,mine);return mine;}
+        if(depth===1)return false;
+        let list=acts().slice();
+        if(!list.length)return false; // No assumption about unresolved immobility.
+        // Ordering affects speed only. All refutations are included in AND nodes.
+        const map=E.distanceMap(s,s.turn);
+        list.sort((a,b)=>(a.t==='m'?map[a.to]:999)-(b.t==='m'?map[b.to]:999));
+        for(const a of list){
+          check();const u=E.make(s,a);let yes;
+          try{yes=force(rival,depth-1);}finally{E.unmake(s,a,u);}
+          if(mine?yes:!yes){memo.set(sig,mine);return mine;}
+        }
+        const value=!mine;memo.set(sig,value);return value;
+      }
+      const rivals=Array.from({length:P},(_,q)=>q).filter(q=>q!==player)
+        .sort((a,b)=>E.distance(s,a)-E.distance(s,b)||E.turnOffset(s.turn,a)-E.turnOffset(s.turn,b));
+      // Breadth in horizon and rival identity before deeper verification.
+      for(let d=1;d<=maxPlies;d++){
+        for(const q of rivals){
+          if(force(q,d))return finish('proven-loss',{winner:q,method:'all-replies',maxPlies:d,conditional:true});
+        }
+        completed=d;
+      }
+      return finish('not-proven',{reason:'horizon'});
+    }catch(e){if(e!==halt)throw e;return finish('not-proven',{reason:'budget'});}
+  }
+  function solveRace(original,check,visit) {
+    const signature=Array.from(original.h).join('')+'/'+Array.from(original.v).join('');
+    if(raceCache?.signature===signature)return raceCache;
+    const count=V*V*2,result=new Int8Array(count),distance=new Uint16Array(count),degree=new Uint8Array(count),
+      longest=new Uint16Array(count),pred=Array.from({length:count},()=>[]),queue=new Uint32Array(count),s=E.clone(original);
+    let head=0,tail=0;
+    for(let a=0;a<V;a++){
+      check();
+      for(let b=0;b<V;b++){
+        if(a===b||(E.goal(a,0)&&E.goal(b,1)))continue;
+        s.pos[0]=a;s.pos[1]=b;
+        for(let p=0;p<2;p++){
+          visit();const id=(a*V+b)*2+p,won=E.winner(s);
+          if(won>=0){result[id]=won===p?1:-1;queue[tail++]=id;continue;}
+          const legal=E.moves(s,p);degree[id]=legal.length;
+          for(const to of legal){const next=(p===0?to*V+b:a*V+to)*2+(1-p);pred[next].push(id);}
+        }
+      }
+    }
+    while(head<tail){
+      if(!(head%128))check();const id=queue[head++];
+      for(const prev of pred[id]){
+        if(result[prev])continue;
+        if(result[id]===-1){result[prev]=1;distance[prev]=distance[id]+1;queue[tail++]=prev;}
+        else{degree[prev]--;longest[prev]=Math.max(longest[prev],distance[id]+1);
+          if(degree[prev]===0){result[prev]=-1;distance[prev]=longest[prev];queue[tail++]=prev;}}
+      }
+    }
+    raceCache={signature,result,distance};return raceCache;
+  }
+  return {analyze};
+}
 </script>
 <script id="app-code">
 (() => {
@@ -1362,6 +1553,76 @@ function createQuoridorStudy() {
   const name=p=>game.names[p];
   const text=(id,value)=>{$(id).textContent=value;};
   const rec=()=>R.record(game,prefs);
+  // BEGIN LOSS UI MODULE
+  // Optional proof-based notification. It never plays a move or resigns.
+  let lossPrefs={enabled:false,effect:'color'},lossTask={ticket:0,stamp:'',busy:false,result:null,error:'',worker:null,url:null,timer:null,watchdog:null},lossCache=new Map();
+  try{const p=JSON.parse(localStorage.getItem('quoridor-loss-notice')||'null');if(p){lossPrefs.enabled=p.enabled===true;lossPrefs.effect=p.effect==='pulse'?'pulse':'color';}}catch(_){}
+  function lossAllowed(){return lossPrefs.enabled&&!ended()&&human(state.turn)&&!handoffPending&&!busy&&!hintBusy&&!dialogsOpen()&&document.visibilityState!=='hidden';}
+  function lossStamp(){return game.id+':'+E.key(state);}
+  function stopLoss(clear=false){
+    lossTask.ticket++;clearTimeout(lossTask.timer);clearTimeout(lossTask.watchdog);lossTask.timer=lossTask.watchdog=null;
+    if(lossTask.worker)lossTask.worker.terminate();if(lossTask.url)URL.revokeObjectURL(lossTask.url);
+    lossTask.worker=null;lossTask.url=null;lossTask.busy=false;
+    if(clear){lossTask.stamp='';lossTask.result=null;lossTask.error='';}
+  }
+  function saveLossPrefs(){try{localStorage.setItem('quoridor-loss-notice',JSON.stringify(lossPrefs));}catch(_){notify('通知設定を保存できません。このページを開いている間だけ適用します。',true);}}
+  function renderLoss(){
+    $('lossNoticeToggle').checked=lossPrefs.enabled;$('lossEffect').value=lossPrefs.effect;
+    $('lossOptions').hidden=!lossPrefs.enabled;$('lossPanel').hidden=!lossPrefs.enabled||ended();
+    const visible=lossAllowed()&&lossTask.stamp===lossStamp(),r=visible?lossTask.result:null,
+      proven=r?.status==='proven-loss'&&r.player===state.turn&&r.positionKey===E.key(state);
+    $('resignBtn').classList.toggle('loss-mark',!!proven);$('resignBtn').classList.toggle('loss-pulse',!!proven&&lossPrefs.effect==='pulse');
+    $('lossPanel').classList.toggle('verified',!!proven);
+    if(proven){
+      $('resignBtn').setAttribute('aria-describedby','lossStatus');
+      text('lossStatus',`${name(state.turn)}：${name(r.winner)}が勝ち筋を逃さなければ、1位になれないと確認しました。`);
+      text('lossDetail',(r.method==='race'?'残りフェンスが双方0枚の2人戦を、ジャンプも含めて終局から計算しました。':`全合法手を対象に、${r.maxPlies}着手以内の相手の勝ちを確認しました。`)+(E.P>2?' 他の全員が妨害しても、1人の相手が勝てる場合だけ通知します。':'')+' 相手のミスで結果は変わり得ます。投了せずに続けられます。');
+    }else{
+      $('resignBtn').removeAttribute('aria-describedby');
+      const msg=!lossPrefs.enabled?'':!human(state.turn)?'人間の手番で確認します。':handoffPending?'「操作を開始」を押すと確認します。':dialogsOpen()||hintBusy?'ほかの画面・ヒントを閉じると確認します。':lossTask.busy?'敗北が確定するかを確認中です。操作は続けられます。':lossTask.error||'この局面では敗北を確認できていません。';
+      text('lossStatus',msg);text('lossDetail','通知なしは、勝てるという意味ではありません。評価値だけでは通知しません。'+(E.P>2?'「対局を終了」は全員の対局を終了し、1人だけを離脱させる操作ではありません。':''));
+    }
+    $('lossRetryBtn').disabled=!lossAllowed()||lossTask.busy||!!proven;
+    $('lossRetryBtn').textContent=lossTask.busy?'確認中':'詳しく確認';
+  }
+  function beginLoss(detailed=false){
+    if(!lossAllowed())return;
+    const stamp=lossStamp();stopLoss(true);lossTask.stamp=stamp;lossTask.busy=true;const ticket=lossTask.ticket;
+    const snapshot=E.pack(state),player=state.turn;
+    renderLoss();
+    const live=()=>ticket===lossTask.ticket&&lossAllowed()&&lossStamp()===stamp;
+    function settle(result,error=''){
+      if(!live())return;stopLoss(false);lossTask.stamp=stamp;lossTask.result=result;lossTask.error=error;
+      if(result){if(lossCache.size>80)lossCache.clear();lossCache.set(stamp,result);}renderLoss();
+    }
+    lossTask.timer=setTimeout(()=>{
+      if(!live())return;
+      try{
+        const source=createQuoridorEngine.toString()+'\n'+createQuoridorLossAnalyzer.toString()+`
+          self.onmessage=e=>{try{const m=e.data,E=createQuoridorEngine(m.state.size,m.state.count,m.state.seats),s=E.unpack(m.state);
+            self.postMessage({result:createQuoridorLossAnalyzer(E).analyze(s,m.player,m.options)});
+          }catch(error){self.postMessage({error:String(error.message||error)});}};`;
+        lossTask.url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));lossTask.worker=new Worker(lossTask.url);
+        lossTask.worker.onmessage=e=>{
+          if(!live())return;const r=e.data.result;
+          if(!r||r.player!==player||r.positionKey!==E.key(state)){settle(null,'判定できませんでした。敗北の通知は出しません。');return;}
+          settle(r);
+        };
+        lossTask.worker.onerror=e=>{e.preventDefault();settle(null,'この環境では敗北の確認を完了できません。通知は出しません。');};
+        lossTask.worker.postMessage({state:snapshot,player,options:{ms:detailed?2600:950,maxNodes:detailed?180000:75000,maxPlies:detailed?12:(E.P===2?8:E.P*2)}});
+        lossTask.watchdog=setTimeout(()=>settle(null,'時間内に確認できませんでした。敗北の通知は出しません。'),detailed?5500:3200);
+      }catch(_){settle(null,'この環境では敗北の確認を実行できません。通知は出しません。');}
+    },detailed?0:250);
+  }
+  function scheduleLoss(){
+    if(!lossAllowed()){if(lossTask.busy)stopLoss(false);renderLoss();return;}
+    const stamp=lossStamp();
+    if(lossTask.stamp===stamp&&(lossTask.busy||lossTask.result||lossTask.error)){renderLoss();return;}
+    if(lossCache.has(stamp)){stopLoss(true);lossTask.stamp=stamp;lossTask.result=lossCache.get(stamp);renderLoss();return;}
+    beginLoss(false);
+  }
+  // END LOSS UI MODULE
+
 
   function updateView(reset=false){
     if(reset){viewAngle=0;viewActor=0;}
@@ -1402,7 +1663,7 @@ function createQuoridorStudy() {
     text('saveState',storageOK?'自動保存':'保存不可');
   }
   function stopComputer(){
-    stopHint(true);
+    stopLoss(false);stopHint(true);
     ticket++;busy=false;progress=null;clearTimeout(watchdog);clearTimeout(delayed);clearTimeout(fallbackTimer);
     watchdog=delayed=fallbackTimer=null;
     if(worker){worker.terminate();worker=null;}if(workerURL){URL.revokeObjectURL(workerURL);workerURL=null;}
@@ -1411,7 +1672,7 @@ function createQuoridorStudy() {
   function closeDialog(id){if($(id).open){$(id).close();render();}}
   function install(parsed,saveNow=true){
     stopComputer();E=parsed.E;C=createQuoridorComputer(E);state=parsed.state;game=parsed.game;states=parsed.states;prefs=parsed.preferences;
-    decisionLog=[];mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
+    lossCache.clear();stopLoss(true);decisionLog=[];mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
     $('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;updateView(true);if(saveNow)save();render();scheduleComputer();
   }
   function blockedMatch(){return E.P>2&&E.moves(state).length===0&&Array.from({length:E.P},(_,p)=>E.forcedPass(state,p)).every(Boolean);}
@@ -1614,7 +1875,8 @@ function createQuoridorStudy() {
     }
     $('resultArea').hidden=!done;
     const handoff=!done&&human(p)&&handoffPending;
-    $('handoffPanel').hidden=!handoff;
+    $('handoffPanel').hidden=!handoff;$('boardHandoff').hidden=!handoff;
+    if(handoff){text('boardHandoffText',name(p)+'の番です');text('boardReadyBtn',name(p)+'の操作を開始');}
     if(handoff){text('handoffText',`${p+1} ${name(p)}の操作です。${ARROWS[E.SEATS[p]]} ${GOALS[E.SEATS[p]]}側のゴールを目指します。`);text('readyBtn',name(p)+'の番をはじめる');}
     const pass=!done&&!handoff&&human(p)&&E.moves(state).length===0&&E.forcedPass(state);
     $('passPanel').hidden=!pass;$('passBtn').disabled=!canPlay();
@@ -1653,7 +1915,7 @@ function createQuoridorStudy() {
     const forced=active&&E.moves(state).length===0&&E.forcedPass(state);
     text('mobileConfirm',handoffPending&&human(p)?`${p+1}番の操作を開始`:forced?'順番を送る':hintBusy?'ヒントを計算中':!human(p)?'考えています':mode==='wall'?'フェンスを確定':'移動を確定');
     $('mobileConfirm').disabled=!((handoffPending&&human(p)&&!ended()&&!dialogsOpen())||forced||(active&&valid));
-    $('undoBtn').disabled=undoIndex()<0&&!game.termination;$('resignBtn').disabled=ended();text('resignBtn',E.P===2&&game.humans===1?'投了':'対局を終了');
+    $('undoBtn').disabled=undoIndex()<0&&!game.termination;$('resignBtn').disabled=ended();text('resignBtn',E.P===2?(game.humans===1?'投了':name(p)+'が投了'):'対局を終了');
   }
   function candidateAt(){return hintResult?.analysis?.alternatives?.[hintChoice]||null;}
   function currentHintAnalysis(){return candidateAt()?.analysis||hintResult?.analysis;}
@@ -1822,7 +2084,7 @@ function createQuoridorStudy() {
     document.documentElement.style.setProperty('--actor',COLORS[actor]);document.documentElement.style.setProperty('--actor-light',LIGHTS[actor]);
     text('modeBadge',(E.N===7?'キッズ ':'通常 ')+E.N+'×'+E.N);
     text('matchInfo',`${E.P}人対戦 · 人間${game.humans}人`+(game.humans<E.P?`＋コンピューター${E.P-game.humans}人 · 全員レベル${game.level}`:' · コンピューターなし'));
-    renderPlayers();renderTurn();renderControls();renderHint();renderBoard();fitViewBoard();
+    renderPlayers();renderTurn();renderControls();renderHint();renderBoard();fitViewBoard();scheduleLoss();
     text('plyLabel',game.actions.length+'手目');text('historyCount',game.actions.length+'手');
     text('lastMove',game.actions.length?`${name(states.at(-2).turn)}：${E.actionName(game.actions.at(-1))}`:name(game.first)+'から開始します。');
     text('saveState',storageOK?'自動保存':'保存不可');$('pathNote').hidden=!prefs.showPaths;$('distanceNote').hidden=!prefs.showDistances;$('localNote').hidden=game.humans===1;
@@ -1914,21 +2176,16 @@ function createQuoridorStudy() {
     }catch(error){text('seatStatus',error.message);}
 
   }
-  $('board').addEventListener('pointerdown',e=>{if(e.isPrimary)pointerStart={x:e.clientX,y:e.clientY,id:e.pointerId};});
-  $('board').addEventListener('pointercancel',()=>pointerStart=null);
-  $('board').addEventListener('pointerup',e=>{
-    const start=pointerStart;pointerStart=null;if(!start||start.id!==e.pointerId||Math.hypot(e.clientX-start.x,e.clientY-start.y)>14||!canPlay())return;
-    const svg=$('board'),matrix=svg.getScreenCTM();if(!matrix)return;
-    let point;try{const xy=svg.createSVGPoint();xy.x=e.clientX;xy.y=e.clientY;point=xy.matrixTransform(matrix.inverse());}catch(_){return;}
-    const {x,y}=point,g=geometry();
-    if(x<GRID-8||x>g.end+8||y<GRID-8||y>g.end+8)return;
+  const mainBoardInput=createQuoridorBoardInput().bind($('board'),({x,y})=>{
+    if(!canPlay())return false;
+    const g=geometry();if(x<GRID-8||x>g.end+8||y<GRID-8||y>g.end+8)return false;
     if(mode==='move'){
       const r=Math.max(0,Math.min(E.M,Math.round((y-g.center)/g.step))),c=Math.max(0,Math.min(E.M,Math.round((x-g.center)/g.step))),to=r*E.N+c;
-      if(!E.moves(state).includes(to)){feedback='駒と同じ色で光るマスが、移動できる場所です。';renderTurn();return;}
+      if(!E.moves(state).includes(to)){feedback='駒と同じ色で光るマスが、移動できる場所です。';renderTurn();return true;}
       preview={t:'m',to};
     }else preview={t:'w',o:orientation,r:Math.max(0,Math.min(E.M-1,Math.round((y-g.cross)/g.step))),c:Math.max(0,Math.min(E.M-1,Math.round((x-g.cross)/g.step)))};
-    stopHint();feedback='';render();
-  });
+    stopHint();feedback='';render();return true;
+  },()=>({angle:viewAngle,key:game.id+':'+game.actions.length+':'+state.turn+':'+mode+':'+handoffPending}));
   $('moveMode').addEventListener('click',()=>setMode('move'));$('wallMode').addEventListener('click',()=>setMode('wall'));
   $('horizontalBtn').addEventListener('click',()=>changeOrientation('h'));$('verticalBtn').addEventListener('click',()=>changeOrientation('v'));
   for(const b of document.querySelectorAll('#directionPad button'))b.addEventListener('click',()=>direction(+b.dataset.dr,+b.dataset.dc));
@@ -1940,6 +2197,10 @@ function createQuoridorStudy() {
   $('variationPrev').addEventListener('click',()=>{if(variation&&variation.index>0){variation.index--;renderVariation();}});
   $('variationNext').addEventListener('click',()=>{if(variation&&variation.index<variation.frames.length-1){variation.index++;renderVariation();}});
   $('studyHintToggle').addEventListener('change',()=>{try{localStorage.setItem('quoridor-coach-steps',String($('studyHintToggle').checked));}catch(_){};});
+  $('boardReadyBtn').addEventListener('click',()=>$('readyBtn').click());
+  $('lossNoticeToggle').addEventListener('change',()=>{lossPrefs.enabled=$('lossNoticeToggle').checked;stopLoss(true);saveLossPrefs();scheduleLoss();});
+  $('lossEffect').addEventListener('change',()=>{lossPrefs.effect=$('lossEffect').value==='pulse'?'pulse':'color';saveLossPrefs();renderLoss();});
+  $('lossRetryBtn').addEventListener('click',()=>beginLoss(true));
   $('readyBtn').addEventListener('click',()=>{if(!ended()&&human(state.turn)){handoffPending=false;feedback='';render();}});
   $('passBtn').addEventListener('click',()=>{if(canPlay()&&E.forcedPass(state))commit({t:'p'});});
   $('mobileMode').addEventListener('click',()=>setMode(mode==='wall'?'move':'wall'));
@@ -1956,11 +2217,11 @@ function createQuoridorStudy() {
   $('helpBtn').addEventListener('click',()=>openDialog('helpDialog'));
   $('dataBtn').addEventListener('click',()=>{text('dataMessage','');openDialog('dataDialog');});
   $('resignBtn').addEventListener('click',()=>{
-    const resign=E.P===2&&game.humans===1;text('resignTitle',resign?'投了しますか？':'この対局を終了しますか？');
-    text('endDescription',resign?'この対局を終了し、コンピューターの勝ちにします。':'勝者を決めずに終了します。再開したい場合は、先に対局データを書き出してください。');
+    const resign=E.P===2,actor=game.humans===1?0:state.turn;text('resignTitle',resign?name(actor)+'が投了しますか？':'この対局を終了しますか？');
+    text('endDescription',resign?'この対局を終了し、'+name(1-actor)+'の勝ちにします。':'勝者を決めずに終了します。再開したい場合は、先に対局データを書き出してください。');
     text('confirmResign',resign?'投了して終了':'勝者なしで終了');openDialog('resignDialog');
   });
-  $('confirmResign').addEventListener('click',()=>{if(!ended()){stopComputer();game.termination=E.P===2&&game.humans===1?{type:'resigned',player:0}:{type:'stopped'};preview=null;handoffPending=false;save();}closeDialog('resignDialog');render();});
+  $('confirmResign').addEventListener('click',()=>{if(!ended()){stopComputer();game.termination=E.P===2?{type:'resigned',player:game.humans===1?0:state.turn}:{type:'stopped'};preview=null;handoffPending=false;save();}closeDialog('resignDialog');render();});
   $('levelRange').addEventListener('input',updateLevel);$('levelMinus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value-1;updateLevel();});$('levelPlus').addEventListener('click',()=>{$('levelRange').value=+$('levelRange').value+1;updateLevel();});
   $('playerCount').addEventListener('change',()=>{text('seatStatus','');updateSettings();});$('humanCount').addEventListener('change',()=>{text('seatStatus','');updateSettings();});
   $('placementSelect').addEventListener('change',()=>{text('seatStatus','');updateSettings();});
@@ -1974,7 +2235,7 @@ function createQuoridorStudy() {
     a.href=url;a.download=`quoridor-${E.N}x${E.N}-${E.P}players-${new Date().toISOString().slice(0,10)}-${game.actions.length}moves.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','対局データを書き出しました。');
   });
   $('exportAnalysisBtn').addEventListener('click',()=>{
-    const data={...rec(),diagnostic:{appVersion:'2.4.0',capturedAt:new Date().toISOString(),environment:navigator.userAgent,decisions:decisionLog.filter(x=>x.gameId===game.id)}};
+    const data={...rec(),diagnostic:{appVersion:'2.6.0',capturedAt:new Date().toISOString(),environment:navigator.userAgent,decisions:decisionLog.filter(x=>x.gameId===game.id)}};
     const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='quoridor-analysis-'+game.actions.length+'moves.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','現在の対局と、このページで記録した検討内容を書き出しました。外部へ自動送信はしません。');
   });
   $('importBtn').addEventListener('click',()=>{$('importFile').value='';$('importFile').click();});
@@ -1998,7 +2259,7 @@ function createQuoridorStudy() {
   window.addEventListener('pagehide',()=>{save();stopComputer();});
   window.addEventListener('pageshow',()=>{render();scheduleComputer();});
   // Read-only snapshots for testing and troubleshooting. No ability to mutate a live game.
-  window.Quoridor=Object.freeze({version:'2.4.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError,hintChoice,hintStage,diagnosticCount:decisionLog.length,view:{angle:viewAngle,auto:autoRotate&&game.humans===2,viewer:viewActor}})});
+  window.Quoridor=Object.freeze({version:'2.6.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError,hintChoice,hintStage,diagnosticCount:decisionLog.length,lossNotice:{enabled:lossPrefs.enabled,effect:lossPrefs.effect,busy:lossTask.busy,result:lossTask.result?JSON.parse(JSON.stringify(lossTask.result)):null,error:lossTask.error},view:{angle:viewAngle,auto:autoRotate&&game.humans===2,viewer:viewActor}})});
   try{$('studyHintToggle').checked=localStorage.getItem('quoridor-coach-steps')==='true';}catch(_){}
   let restored=null,migrated=false;
   try{const raw=localStorage.getItem(STORAGE);if(raw)restored=R.parse(JSON.parse(raw));else{const old=localStorage.getItem(PREVIOUS_STORAGE)||localStorage.getItem(OLD_STORAGE);if(old){restored=R.parse(JSON.parse(old));migrated=true;}}}
@@ -2138,16 +2399,13 @@ function createQuoridorStudy() {
   $('studyProfile').value=progress.profile;$('studyProfile').onchange=()=>{progress.profile=+$('studyProfile').value;save();refreshList(p?.id);};
   function next(shuffle=false){const list=available();if(!list.length){refreshList();return;}const pool=shuffle&&list.length>1?list.filter(x=>x.id!==p?.id):list;const id=shuffle?pool[Math.floor(Math.random()*pool.length)].id:list[(list.findIndex(x=>x.id===p?.id)+1)%list.length].id;refreshList(id);}
   $('studyNext').onclick=()=>next();$('studyShuffle').onclick=()=>next(true);
-  $('studyBoard').addEventListener('pointerdown',e=>{if(e.isPrimary)pointer={x:e.clientX,y:e.clientY,id:e.pointerId};});
-  $('studyBoard').addEventListener('pointercancel',()=>pointer=null);
-  $('studyBoard').addEventListener('pointerup',e=>{
-    const start=pointer;pointer=null;if(!p||done||reviewing||!start||e.pointerId!==start.id||Math.hypot(e.clientX-start.x,e.clientY-start.y)>14)return;
-    const svg=$('studyBoard'),matrix=svg.getScreenCTM();if(!matrix)return;let point;try{const xy=svg.createSVGPoint();xy.x=e.clientX;xy.y=e.clientY;point=xy.matrixTransform(matrix.inverse());}catch(_){return;}
-    const {x,y}=point,g=geometry();if(x<48||y<48||x>524||y>524)return;
-    if(mode==='move'){const r=Math.max(0,Math.min(E.M,Math.round((y-g.center)/g.step))),c=Math.max(0,Math.min(E.M,Math.round((x-g.center)/g.step))),to=r*E.N+c;if(!E.moves(root).includes(to)){feedback='光っているマスから移動先を選んでください。';ok=null;render();return;}selected={t:'m',to};}
+  createQuoridorBoardInput().bind($('studyBoard'),({x,y})=>{
+    if(!p||done||reviewing)return false;
+    const g=geometry();if(x<48||y<48||x>524||y>524)return false;
+    if(mode==='move'){const r=Math.max(0,Math.min(E.M,Math.round((y-g.center)/g.step))),c=Math.max(0,Math.min(E.M,Math.round((x-g.center)/g.step))),to=r*E.N+c;if(!E.moves(root).includes(to)){feedback='光っているマスから移動先を選んでください。';ok=null;render();return true;}selected={t:'m',to};}
     else selected={t:'w',o:orientation,r:Math.max(0,Math.min(E.M-1,Math.round((y-g.cross)/g.step))),c:Math.max(0,Math.min(E.M-1,Math.round((x-g.cross)/g.step)))};
-    feedback='';ok=null;render();
-  });
+    feedback='';ok=null;render();return true;
+  },()=>({angle:Number(document.body.dataset.viewAngle)||0,key:(p?.id||'')+':'+nodeIndex+':'+mode+':'+done+':'+reviewing}));
   $('studyDialog').addEventListener('keydown',e=>{
     if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;const dirs={ArrowUp:[-1,0],ArrowRight:[0,1],ArrowDown:[1,0],ArrowLeft:[0,-1]};
     if(dirs[e.key]){e.preventDefault();direction(...dirs[e.key]);}else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){e.preventDefault();submit();}
@@ -2157,6 +2415,5 @@ function createQuoridorStudy() {
   $('studyFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>250000)throw new Error('学習記録は250KB以下です。');const parsed=S.parseProgress(JSON.parse(await f.text()));progress=parsed;$('studyProfile').value=progress.profile;save();refreshList(p?.id);text('studySaveNote','学習記録を読み込みました。対局は変更していません。');}catch(err){text('studySaveNote','読み込めませんでした：'+err.message);}};
   window.QuoridorStudyUI=Object.freeze({open(){if(!p)refreshList();else{summary();render();}save();},inspect:()=>({id:p?.id??null,selected:selected?{...selected}:null,done,hints,tries,mode,nodeIndex,stageCount,mistakes,reviewing,profile:progress.profile,root:root?E.pack(root):null,shown:shown?E.pack(shown):null,progress:JSON.parse(JSON.stringify(progress))})});
 })();
-
 </script>
 </body></html>
