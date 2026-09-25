@@ -88,6 +88,17 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 @media(max-width:360px){.player-distance{font-size:9px;gap:3px}.player-distance strong{font-size:21px}.distance-options>span{display:none}.seat-row{grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr);gap:5px}.seat-row select{font-size:11px;padding:7px 5px}.seat-person{font-size:10px;gap:4px}.seat-preview-item strong{font-size:10px}}
 .distance-note summary{cursor:pointer;min-height:22px;line-height:22px}.distance-note p{margin:2px 0 5px}
 @media(max-width:760px){.player-line{min-height:20px}.player-goal{margin-top:1px;line-height:1.3}.player-goal b{font-size:12px}.player .wall-line{margin-top:2px;line-height:1.2}.player .wall-line b{font-size:13px}.player-distance{margin-top:3px;padding-top:3px}.player-distance strong{font-size:21px}}
+
+/* v2.3: coach comparisons and independent variation board. */
+.hint-study-option{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);margin:-3px 0 10px;min-height:28px}.hint-study-option input{width:18px;height:18px;accent-color:var(--actor)}
+.coach-point{font-size:12px;line-height:1.8;padding:10px 12px;border-left:3px solid #cda147;background:#fff8e9;border-radius:4px}
+.coach-candidates{display:grid;gap:7px;margin-top:10px}.coach-choice{text-align:left;display:block;width:100%;padding:11px 12px;border:1px solid #dfd6bf;background:#fffefa;border-radius:10px;color:var(--ink)}
+.coach-choice strong{display:block;font-size:12px}.coach-choice span{display:block;font-size:10px;color:var(--muted);margin-top:5px;line-height:1.7}.coach-choice.selected{border-color:#ad7c1f;box-shadow:0 0 0 1px #ad7c1f;background:#fff5d9}
+.coach-links{display:grid;gap:7px;margin-top:10px}.coach-links button{font-size:11px;min-height:40px;background:#fffefa;border:1px solid #d9c8a4}
+#hintCompare summary{font-size:12px;font-weight:650;cursor:pointer;min-height:36px;padding:9px 0}#hintCompare h4{font-size:12px;margin:14px 0 4px}#hintCompare p{font-size:10px;line-height:1.8;color:var(--muted)}
+#variationDialog{width:min(600px,calc(100vw - 20px))}#variationBoard{display:block;width:100%;max-height:58svh;aspect-ratio:1;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.variation-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.variation-controls button{min-height:46px;border:1px solid var(--line);background:var(--paper)}#variationStep{font-size:12px;color:var(--ink);min-height:38px}#variationDistances{font-size:10px}
+
 </style></head>
 <body>
 <div class="app">
@@ -113,13 +124,16 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <div id="handoffPanel" class="handoff-panel" hidden><p id="handoffText"></p><button id="readyBtn" class="primary-btn">自分の番をはじめる</button></div>
   <div id="passPanel" class="pass-panel" hidden><p>移動できるマスも、置けるフェンスもありません。本アプリでは、この場合に限り順番を送ります。</p><button id="passBtn" class="primary-btn">順番を送る</button></div>
   <div class="hint-toolbar"><button id="hintBtn" class="hint-button" aria-controls="hintPanel">ヒント</button><span id="hintAvailability">迷ったら、次の1手を確認できます。</span></div>
+  <label class="hint-study-option"><input id="studyHintToggle" type="checkbox"><span>ヒントを段階的に表示（考える練習）</span></label>
   <section id="hintPanel" class="hint-panel" aria-label="次の1手のヒント" hidden>
     <div role="status" aria-live="polite" aria-atomic="true"><h3 id="hintTitle"></h3><p id="hintReason"></p></div>
     <p id="hintMeta" class="hint-meta"></p>
+    <p id="hintPoint" class="coach-point" hidden></p><button id="hintReveal" class="primary-btn full" hidden>候補の場所を見る</button>
     <div id="hintExplanation" hidden>
       <div class="hint-actions"><span id="hintActionNote">盤面の金色の枠が候補です。<br>着手する場合は「確定」を押してください。</span><button id="dismissHint" class="text-btn">自分で考える</button></div>
       <details id="hintDetails"><summary>歩数の変化を見る</summary><table class="hint-table"><thead><tr><th scope="col">プレイヤー</th><th scope="col">いま</th><th scope="col">候補のあと</th></tr></thead><tbody id="hintSteps"></tbody></table><p id="hintRisk" class="hint-disclaimer"></p><p class="hint-disclaimer">歩数はフェンスだけで計算した目安です。ジャンプと今後の着手は含みません。フェンスを置くための1手の消費も別に考える必要があります。</p></details>
-      <p class="hint-disclaimer">ヒントは候補であり、最善手や勝利を保証するものではありません。</p>
+      <details id="hintCompare" hidden><summary>比較候補・応手を見る</summary><h4>別の候補と比べる</h4><div id="hintCandidates" class="coach-candidates"></div><p>候補を押すと仮表示が切り替わります。比較候補は、すべてがおすすめという意味ではありません。最大の増加は、相手がそのフェンスを置く確率ではありません。</p><div class="coach-links"><button id="hintLineBtn">候補と応手を順に見る</button><button id="hintThreatBtn">遠回りさせるフェンスを見る</button></div><p id="hintLineNote"></p></details>
+      <p class="hint-disclaimer">候補を絞った検討です。未検討の手もあり、最善手や勝利を保証するものではありません。</p>
     </div>
   </section>
   <div id="playControls">
@@ -144,7 +158,7 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
   <details class="history-box"><summary>手順を見る <span id="historyCount">0手</span></summary><ol id="historyList"></ol></details>
 </section>
 </main>
-<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.2.0</span></footer>
+<footer><span>非公式・個人練習用</span><span>端末内で対戦・保存 <i aria-hidden="true">·</i> v2.3.0</span></footer>
 </div>
 <div id="mobileBar" class="mobile-bar" aria-label="スマートフォン用の操作"><div id="mobileSelection" class="mobile-selection"></div><div class="mobile-buttons"><button id="mobileMode" class="mobile-mode">フェンス</button><button id="mobileHint" class="hint-button mobile-hint" aria-controls="hintPanel">ヒント</button><button id="mobileRotate" class="mobile-rotate" aria-label="フェンスの向きを変える">↻</button><button id="mobileConfirm" class="primary-btn">移動を確定</button></div></div>
 <dialog id="settingsDialog" aria-labelledby="settingsTitle"><div class="dialog-body">
@@ -197,11 +211,12 @@ select:focus-visible{outline:3px solid #246fda;outline-offset:3px}
 <dialog id="dataDialog" aria-labelledby="dataTitle"><div class="dialog-body">
   <div class="dialog-heading"><div><p class="eyebrow">SAVE GAME</p><h2 id="dataTitle">保存と読み込み</h2></div><button class="icon-btn" data-close="dataDialog" aria-label="保存画面を閉じる">×</button></div>
   <p>対局はこのブラウザー内に自動保存されます。ブラウザーのデータ消去で失われるため、残したい対局は書き出してください。画面を開いている間はコンピューターの思考を一時停止します。</p>
-  <button id="exportBtn" class="primary-btn full">対局データを書き出す</button><button id="importBtn" class="outline-btn full">対局データを読み込む</button><input id="importFile" type="file" accept=".json,application/json" hidden>
+  <button id="exportBtn" class="primary-btn full">対局データを書き出す</button><button id="exportAnalysisBtn" class="outline-btn full">対局と検討記録を書き出す</button><button id="importBtn" class="outline-btn full">対局データを読み込む</button><input id="importFile" type="file" accept=".json,application/json" hidden>
   <p class="small-note">保存形式はJavaScript Object Notation（JSON）です。読み込むと現在の対局に置き換わります。旧版のデータも読み込めますが、新版の対局は旧版アプリでは開けません。端末間の自動同期はありません。</p>
   <p id="dataMessage" class="data-message" role="status"></p><button class="text-btn full" data-close="dataDialog">盤面に戻る</button>
 </div></dialog>
 <dialog id="resignDialog" aria-labelledby="resignTitle"><div class="dialog-body"><div class="dialog-heading"><h2 id="resignTitle">この対局を終了しますか？</h2><button class="icon-btn" data-close="resignDialog" aria-label="閉じる">×</button></div><p id="endDescription">勝者を決めずに現在の対局を終了します。再開したい場合は、先にデータを書き出してください。</p><button id="confirmResign" class="primary-btn full">終了する</button><button class="text-btn full" data-close="resignDialog">対局を続ける</button></div></dialog>
+<dialog id="variationDialog" aria-labelledby="variationTitle"><div class="dialog-body"><div class="dialog-heading"><h2 id="variationTitle">検討手順</h2><button class="icon-btn" data-close="variationDialog" aria-label="検討画面を閉じる">×</button></div><p id="variationNote"></p><svg id="variationBoard" viewBox="0 0 552 552" role="img" aria-label="実際の対局とは別の検討用盤面"></svg><p id="variationStep" aria-live="polite"></p><div class="variation-controls"><button id="variationPrev">← 1手前</button><button id="variationNext">次の1手 →</button></div><p id="variationDistances"></p><button class="primary-btn full" data-close="variationDialog">実際の盤面に戻る</button></div></dialog>
 <noscript><div class="notice">このアプリにはJavaScriptが必要です。Safariなどのブラウザーで開き、JavaScriptを有効にしてください。</div></noscript>
 
 <script id="engine-code">
@@ -350,61 +365,208 @@ function createQuoridorEngine(size, count, seats) {
 </script>
 
 <script id="computer-code">
-
-/* Selective alpha-beta search, iterative deepening, and exact wall-free race endgames. */
+/* v2.3: tactical candidate generation, topology cache, threat-aware leaves,
+   iterative selective search, and comparable hint lines. No remote service. */
 function createQuoridorComputer(E) {
   'use strict';
-  const N=E.N, M=E.M, V=E.V, W=E.W;
-  const configs = [
-    { ms: 45, depth: 1, width: 4, random: .75, pool: 5 },
-    { ms: 75, depth: 1, width: 6, random: .45, pool: 4 },
-    { ms: 130, depth: 2, width: 8, random: .25, pool: 3 },
-    { ms: 200, depth: 2, width: 10, random: .12, pool: 3 },
-    { ms: 320, depth: 3, width: 12, random: .05, pool: 2 },
-    { ms: 500, depth: 3, width: 14, random: .02, pool: 2 },
-    { ms: 800, depth: 4, width: 16, random: 0, pool: 1 },
-    { ms: 1200, depth: 4, width: 18, random: 0, pool: 1 },
-    { ms: 1900, depth: 5, width: 22, random: 0, pool: 1 },
-    { ms: 3000, depth: 6, width: 26, random: 0, pool: 1 }
+  const N=E.N,M=E.M,V=E.V,W=E.W,P=E.P,WIN=1000000;
+  const configs=[
+    {ms:35,depth:1,width:3,skill:0,random:.65,pool:4},
+    {ms:60,depth:1,width:4,skill:1,random:.35,pool:3},
+    {ms:110,depth:2,width:5,skill:2,random:.20,pool:3},
+    {ms:180,depth:3,width:6,skill:3,random:.10,pool:2},
+    {ms:320,depth:4,width:7,skill:4,random:.04,pool:2},
+    {ms:550,depth:5,width:8,skill:5,random:0,pool:1},
+    {ms:850,depth:6,width:9,skill:6,random:0,pool:1},
+    {ms:1250,depth:7,width:10,skill:7,random:0,pool:1},
+    {ms:1800,depth:8,width:11,skill:8,random:0,pool:1},
+    {ms:2600,depth:10,width:12,skill:9,random:0,pool:1}
   ];
-  const clock = () => typeof performance !== 'undefined' ? performance.now() : Date.now();
-  const timeout = Symbol('search-timeout');
-  let raceCache = null;
-  function raceDistance(s, p, map) {
-    if (E.goal(s.pos[p], p)) return 0;
-    let best = 90;
-    for (const n of E.moves(s, p)) if (map[n] >= 0) best = Math.min(best, map[n] + 1);
-    return best;
+  const clock=()=>typeof performance!=='undefined'?performance.now():Date.now();
+  const timeout=Symbol('timeout');
+  const walls=Array.from({length:W*2},(_,id)=>({t:'w',o:id<W?'h':'v',r:Math.floor((id%W)/M),c:id%M}));
+  const wallId=a=>(a.o==='h'?0:W)+a.r*M+a.c;
+  const aid=a=>a.t==='m'?'m'+a.to:a.t==='w'?'w'+wallId(a):'p';
+  const same=(a,b)=>a&&b&&aid(a)===aid(b);
+  const topo=new Map();let hits=0,misses=0,raceCache=null;
+  function topology(s){
+    const words=new Uint16Array(Math.ceil(W*2/16));
+    for(let i=0;i<W;i++){if(s.h[i])words[i>>4]|=1<<(i&15);const j=i+W;if(s.v[i])words[j>>4]|=1<<(j&15);}
+    return String.fromCharCode(...words);
   }
-  function evaluate(s, p, maps) {
-    const w = E.winner(s);
-    if (w >= 0) return w === p ? 100000 : -100000;
-    maps = maps || [E.distanceMap(s, 0), E.distanceMap(s, 1)];
-    const a = raceDistance(s, p, maps[p]), b = raceDistance(s, 1 - p, maps[1 - p]);
-    // A wall is a limited resource; spending it also consumes the entire turn.
-    return 100 * (b - a) + 14 * (s.left[p] - s.left[1 - p]) +
-      .3 * (Math.abs(s.pos[1 - p] % N - M/2) - Math.abs(s.pos[p] % N - M/2));
+  function childKey(k,a){if(a.t!=='w')return k;const id=wallId(a),i=id>>4;return k.slice(0,i)+String.fromCharCode(k.charCodeAt(i)^(1<<(id&15)))+k.slice(i+1);}
+  function board(s,k){
+    let b=topo.get(k);if(b){hits++;return b;}misses++;
+    b={maps:Array.from({length:P},(_,p)=>E.distanceMap(s,p)),ids:null};
+    if(topo.size>14000){let removed=0;for(const oldKey of topo.keys()){topo.delete(oldKey);if(++removed===3500)break;}}topo.set(k,b);return b;
   }
-  function ranked(s, check = () => {}) {
-    const p = s.turn, maps = [E.distanceMap(s, 0), E.distanceMap(s, 1)], out = [];
-    for (const to of E.moves(s, p)) {
-      const a = { t: 'm', to }, old = s.pos[p]; s.pos[p] = to;
-      out.push({ a, score: evaluate(s, p, maps), ds: [maps[0][s.pos[0]], maps[1][s.pos[1]]] });
-      s.pos[p] = old;
+  function fenceIds(s,b){if(!b.ids)b.ids=walls.map((_,i)=>i).filter(i=>E.geometry(s,walls[i]));return b.ids;}
+  // Same jump rules as the public engine, with small fixed-size occupancy checks.
+  function moves(s,p=s.turn){
+    const at=s.pos[p],out=[];
+    const add=q=>{if(!out.includes(q))out.push(q);};
+    for(let d=0;d<4;d++)if(s.edges[at]&(1<<d)){
+      const to=at+E.STEP[d];
+      if(!s.pos.includes(to))add(to);
+      else if((s.edges[to]&(1<<d))&&!s.pos.includes(to+E.STEP[d]))add(to+E.STEP[d]);
+      else for(const e of [(d+1)%4,(d+3)%4])if((s.edges[to]&(1<<e))&&!s.pos.includes(to+E.STEP[e]))add(to+E.STEP[e]);
     }
-    if (s.left[p] > 0) for (const o of ['h', 'v']) for (let k = 0; k < W; k++) {
-      if (!(k % 16)) check();
-      const a = { t: 'w', o, r: (k / M) | 0, c: k % M };
-      if (!E.geometry(s, a)) continue;
-      E.rawWall(s, a, true); s.left[p]--;
-      try {
-        const after = [E.distanceMap(s, 0), E.distanceMap(s, 1)];
-        const ds = [after[0][s.pos[0]], after[1][s.pos[1]]];
-        if (ds[0] >= 0 && ds[1] >= 0) out.push({ a, score: evaluate(s, p, after), ds });
-      } finally { s.left[p]++; E.rawWall(s, a, false); }
-    }
-    out.sort((a, b) => b.score - a.score);
     return out;
+  }
+  function immediate(s,p=s.turn){for(const to of moves(s,p))if(E.goal(to,p))return {t:'m',to};return null;}
+  function distances(s,b){return s.pos.map((at,p)=>b.maps[p][at]);}
+  function raceDistances(s,b){
+    return s.pos.map((at,p)=>{
+      if(E.goal(at,p))return 0;
+      const base=b.maps[p][at];let contact=false;
+      for(let d=0;d<4;d++)if((s.edges[at]&(1<<d))&&s.pos.includes(at+E.STEP[d]))contact=true;
+      if(!contact)return base;
+      let best=V+1;for(const to of moves(s,p))if(b.maps[p][to]>=0)best=Math.min(best,1+b.maps[p][to]);return best;
+    });
+  }
+  // A passed fence directly behind a pawn can limit later long detours.
+  // A small, bounded feature breaks otherwise identical distance evaluations.
+  // Never treat the board boundary as an owned defensive fence.
+  function backGuard(s,p){
+    const dir=[2,0,3,1][E.SEATS[p]];let at=s.pos[p];
+    for(let i=0;i<5;i++){
+      const r=Math.floor(at/N),c=at%N;
+      if((dir===0&&r===0)||(dir===2&&r===M)||(dir===1&&c===M)||(dir===3&&c===0))return 0;
+      if(!(s.edges[at]&(1<<dir)))return 24-5*i;
+      at+=E.STEP[dir];
+    }
+    return 0;
+  }
+  function utility(s,b,risk=null,tactical=true,knowledge=9){
+    let won=E.winner(s);if(won<0&&tactical&&immediate(s))won=s.turn;
+    if(won>=0)return Array.from({length:P},(_,p)=>p===won?WIN:-WIN);
+    const d=raceDistances(s,b),out=[],guards=Array.from({length:P},(_,p)=>knowledge>=4?backGuard(s,p):0);
+    if(P===2){
+      const x=100*(d[1]-d[0])+50*(s.turn===0?1:-1)+18*(s.left[0]-s.left[1])+(risk?36*(risk[1]-risk[0]):0)+guards[0]-guards[1];
+      return [x,-x];
+    }
+    const arrival=d.map((n,p)=>(n-1)*P+E.turnOffset(s.turn,p));
+    for(let p=0;p<P;p++){
+      let nearest=Infinity,stock=0,otherRisk=0;
+      for(let q=0;q<P;q++)if(q!==p){nearest=Math.min(nearest,arrival[q]+(risk?P*.36*risk[q]:0));stock+=s.left[q];otherRisk+=risk?.[q]||0;}
+      out[p]=100*(nearest-arrival[p])/P-8*d[p]+15*(s.left[p]-stock/(P-1))-(risk?36*risk[p]:0)+guards[p];
+    }
+    return out;
+  }
+  // Probe walls cutting a near section of a shortest path; all alternatives in this
+  // probe are legal for every player. This is a risk estimate, not a forced loss.
+  function probeIds(s,b,full=false){
+    if(full)return fenceIds(s,b);
+    const set=new Set();
+    function edge(a,to){
+      if(Math.abs(to-a)===N){const r=Math.floor(Math.min(a,to)/N),c=a%N;for(const x of [c-1,c])if(r<M&&x>=0&&x<M)set.add(r*M+x);}
+      else {const r=Math.floor(a/N),c=Math.min(a,to)%N;for(const y of [r-1,r])if(y>=0&&y<M&&c<M)set.add(W+y*M+c);}
+    }
+    for(let p=0;p<P;p++){
+      let at=s.pos[p];const map=b.maps[p];
+      for(let step=0;step<3&&map[at]>0;step++){
+        let first=-1;
+        for(let d=0;d<4;d++)if((s.edges[at]&(1<<d))&&map[at+E.STEP[d]]===map[at]-1){edge(at,at+E.STEP[d]);if(first<0)first=at+E.STEP[d];}
+        if(first<0)break;at=first;
+      }
+    }
+    return [...set].filter(id=>E.geometry(s,walls[id]));
+  }
+  function risks(s,k,b,check=()=>{},full=false){
+    const out=Array(P).fill(0),base=distances(s,b);
+    if(!s.left.some(n=>n>0)||E.winner(s)>=0)return out;
+    let i=0;
+    for(const id of probeIds(s,b,full)){
+      if(!(i++%8))check();const a=walls[id];E.rawWall(s,a,true);
+      try{
+        const after=distances(s,board(s,childKey(k,a)));if(after.some(n=>n<0))continue;
+        for(let p=0;p<P;p++){
+          let cost=Infinity;for(let q=0;q<P;q++)if(q!==p&&s.left[q]>0)cost=Math.min(cost,after[q]-base[q]+1);
+          if(cost<Infinity)out[p]=Math.max(out[p],after[p]-base[p]-cost);
+        }
+      }finally{E.rawWall(s,a,false);}
+    }
+    return out;
+  }
+  function generate(s,k,b,check=()=>{},skill=9){
+    const actor=s.turn,out=[],base=distances(s,b),near=immediate(s,E.nextPlayer(actor));
+    function add(a,ck,cb){
+      const u=E.make(s,a);
+      try{
+        const ds=distances(s,cb);if(ds.some(n=>n<0))return;
+        const value=utility(s,cb,null,skill>=2,skill),tags=[];
+        const nextWins=skill>=2&&E.winner(s)<0&&!!immediate(s);
+        if(E.winner(s)===actor)tags.push('goal');
+        if(near&&!nextWins)tags.push('stop-goal');
+        if(a.t==='m'&&Math.abs(Math.floor(a.to/N)-Math.floor(u.pos/N))+Math.abs(a.to%N-u.pos%N)>1)tags.push('jump');
+        if(a.t==='w'&&ds.some((n,q)=>q!==actor&&n-base[q]>=3))tags.push('detour');
+        out.push({a,k:ck,b:cb,score:value[actor],values:value,ds,tags,unsafe:nextWins});
+      }finally{E.unmake(s,a,u);}
+    }
+    for(const to of moves(s))add({t:'m',to},k,b);
+    if(s.left[actor]>0){let c=0;for(const id of fenceIds(s,b)){
+      if(!(c++%16))check();const a=walls[id];E.rawWall(s,a,true);let cb;const ck=childKey(k,a);
+      try{cb=board(s,ck);}finally{E.rawWall(s,a,false);}add(a,ck,cb);
+    }}
+    if(!out.length&&P>2)add({t:'p'},k,b);
+    out.sort((x,y)=>y.score-x.score);return out;
+  }
+  function evaluate(s,p,maps){const k=topology(s),b=maps?{maps}:board(s,k);return utility(s,b,null,false)[p];}
+  function ranked(s,check=()=>{}){const x=E.clone(s),k=topology(x);return generate(x,k,board(x,k),check,9).map(i=>({a:i.a,score:i.score,ds:i.ds,values:i.values}));}
+  function vectorScore(s,maps){return utility(s,maps?{maps}:board(s,topology(s)),null,false);}
+  // Root tactical knowledge: do not throw away a fence simply because it does
+  // not immediately change a distance. Defense is rechecked after the candidate.
+  function prepare(s,k,b,all,check,skill){
+    if(skill<4||all.length<2)return;
+    const p=s.turn,base=distances(s,b),threats=[];
+    // A threat can be found even when the player to move has no fences left.
+    for(const id of fenceIds(s,b)){
+      check();const a=walls[id];E.rawWall(s,a,true);
+      try{
+        const ds=distances(s,board(s,childKey(k,a)));if(ds.some(n=>n<0))continue;
+        let cost=Infinity;for(let q=0;q<P;q++)if(q!==p&&s.left[q]>0)cost=Math.min(cost,ds[q]-base[q]+1);
+        const net=ds[p]-base[p]-cost;if(net>0)threats.push({a,net});
+      }finally{E.rawWall(s,a,false);}
+    }
+    threats.sort((a,b)=>b.net-a.net);const danger=threats.slice(0,4),before=danger[0]?.net||0;
+    for(const x of all){
+      check();const u=E.make(s,x.a);
+      try{
+        let risk=0;
+        for(const t of danger){
+          if(!E.geometry(s,t.a))continue;
+          E.rawWall(s,t.a,true);
+          try{
+            const ds=distances(s,board(s,childKey(x.k,t.a)));if(ds.some(n=>n<0))continue;
+            let cost=Infinity;for(let q=0;q<P;q++)if(q!==p&&s.left[q]>0)cost=Math.min(cost,ds[q]-x.ds[q]+1);
+            risk=Math.max(risk,ds[p]-x.ds[p]-cost);
+          }finally{E.rawWall(s,t.a,false);}
+        }
+        x.order=x.score-40*risk;x.rootRisk=risk;
+        if(before>=2&&risk<before&&x.a.t==='w'){x.tags.push('protect');x.order+=30;}
+        // Include a quiet continuation next to the opponent or an existing fence.
+        if(skill>=7&&x.a.t==='w'&&x.ds[p]===base[p]){
+          const qpos=s.pos.filter((_,q)=>q!==p);
+          const nearPawn=qpos.some(pos=>Math.abs(Math.floor(pos/N)-x.a.r)+Math.abs(pos%N-x.a.c)<=2);
+          const id=wallId(x.a),nextSame=[id-1,id+1,id-M,id+M];
+          const linked=nextSame.some(i=>i>=0&&i<2*W&&i!==id&&(i<W?s.h[i]:s.v[i-W]));
+          if(nearPawn&&linked)x.tags.push('combine');
+        }
+      }finally{E.unmake(s,x.a,u);}
+    }
+    all.sort((x,y)=>(y.order??y.score)-(x.order??x.score));
+  }
+  function pick(all,width,preferred,root=false){
+    const out=[],used=new Set();const add=x=>{if(x&&!used.has(aid(x.a))){out.push(x);used.add(aid(x.a));}};
+    add(preferred?all.find(x=>same(x.a,preferred)):null);
+    // Imminent wins and safe blocks always survive selection at tactical levels.
+    const hasSafe=all.some(x=>!x.unsafe);
+    const eligible=hasSafe?all.filter(x=>!x.unsafe):all;
+    eligible.slice(0,width).forEach(add);
+    eligible.filter(x=>x.a.t==='m').slice(0,root||P===2?99:2).forEach(add);
+    eligible.filter(x=>x.tags.includes('stop-goal')).slice(0,5).forEach(add);
+    if(root){eligible.filter(x=>x.tags.includes('protect')).slice(0,4).forEach(add);eligible.filter(x=>x.tags.includes('combine')).slice(0,2).forEach(add);}
+    return out.length?out:all.slice(0,1);
   }
   function sealedRouteWin(s, player) {
     const own = E.distance(s, player), other = E.distance(s, 1-player);
@@ -430,43 +592,6 @@ function createQuoridorComputer(E) {
     }
     return true;
   }
-  function aid(a) { return a.t === 'm' ? 'm' + a.to : a.o + a.r + ',' + a.c; }
-  function select(items, width, preferred) {
-    const out = [], used = new Set();
-    const add = x => { const k = aid(x.a); if (!used.has(k)) { used.add(k); out.push(x); } };
-    if (preferred) { const x = items.find(x => aid(x.a) === preferred); if (x) add(x); }
-    items.slice(0, width).forEach(add);
-    // Never prune ordinary moves, jumps, diagonals, or an immediate win.
-    items.filter(x => x.a.t === 'm').forEach(add);
-    return out;
-  }
-  function protectOrdering(s, items, check) {
-    if (!s.left[1 - s.turn]) return;
-    const p = s.turn, base = [E.distance(s, 0), E.distance(s, 1)];
-    const threats = items.filter(x => x.a.t === 'w')
-      .map(x => ({ a: x.a, harm: (x.ds[p] - base[p]) - (x.ds[1-p] - base[1-p]) - 1 }))
-      .filter(x => x.harm > 0).sort((a, b) => b.harm - a.harm).slice(0, 5);
-    if (!threats.length) return;
-    for (const item of items) {
-      check(); let risk = 0;
-      const undo = E.make(s, item.a);
-      try {
-        const ds = [E.distance(s, 0), E.distance(s, 1)];
-        for (const t of threats) {
-          if (!E.geometry(s, t.a)) continue;
-          E.rawWall(s, t.a, true);
-          try {
-            const da = E.distance(s, p), db = E.distance(s, 1-p);
-            if (da >= 0 && db >= 0) risk = Math.max(risk, (da - ds[p]) - (db - ds[1-p]) - 1);
-          } finally { E.rawWall(s, t.a, false); }
-        }
-      } finally { E.unmake(s, item.a, undo); }
-      // This is move ordering, not a proof that the path is protected.
-      item.order = item.score - 65 * risk;
-    }
-    items.sort((a, b) => (b.order ?? b.score) - (a.order ?? a.score));
-  }
-  // Exact retrograde solution when neither side has walls. Occupancy and jumps are included.
   function solveRace(original, check) {
     const signature = Array.from(original.h).join('') + Array.from(original.v).join('');
     if (raceCache && raceCache.signature === signature) return raceCache;
@@ -506,264 +631,158 @@ function createQuoridorComputer(E) {
     raceCache = { signature, result, distance };
     return raceCache;
   }
-  function choose(input, level = 5, options = {}) {
-    if (E.P > 2) return chooseMultiplayer(input, level, options);
-    const s = E.clone(input), p = s.turn, index = Math.max(0, Math.min(9, Number(level) - 1)) | 0,
-      cfg = configs[index], random = options.rng || Math.random, started = clock(),
-      budget = Number.isFinite(options.ms) ? Math.max(15, options.ms) : cfg.ms, deadline = started + budget;
-    let nodes = 0, completed = 0;
-    const check = () => { if (clock() >= deadline) throw timeout; };
-    const finish = (action, score, extra = {}) => ({ action, score: Math.round(score), depth: completed, nodes,
-      elapsed: Math.round(clock() - started), level: index + 1, ...extra });
-    if (E.winner(s) >= 0) return finish(null, 0);
-    const legalMoves = E.moves(s, p);
-    for (const to of legalMoves) if (E.goal(to, p)) return finish({ t: 'm', to }, 100000, { exact: true });
-    if (index >= 7 && s.left[0] + s.left[1] === 0) {
-      try {
-        const solved = solveRace(s, check), choices = [];
-        for (const to of legalMoves) {
-          const old = s.pos[p]; s.pos[p] = to;
-          const id = (s.pos[0] * V + s.pos[1]) * 2 + (1-p), outcome = -solved.result[id],
-            score = outcome * 100000 + (outcome > 0 ? -solved.distance[id] : outcome < 0 ? solved.distance[id] : evaluate(s, p));
-          choices.push({ a: { t: 'm', to }, score }); s.pos[p] = old;
-        }
-        choices.sort((a,b) => b.score-a.score);
-        return finish(choices[0].a, choices[0].score, { exact: true, solver: 'race' });
-      } catch (error) { if (error !== timeout) throw error; }
-    }
-    // A complete legal one-ply fallback is available even on a slow device.
-    let items = ranked(s); nodes += items.length;
-    if (!items.length) return finish({ t: 'm', to: legalMoves[0] }, 0);
-    const repetition = new Map();
-    for (const k of (options.recent || [])) repetition.set(k, (repetition.get(k) || 0) + 1);
-    function repeatCost(a) {
-      if (a.t !== 'm') return 0;
-      const u = E.make(s, a), k = E.key(s); E.unmake(s, a, u);
-      return 115 * (repetition.get(k) || 0);
-    }
-    for (const x of items) x.score -= repeatCost(x.a);
-    items.sort((a, b) => b.score-a.score);
-    // Weak levels make bounded mistakes, but always choose legal moves and take an immediate win.
-    if (cfg.random && random() < cfg.random) {
-      const viable = items.filter(x => x.score >= items[0].score - (index < 2 ? 230 : 125));
-      const pool = viable.slice(0, cfg.pool);
-      const x = pool[Math.min(pool.length - 1, Math.floor(random() * pool.length))];
-      return finish(x.a, x.score, { varied: true });
-    }
-    const staticBest = items[0];
-    if (index >= 6 && clock() < deadline) {
-      try {
-        for (const item of items) {
-          check(); const u=E.make(s,item.a);let certified;
-          try { certified=sealedRouteWin(s,p); } finally { E.unmake(s,item.a,u); }
-          if(certified)return finish(item.a,99000,{exact:true,solver:'protected-route'});
-        }
-      } catch(error) { if(error!==timeout)throw error; }
-    }
-    if (index >= 4 && clock() < deadline) {
-      try { protectOrdering(s, items, check); } catch (error) { if (error !== timeout) throw error; }
-    }
-    const root = select(items, cfg.width);
-    if (!root.some(x => aid(x.a) === aid(staticBest.a))) root.push(staticBest);
-    let best = staticBest.a, bestScore = staticBest.score;
-    const table = new Map(), path = new Set([E.key(s)]);
-    function negamax(depth, alpha, beta, ply) {
-      nodes++; if (!(nodes % 16)) check();
-      const win = E.winner(s);
-      if (win >= 0) return win === s.turn ? 100000 - ply : -100000 + ply;
-      if (depth <= 0) return evaluate(s, s.turn);
-      const k = E.key(s), memo = table.get(k), initialAlpha = alpha;
-      if (memo && memo.depth >= depth) {
-        if (memo.flag === 0) return memo.value;
-        if (memo.flag === 1) alpha = Math.max(alpha, memo.value);
-        if (memo.flag === -1) beta = Math.min(beta, memo.value);
-        if (alpha >= beta) return memo.value;
-      }
-      const all = ranked(s, check), list = select(all, Math.max(5, cfg.width - 3), memo && memo.best);
-      let value = -Infinity, bestId = '';
-      for (const item of list) {
-        const u = E.make(s, item.a); let q;
-        try {
-          const nextKey = E.key(s);
-          if (path.has(nextKey)) q = 0;
-          else {
-            path.add(nextKey);
-            try { q = -negamax(depth - 1, -beta, -alpha, ply + 1); }
-            finally { path.delete(nextKey); }
-          }
-        } finally { E.unmake(s, item.a, u); }
-        if (q > value) { value = q; bestId = aid(item.a); }
-        alpha = Math.max(alpha, q); if (alpha >= beta) break;
-      }
-      if (table.size > 20000) table.clear();
-      if (Math.abs(value) < 90000) table.set(k, { depth, value, best: bestId, flag: value <= initialAlpha ? -1 : value >= beta ? 1 : 0 });
-      return value;
-    }
-    for (let depth = 1; depth <= cfg.depth; depth++) {
-      let roundBest = null, roundScore = -Infinity, alpha = -Infinity;
-      try {
-        check();
-        root.sort((a, b) => (b.last ?? b.order ?? b.score) - (a.last ?? a.order ?? a.score));
-        for (const item of root) {
-          check(); const penalty = repeatCost(item.a), u = E.make(s, item.a); let score;
-          try {
-            const k = E.key(s); path.add(k);
-            try { score = -negamax(depth - 1, -Infinity, -(alpha + penalty), 1) - penalty; }
-            finally { path.delete(k); }
-          } finally { E.unmake(s, item.a, u); }
-          item.last = score;
-          if (score > roundScore) { roundScore = score; roundBest = item.a; }
-          alpha = Math.max(alpha, roundScore);
-        }
-        best = roundBest; bestScore = roundScore; completed = depth;
-        if (typeof options.progress === 'function') options.progress({ depth, nodes, elapsed: Math.round(clock()-started) });
-        if (Math.abs(bestScore) > 90000) break;
-      } catch (error) { if (error !== timeout) throw error; else break; }
-    }
-    return finish(best, bestScore);
-  }
-  // Max-n: every player maximizes their own utility. Human/computer identities are
-  // intentionally NOT passed into the engine; computers do not form a team.
-  function vectorScore(s, maps) {
-    const won=E.winner(s), scores=new Array(E.P);
-    if(won>=0)return scores.fill(-100000).map((_,p)=>p===won?100000:-100000);
-    maps=maps||s.pos.map((_,p)=>E.distanceMap(s,p));
-    const d=s.pos.map((_,p)=>raceDistance(s,p,maps[p]));
-    const arrival=d.map((v,p)=>(v-1)*E.P+E.turnOffset(s.turn,p));
-    for(let p=0;p<E.P;p++) {
-      let rival=Infinity, stock=0;
-      for(let q=0;q<E.P;q++)if(q!==p){rival=Math.min(rival,arrival[q]);stock+=s.left[q];}
-      scores[p]=100*(rival-arrival[p])/E.P - 7*d[p] + 12*(s.left[p]-stock/(E.P-1));
-    }
-    return scores;
-  }
-  function rankedMulti(s,check=()=>{}) {
-    const p=s.turn,maps=s.pos.map((_,q)=>E.distanceMap(s,q)),out=[];
-    for(const to of E.moves(s,p)) {
-      const a={t:'m',to},u=E.make(s,a);
-      try {const value=vectorScore(s,maps);out.push({a,score:value[p],values:value,ds:maps.map((m,q)=>m[s.pos[q]])});}
-      finally {E.unmake(s,a,u);}
-    }
-    if(s.left[p]>0)for(const o of ['h','v'])for(let k=0;k<W;k++) {
-      if(!(k%8))check();
-      const a={t:'w',o,r:(k/M)|0,c:k%M};if(!E.geometry(s,a))continue;
-      const u=E.make(s,a);
-      try {
-        const after=s.pos.map((_,q)=>E.distanceMap(s,q)),ds=after.map((m,q)=>m[s.pos[q]]);
-        if(ds.every(x=>x>=0)){const value=vectorScore(s,after);out.push({a,score:value[p],values:value,ds});}
-      }finally {E.unmake(s,a,u);}
-    }
-    if(!out.length && E.winner(s)<0) {
-      const a={t:'p'},u=E.make(s,a);
-      try{const value=vectorScore(s);out.push({a,score:value[p],values:value,ds:s.pos.map((_,q)=>E.distance(s,q))});}
-      finally{E.unmake(s,a,u);}
-    }
-    out.sort((a,b)=>b.score-a.score);return out;
-  }
-  function protectMulti(s,items,check) {
-    const p=s.turn;
-    if(!s.left.some((n,q)=>q!==p&&n>0))return;
-    const base=s.pos.map((_,q)=>E.distance(s,q));
-    const threats=items.filter(x=>x.a.t==='w'&&x.ds[p]>base[p])
-      .sort((a,b)=>(b.ds[p]-base[p])-(a.ds[p]-base[p])).slice(0,6);
-    if(!threats.length)return;
-    for(const item of items) {
-      check();const u=E.make(s,item.a);let risk=0;
-      try {
-        const before=s.pos.map((_,q)=>E.distance(s,q));
-        for(const threat of threats) {
-          if(!E.geometry(s,threat.a))continue;
-          E.rawWall(s,threat.a,true);
-          try {
-            const after=s.pos.map((_,q)=>E.distance(s,q));
-            if(after.every(x=>x>=0)) {
-              let leastOwnCost=Infinity;
-              for(let q=0;q<E.P;q++)if(q!==p&&s.left[q]>0)leastOwnCost=Math.min(leastOwnCost,after[q]-before[q]);
-              risk=Math.max(risk,after[p]-before[p]-leastOwnCost-1);
-            }
-          }finally{E.rawWall(s,threat.a,false);}
-        }
-      }finally{E.unmake(s,item.a,u);}
-      item.order=item.score-60*risk;
-    }
-    items.sort((a,b)=>(b.order??b.score)-(a.order??a.score));
-  }
-  function chooseMultiplayer(input,level=5,options={}) {
-    const s=E.clone(input),p=s.turn,index=Math.max(0,Math.min(9,Number(level)-1))|0,
-      cfg=configs[index],rng=options.rng||Math.random,started=clock(),
-      deadline=started+(Number.isFinite(options.ms)?Math.max(15,options.ms):cfg.ms);
-    let nodes=0,completed=0;
+  function choose(input,level=5,options={}){
+    const s=E.clone(input),p=s.turn,index=Math.max(0,Math.min(9,(Number(level)||5)-1))|0,cfg=configs[index],skill=cfg.skill,
+      started=clock(),budget=Number.isFinite(options.ms)?Math.max(15,options.ms):(options.hint?4800:cfg.ms),deadline=started+budget,rng=options.rng||Math.random;
+    let nodes=0,completed=0,k=topology(s),b=board(s,k),initialHits=hits,initialMisses=misses;
     const check=()=>{if(clock()>=deadline)throw timeout;};
-    const finish=(action,score,extra={})=>({action,score:Math.round(score),depth:completed,nodes,elapsed:Math.round(clock()-started),level:index+1,method:'max-n',...extra});
-    if(E.winner(s)>=0)return finish(null,0);
-    for(const to of E.moves(s,p))if(E.goal(to,p))return finish({t:'m',to},100000,{exact:true});
-    const items=rankedMulti(s);nodes+=items.length;
-    if(items.length===1&&items[0].a.t==='p')return finish({t:'p'},items[0].score);
-    const seen=new Map();for(const k of (options.recent||[]))seen.set(k,(seen.get(k)||0)+1);
-    function repetitionCost(a) {
-      if(a.t!=='m')return 0;
-      const u=E.make(s,a),k=E.key(s);E.unmake(s,a,u);return 90*(seen.get(k)||0);
+    const table=new Map(),leafCache=new Map(),seen=new Map();
+    for(const x of options.recent||[])seen.set(x,(seen.get(x)||0)+1);
+    const stateKey=(key)=>key+'|'+s.pos.join(',')+'|'+s.left.join(',')+'|'+s.turn;
+    function repeatPenalty(a){if(a.t!=='m')return 0;const u=E.make(s,a),n=seen.get(E.key(s))||0;E.unmake(s,a,u);return n*145;}
+    function result(a,score,extra={}){
+      return {action:a,score:Math.round(score),level:index+1,depth:completed,nodes,elapsed:Math.round(clock()-started),
+        method:P===2?'tactical-alpha-beta':'tactical-max-n',cacheHits:hits-initialHits,boards:misses-initialMisses,
+        knowledge:skill>=4?'conditional-tactics':'basic',...extra};
     }
-    for(const item of items)item.score-=repetitionCost(item.a);
-    items.sort((a,b)=>b.score-a.score);
-    if(cfg.random&&rng()<cfg.random) {
-      const pool=items.filter(x=>x.score>=items[0].score-(index<2?220:120)).slice(0,cfg.pool);
-      const item=pool[Math.min(pool.length-1,Math.floor(rng()*pool.length))];return finish(item.a,item.score,{varied:true});
-    }
-    const fallback=items[0];
-    if(index>=4&&clock()<deadline){try{protectMulti(s,items,check);}catch(err){if(err!==timeout)throw err;}}
-    const root=select(items,cfg.width);
-    if(!root.some(x=>aid(x.a)===aid(fallback.a)))root.push(fallback);
-    // Ordering can identify protective fences even if the time budget only permits one ply.
-    let best=root[0].a,bestScore=root[0].score;
-    const cache=new Map(),path=new Set([E.key(s)]);
-    function search(depth,ply) {
-      nodes++;if(!(nodes%8))check();
-      const won=E.winner(s);
-      if(won>=0)return Array.from({length:E.P},(_,q)=>q===won?100000-ply:-100000+ply);
-      if(depth<=0)return vectorScore(s);
-      const key=E.key(s)+'#'+depth;
-      if(cache.has(key))return cache.get(key);
-      const actor=s.turn,all=rankedMulti(s,check),list=select(all,Math.max(3,Math.floor(cfg.width/2)));
-      let chosen=null,score=-Infinity;
-      for(const item of list) {
-        check();const u=E.make(s,item.a);let values;
-        try {
-          const k=E.key(s);
-          if(path.has(k))values=vectorScore(s).map(v=>v-25);
-          else {path.add(k);try{values=search(depth-1,ply+1);}finally{path.delete(k);}}
-        }finally{E.unmake(s,item.a,u);}
-        if(values[actor]>score){score=values[actor];chosen=values;}
-        if(score>90000)break;
-      }
-      if(!chosen)chosen=vectorScore(s);
-      if(cache.size>12000)cache.clear();
-      // Terminal values depend on distance from root; avoid reusing them across lengths.
-      if(chosen.every(v=>Math.abs(v)<90000))cache.set(key,chosen);
-      return chosen;
-    }
-    const maxDepth=index>=4?Math.max(E.P,cfg.depth):cfg.depth;
-    for(let depth=1;depth<=maxDepth;depth++) {
-      let round=null,value=-Infinity;
-      try {
-        root.sort((a,b)=>(b.last??b.order??b.score)-(a.last??a.order??a.score));
-        for(const item of root) {
-          check();const penalty=repetitionCost(item.a),u=E.make(s,item.a);let v;
-          try{v=search(depth-1,1)[p]-penalty;}finally{E.unmake(s,item.a,u);}
-          item.last=v;
-          if(v>value){value=v;round=item.a;}
+    if(E.winner(s)>=0)return result(null,0);
+    const win=immediate(s);if(win)return result(win,WIN,{exact:true,solver:'immediate',candidates:[{action:win,score:WIN,depth:1,pv:[win],tags:['goal'],exact:true}]});
+    if(P===2&&index>=7&&s.left.every(n=>n===0)){
+      try{
+        const solved=solveRace(s,check),choices=[];
+        for(const to of moves(s)){
+          const old=s.pos[p];s.pos[p]=to;const id=(s.pos[0]*V+s.pos[1])*2+(1-p),outcome=-solved.result[id],
+            score=outcome*WIN+(outcome>0?-solved.distance[id]:outcome<0?solved.distance[id]:evaluate(s,p));s.pos[p]=old;
+          choices.push({action:{t:'m',to},score,depth:0,pv:[{t:'m',to}],tags:['race'],exact:true,outcome});
         }
-        best=round;bestScore=value;completed=depth;
-        if(typeof options.progress==='function')options.progress({depth,nodes,elapsed:Math.round(clock()-started)});
-        if(value>90000)break;
+        choices.sort((a,b)=>b.score-a.score);return result(choices[0].action,choices[0].score,{exact:true,solver:'race',candidates:choices.slice(0,3)});
+      }catch(err){if(err!==timeout)throw err;}
+    }
+    // Uninterruptible first ply supplies a legal fallback; only this short pass
+    // may overrun a very small budget on a slow device.
+    let all=generate(s,k,b,()=>{},skill);nodes+=all.length;
+    if(!all.length)return result(E.firstAction(s),0);
+    for(const x of all){x.penalty=repeatPenalty(x.a);x.score-=x.penalty;}
+    all.sort((a,b)=>b.score-a.score);
+    if(all.length===1&&all[0].a.t==='p')return result(all[0].a,all[0].score);
+    if(index<2){
+      const base=distances(s,b)[p],ms=all.filter(x=>x.a.t==='m'),fences=all.filter(x=>x.a.t==='w'&&x.ds[p]<=base&&x.ds.some((d,q)=>q!==p&&d>distances(s,b)[q]));
+      ms.sort((a,b)=>a.ds[p]-b.ds[p]||b.score-a.score);
+      let pool=ms.filter(x=>x.ds[p]<=Math.min(...ms.map(x=>x.ds[p]))+(index===0?1:0));
+      if(fences.length&&rng()<(index===0?.12:.32))pool=fences.slice(0,index===0?12:4);
+      if(!pool.length)pool=all.slice(0,4);
+      const x=pool[Math.min(pool.length-1,Math.floor(rng()*((rng()<cfg.random)?pool.length:1)))];
+      return result(x.a,x.score,{varied:true,candidates:[{action:x.a,score:x.score,depth:0,pv:[x.a],tags:x.tags}]});
+    }
+    let certified=null;
+    if(P===2&&skill>=6&&clock()<deadline){
+      try{for(const x of all){check();const u=E.make(s,x.a);let yes;try{yes=sealedRouteWin(s,p);}finally{E.unmake(s,x.a,u);}if(yes){certified=x;break;}}}catch(err){if(err!==timeout)throw err;}
+    }
+    if(certified&&!options.hint)return result(certified.a,WIN-100,{exact:true,solver:'protected-route',candidates:[{action:certified.a,score:WIN-100,depth:0,pv:[certified.a],tags:['protect'],exact:true}]});
+    try{prepare(s,k,b,all,check,skill);}catch(err){if(err!==timeout)throw err;}
+    const root=pick(all,Math.max(5,cfg.width+(options.hint?2:0)),null,true);
+    if(certified&&!root.includes(certified))root.push(certified);
+    let last=root.map(x=>({x,score:x.order??x.score,depth:0,pv:[x.a],bound:false})),best=last[0];
+    function terminal(ply){
+      const won=E.winner(s);if(won>=0)return Array.from({length:P},(_,q)=>q===won?WIN-ply:-WIN+ply);
+      if(skill>=2){const a=immediate(s);if(a)return Array.from({length:P},(_,q)=>q===s.turn?WIN-ply-1:-WIN+ply+1);}
+      return null;
+    }
+    function leaf(key,bo){
+      const sk=stateKey(key),cached=leafCache.get(sk);if(cached)return cached;
+      const r=skill>=5?risks(s,key,bo,check):null,value=utility(s,bo,r,skill>=2,skill);
+      if(leafCache.size>18000)leafCache.clear();leafCache.set(sk,value);return value;
+    }
+    const path=new Set([stateKey(k)]);
+    function negamax(key,bo,depth,alpha,beta,ply){
+      nodes++;if(!(nodes%16))check();
+      const t=terminal(ply);if(t)return t[s.turn];
+      if(depth===0)return leaf(key,bo)[s.turn];
+      const sk=stateKey(key),memo=table.get(sk),startAlpha=alpha,startBeta=beta;
+      if(memo&&memo.depth>=depth){if(memo.flag===0)return memo.score;if(memo.flag===1)alpha=Math.max(alpha,memo.score);else beta=Math.min(beta,memo.score);if(alpha>=beta)return memo.score;}
+      let generated=generate(s,key,bo,check,skill);
+      // Scan defense at interior nodes close to a dangerous corridor as well.
+      if(skill>=7&&depth>=2&&bo.ids&&bo.ids.length<65)prepare(s,key,bo,generated,check,skill);
+      const list=pick(generated,Math.max(4,cfg.width-3),memo?.best,skill>=7&&depth>=2);
+      let value=-Infinity,bestAction=null;
+      for(const x of list){
+        const u=E.make(s,x.a),nextKey=stateKey(x.k);let score;
+        try{
+          if(path.has(nextKey))score=-20;
+          else {path.add(nextKey);try{score=-negamax(x.k,x.b,depth-1,-beta,-alpha,ply+1);}finally{path.delete(nextKey);}}
+        }finally{E.unmake(s,x.a,u);}
+        if(score>value){value=score;bestAction=x.a;}alpha=Math.max(alpha,score);if(alpha>=beta)break;
+      }
+      if(!bestAction)return leaf(key,bo)[s.turn];
+      if(table.size>22000)table.clear();
+      if(Math.abs(value)<WIN/2)table.set(sk,{score:value,depth,flag:value<=startAlpha?-1:value>=startBeta?1:0,best:bestAction});return value;
+    }
+    function maxn(key,bo,depth,ply){
+      nodes++;if(!(nodes%8))check();const t=terminal(ply);if(t)return t;
+      if(depth===0)return leaf(key,bo);
+      const sk=stateKey(key)+'#'+depth,memo=table.get(sk);if(memo)return memo.values;
+      const actor=s.turn,generated=generate(s,key,bo,check,skill),list=pick(generated,Math.max(3,Math.floor(cfg.width/3)),null,false);
+      let value=null,score=-Infinity,bestAction=null;
+      for(const x of list){
+        const u=E.make(s,x.a),nk=stateKey(x.k);let v;
+        try{if(path.has(nk))v=leaf(x.k,x.b).map(n=>n-20);else{path.add(nk);try{v=maxn(x.k,x.b,depth-1,ply+1);}finally{path.delete(nk);}}}finally{E.unmake(s,x.a,u);}
+        if(v[actor]>score){score=v[actor];value=v;bestAction=x.a;}
+        if(score>WIN/2)break;
+      }
+      if(!value)return leaf(key,bo);if(table.size>22000)table.clear();if(value.every(x=>Math.abs(x)<WIN/2))table.set(sk,{values:value,best:bestAction,depth});return value;
+    }
+    function line(first,depth){
+      const z=E.clone(s),a=[first];let qk=childKey(k,first);E.make(z,first);const visited=new Set();
+      for(let remain=depth-1;remain>0&&E.winner(z)<0;remain--){
+        const sk=qk+'|'+z.pos.join(',')+'|'+z.left.join(',')+'|'+z.turn;
+        if(visited.has(sk))break;visited.add(sk);
+        const goal=immediate(z),entry=table.get(P===2?sk:sk+'#'+remain),next=goal||entry?.best;
+        if(!next||!E.legal(z,next))break;a.push(next);qk=childKey(qk,next);E.make(z,next);
+      }
+      return a;
+    }
+    // Short-horizon fallback is upgraded by a FULL tactical risk scan at the root.
+    if(skill>=5&&clock()<deadline){
+      try{
+        const candidates=[];
+        for(const x of root){check();const u=E.make(s,x.a);let v;
+          try{v=utility(s,x.b,risks(s,x.k,x.b,check,true),true,skill)[p]-(x.penalty||0);}finally{E.unmake(s,x.a,u);}
+          candidates.push({x,score:v,depth:1,pv:[x.a],bound:false});
+        }
+        candidates.sort((a,b)=>b.score-a.score);last=candidates;best=last[0];
+      }catch(err){if(err!==timeout)throw err;}
+    }
+    const maxDepth=P>2&&index>=4?Math.max(P+1,cfg.depth):cfg.depth;
+    for(let depth=1;depth<=maxDepth;depth++){
+      const round=[];let alpha=-Infinity;
+      try{
+        check();root.sort((a,b)=>(last.find(x=>x.x===b)?.score??b.score)-(last.find(x=>x.x===a)?.score??a.score));
+        for(const x of root){
+          check();const u=E.make(s,x.a);let score;const independent=!!options.hint,oldAlpha=alpha;
+          try{
+            const sk=stateKey(x.k);path.add(sk);
+            try{score=P===2?-negamax(x.k,x.b,depth-1,-Infinity,independent?Infinity:-alpha-(x.penalty||0),1):maxn(x.k,x.b,depth-1,1)[p];}
+            finally{path.delete(sk);}
+          }finally{E.unmake(s,x.a,u);}
+          score-=x.penalty||0;
+          round.push({x,score,depth,pv:line(x.a,depth),bound:P===2&&!independent&&score<=oldAlpha});alpha=Math.max(alpha,score);
+        }
+        round.sort((a,b)=>b.score-a.score);last=round;best=round[0];completed=depth;
+        if(typeof options.progress==='function')options.progress({depth,nodes,elapsed:Math.round(clock()-started),candidates:root.length,method:P===2?'alpha-beta':'max-n'});
+        if(best.score>WIN/2)break;
       }catch(err){if(err!==timeout)throw err;break;}
     }
-    return finish(best,bestScore);
+    if(certified){const row=last.find(x=>same(x.x.a,certified.a));best=row||{x:certified,score:WIN-100,depth:0,pv:[certified.a],bound:false};best={...best,score:WIN-100};}
+    if(cfg.random&&rng()<cfg.random&&!options.hint&&!certified){const near=last.filter(x=>!x.x.unsafe&&x.score>=last[0].score-(index===2?150:70)).slice(0,cfg.pool);if(near.length)best=near[Math.floor(rng()*near.length)];}
+    const ordered=[best,...last.filter(x=>x!==best&&!same(x.x.a,best.x.a))];
+    const candidates=ordered.slice(0,3).map(x=>({action:x.x.a,score:Math.round(x.score),depth:x.depth,pv:x.pv,bound:x.bound,tags:x.x.tags,
+      exact:!!certified&&same(x.x.a,certified.a),unsafe:x.x.unsafe}));
+    return result(best.x.a,best.score,{candidates,exact:!!certified,solver:certified?'protected-route':undefined,rootCount:root.length,legalCount:all.length,limited:true});
   }
-
-  return { configs, choose, evaluate, ranked, solveRace, sealedRouteWin, vectorScore, rankedMulti };
+  return {configs,choose,evaluate,ranked,solveRace,sealedRouteWin,vectorScore,rankedMulti:ranked,
+    // Pure inspection helpers for differential tests and hint explanations.
+    fastMoves:moves,riskEstimate(s,full=false){const z=E.clone(s),k=topology(z);return risks(z,k,board(z,k),()=>{},full);}};
 }
-
 
 </script>
 
@@ -905,7 +924,44 @@ function createQuoridorHints(E) {
     }
     return sentences.join('');
   }
-  return {analyze,wallRisk,describe};
+  // Return an explicit legal fence witnessing the largest one-fence detour.
+  // Other pawns stay fixed. This is a possibility, NOT a predicted choice.
+  function strongestFence(input,player){
+    const s=E.clone(input),base=s.pos.map((_,q)=>E.distance(s,q));let found=null;
+    if(E.winner(s)>=0)return null;
+    const opponents=s.pos.map((_,q)=>q).filter(q=>q!==player&&s.left[q]>0);if(!opponents.length)return null;
+    for(const o of ['h','v'])for(let k=0;k<E.W;k++){
+      const a={t:'w',o,r:Math.floor(k/E.M),c:k%E.M};if(!E.geometry(s,a))continue;E.rawWall(s,a,true);
+      try{
+        const ds=s.pos.map((_,q)=>E.distance(s,q));if(ds.some(n=>n<0))continue;
+        const delay=ds[player]-base[player];if(delay<=0)continue;
+        const actor=opponents.slice().sort((x,y)=>(ds[x]-base[x])-(ds[y]-base[y])||E.turnOffset(s.turn,x)-E.turnOffset(s.turn,y))[0];
+        if(!found||delay>found.delay||(delay===found.delay&&ds[actor]-base[actor]<found.actorDelay))found={action:a,actor,delay,actorDelay:ds[actor]-base[actor],before:base,after:ds};
+      }finally{E.rawWall(s,a,false);}
+    }
+    return found;
+  }
+  function explain(input,result){
+    const main=analyze(input,result.action),seen=new Set(),rows=[];
+    const source=result.candidates?.length?result.candidates:[{action:result.action,score:result.score,pv:[result.action],depth:result.depth}];
+    for(const item of source){
+      const signature=JSON.stringify(item.action);if(seen.has(signature)||!E.legal(input,item.action))continue;seen.add(signature);
+      const a=analyze(input,item.action),after=E.apply(input,item.action),line=[];let s=E.clone(input);
+      for(const action of item.pv||[item.action]){if(!E.legal(s,action))break;line.push({actor:s.turn,action:{...action}});s=E.apply(s,action);if(E.winner(s)>=0)break;}
+      if(!line.length)line.push({actor:input.turn,action:{...item.action}});
+      rows.push({action:item.action,analysis:a,line,score:item.score,depth:item.depth,bound:!!item.bound,tags:item.tags||[],exact:!!item.exact,
+        threat:a.winning?null:strongestFence(after,input.turn)});
+    }
+    let point='前進する手と、フェンスを置く手を比べましょう。フェンスを置く番には駒を進められません。';
+    const p=input.turn,next=E.nextPlayer(p);
+    if(main.winning)point='この手番で、自分のゴールに着ける場所はありませんか？';
+    else if(main.oneMoveBefore[next])point='次の人が、あと1回の移動でゴールできるかを確認しましょう。';
+    else if(main.riskBefore>=3)point='通路を進んだあと、出口をフェンスで塞がれると、どこまで戻ることになりますか？';
+    else if(main.jump!=='none')point='となりの駒を跳びこえられるか、確認しましょう。';
+    else if(rows[0]?.tags.includes('protect'))point='相手のフェンスから、自分の近道を守る置き方はありませんか？';
+    return {...main,point,alternatives:rows};
+  }
+  return {analyze,wallRisk,describe,strongestFence,explain};
 }
 </script>
 
@@ -920,7 +976,7 @@ function createQuoridorHints(E) {
     prefs=bundle.preferences,mode='move',orientation='h',preview=null,feedback='',progress=null,handoffPending=false,
     worker=null,workerURL=null,ticket=0,busy=false,watchdog=null,delayed=null,fallbackTimer=null,noticeTimer=null,storageOK=true,
     pointerStart=null,draftNames=[],draftSeats=[0,1],
-    hintWorker=null,hintURL=null,hintTicket=0,hintBusy=false,hintResult=null,hintProgress=null,hintError='',hintWatchdog=null,hintTimer=null;
+    hintWorker=null,hintURL=null,hintTicket=0,hintBusy=false,hintResult=null,hintProgress=null,hintError='',hintWatchdog=null,hintTimer=null,hintChoice=0,hintStage=1,variation=null,decisionLog=[];
   const human=p=>p<game.humans;
   const dialogsOpen=()=>!!document.querySelector('dialog[open]');
   const ended=()=>!!game.termination||E.winner(state)>=0;
@@ -944,7 +1000,7 @@ function createQuoridorHints(E) {
   function closeDialog(id){if($(id).open){$(id).close();render();}}
   function install(parsed,saveNow=true){
     stopComputer();E=parsed.E;C=createQuoridorComputer(E);state=parsed.state;game=parsed.game;states=parsed.states;prefs=parsed.preferences;
-    mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
+    decisionLog=[];mode='move';orientation='h';preview=null;feedback='';handoffPending=game.humans>1&&prefs.handoff&&human(state.turn)&&!ended();
     $('pathToggle').checked=prefs.showPaths;$('distanceToggle').checked=prefs.showDistances;if(saveNow)save();render();scheduleComputer();
   }
   function blockedMatch(){return E.P>2&&E.moves(state).length===0&&Array.from({length:E.P},(_,p)=>E.forcedPass(state,p)).every(Boolean);}
@@ -980,7 +1036,7 @@ function createQuoridorHints(E) {
     fallbackTimer=setTimeout(()=>{
       if(id!==ticket||ended()||human(state.turn)||dialogsOpen())return;
       let action;
-      try{action=C.choose(state,game.level,{ms:90,recent:states.slice(-28).map(E.key)}).action;}
+      try{const r=C.choose(state,game.level,{ms:Math.min(350,C.configs[game.level-1].ms),recent:states.slice(-28).map(E.key)});action=r.action;logDecision('computer',{...r,lightweight:true});}
       catch(_){const map=E.distanceMap(state,state.turn),ms=E.moves(state);ms.sort((a,b)=>map[a]-map[b]);action=ms.length?{t:'m',to:ms[0]}:E.firstAction(state)||{t:'p'};}
       busy=false;
       if(action&&E.legal(state,action))commit(action);
@@ -1002,7 +1058,7 @@ function createQuoridorHints(E) {
           if(m.type==='error'){fallback(id);return;}
           clearTimeout(watchdog);
           if(!m.result?.action||!E.legal(state,m.result.action)){fallback(id);return;}
-          busy=false;commit(m.result.action);
+          logDecision('computer',m.result);busy=false;commit(m.result.action);
         };
         w.onerror=e=>{e.preventDefault();fallback(id);};
         w.postMessage({id,state:E.pack(state),level:game.level,recent:states.slice(-28).map(E.key)});
@@ -1019,8 +1075,8 @@ function createQuoridorHints(E) {
     if(hintURL){URL.revokeObjectURL(hintURL);hintURL=null;}
   }
   function stopHint(clearPreview=false){
-    if(clearPreview&&hintResult&&sameAction(preview,hintResult.action))preview=null;
-    hintTicket++;releaseHintWorker();hintBusy=false;hintResult=null;hintProgress=null;hintError='';
+    if(clearPreview&&hintResult)preview=null;
+    hintTicket++;releaseHintWorker();hintBusy=false;hintResult=null;hintProgress=null;hintError='';hintChoice=0;hintStage=1;
   }
   function dismissHint(){stopHint(true);feedback='';render();}
   function validHintJob(id,stamp){return id===hintTicket&&hintBusy&&stamp===hintStamp()&&!ended()&&human(state.turn)&&!handoffPending&&!dialogsOpen()&&document.visibilityState!=='hidden';}
@@ -1030,7 +1086,7 @@ function createQuoridorHints(E) {
     // A worker result describes only the immutable snapshot used for this request.
     if(!analysis||!sameAction(analysis.action,result.action)||analysis.player!==state.turn){failHint(id,stamp);return;}
     releaseHintWorker();hintBusy=false;hintProgress=null;hintError='';
-    hintResult={...result,analysis,stamp,lightweight};preview=result.action.t==='p'?null:{...result.action};
+    hintResult={...result,analysis,stamp,lightweight};hintChoice=0;hintStage=$('studyHintToggle').checked?0:1;preview=hintStage===0||result.action.t==='p'?null:{...result.action};logDecision('hint',hintResult);
     mode=result.action.t==='w'?'wall':'move';if(mode==='wall')orientation=result.action.o;
     feedback='';render();
   }
@@ -1045,8 +1101,8 @@ function createQuoridorHints(E) {
     hintTimer=setTimeout(()=>{
       if(!validHintJob(id,stamp))return;
       try {
-        const snapshot=E.clone(state),result=C.choose(snapshot,10,{ms:90,recent:states.slice(-28).map(E.key)}),
-          analysis=createQuoridorHints(E).analyze(snapshot,result.action);
+        const snapshot=E.clone(state),result=C.choose(snapshot,10,{ms:350,hint:true,recent:states.slice(-28).map(E.key)}),
+          analysis=createQuoridorHints(E).explain(snapshot,result);
         finishHint(id,stamp,result,analysis,true);
       }catch(_){failHint(id,stamp);}
     },30);
@@ -1055,14 +1111,14 @@ function createQuoridorHints(E) {
     if(hintBusy){dismissHint();return;}
     if(!canPlay())return;
     stopHint();const id=hintTicket,stamp=hintStamp();hintBusy=true;preview=null;feedback='';
-    $('hintDetails').open=false;render();
+    $('hintDetails').open=false;$('hintCompare').open=false;render();
     const source=createQuoridorEngine.toString()+'\n'+createQuoridorComputer.toString()+'\n'+createQuoridorHints.toString()+`
       self.onmessage=event=>{
         const m=event.data;
         try {
           const E=createQuoridorEngine(m.state.size,m.state.count,m.state.seats),s=E.unpack(m.state),C=createQuoridorComputer(E),
-            result=C.choose(s,10,{recent:m.recent,progress:stats=>self.postMessage({id:m.id,type:'progress',stats})}),
-            analysis=createQuoridorHints(E).analyze(s,result.action);
+            result=C.choose(s,10,{hint:true,recent:m.recent,progress:stats=>self.postMessage({id:m.id,type:'progress',stats})}),
+            analysis=createQuoridorHints(E).explain(s,result);
           self.postMessage({id:m.id,type:'result',result,analysis});
         }catch(error){self.postMessage({id:m.id,type:'error',message:String(error.message||error)});}
       };`;
@@ -1076,7 +1132,7 @@ function createQuoridorHints(E) {
       };
       hintWorker.onerror=e=>{e.preventDefault();fallbackHint(id,stamp);};
       hintWorker.postMessage({id,kind:'hint',state:E.pack(state),level:10,recent:states.slice(-28).map(E.key)});
-      hintWatchdog=setTimeout(()=>fallbackHint(id,stamp),10000);
+      hintWatchdog=setTimeout(()=>fallbackHint(id,stamp),14000);
     }catch(_){fallbackHint(id,stamp);}
   }
   function renderHint(){
@@ -1086,22 +1142,23 @@ function createQuoridorHints(E) {
     $('hintPanel').hidden=!allowed||(!hintBusy&&!hintResult&&!hintError);$('hintExplanation').hidden=!hintResult;
     $('hintPanel').setAttribute('aria-busy',String(hintBusy));
     if(!allowed)return;
-    if(hintBusy){text('hintTitle','ヒントを考えています…');text('hintReason','移動とフェンスの候補を比べています。');text('hintMeta',hintProgress?`${hintProgress.depth}手先まで比較済み`:'レベル10の思考設定で検討します。');return;}
-    if(hintError){text('hintTitle','ヒントを表示できませんでした');text('hintReason',hintError);text('hintMeta','');return;}
+    if(hintBusy){$('hintPoint').hidden=true;$('hintReveal').hidden=true;$('hintCompare').hidden=true;text('hintTitle','ヒントを考えています…');text('hintReason','移動とフェンスの候補を比べています。');text('hintMeta',hintProgress?`${hintProgress.depth}手先まで比較済み`:'レベル10の思考設定で検討します。');return;}
+    if(hintError){$('hintPoint').hidden=true;$('hintReveal').hidden=true;$('hintCompare').hidden=true;text('hintTitle','ヒントを表示できませんでした');text('hintReason',hintError);text('hintMeta','');return;}
     if(!hintResult)return;
-    const r=hintResult,d=r.analysis;
-    text('hintActionNote',r.action.t==='p'?'「順番を送る」で次の人に進めます。':'盤面の金色の枠が候補です。着手する場合は「確定」を押してください。');
-    const title=r.action.t==='m'?`${E.square(r.action.to)}へ${E.N===7?'ネズミ':'駒'}を動かす`:r.action.t==='w'?`${r.action.o==='h'?'横':'縦'}のフェンスを置く`:'順番を送る';
-    text('hintTitle',`${state.turn+1} ${name(state.turn)}へのヒント：${title}`);
+    const r=hintResult,d=currentHintAnalysis(),selected=candidateAt(),action=selected?.action||r.action;
+    text('hintActionNote',action.t==='p'?'「順番を送る」で次の人に進めます。':'盤面の金色の枠が候補です。着手する場合は「確定」を押してください。');
+    const title=action.t==='m'?`${E.square(action.to)}へ${E.N===7?'ネズミ':'駒'}を動かす`:action.t==='w'?`${action.o==='h'?'横':'縦'}のフェンスを置く`:'順番を送る';
+    text('hintTitle',`${hintChoice===0?'推奨候補':'比較候補'}：${title}`);
     text('hintReason',createQuoridorHints(E).describe(d,game.names,E.N===7));
-    const meta=r.lightweight?'軽量計算（通常のヒントより先読みが浅い場合があります）':d.winning?'ゴールへの到達を確認':`レベル10の思考設定 ／ ${r.depth>0?r.depth+'手先まで比較':'先の探索を完了できなかったため、候補の評価で選択'}`;
-    text('hintMeta',meta+(r.action.t==='w'?'\n'+wallLabel(r.action):''));
+    const meta=r.lightweight?'簡易計算です。通常より検討範囲が狭くなっています。':d.winning?'この手でのゴールを確認':r.exact&&hintChoice===0?(r.solver==='race'?'フェンスなしの2人戦：終盤専用計算':'経路の保護と先着条件を確認'):`候補を絞った検討：${r.depth>0?r.depth+'手先まで比較':'局面評価による候補'}${E.P>2&&r.depth>0?(r.depth>=E.P+1?' ／ 自分の次の手まで':r.depth>=E.P?' ／ 他の全員の応手まで':' ／ 他の全員の応手は未完了'):''}`;
+    text('hintMeta',meta+(action.t==='w'?'\n'+wallLabel(action):''));
     const body=$('hintSteps');body.replaceChildren();
     for(let p=0;p<E.P;p++){
       const tr=document.createElement('tr');
       for(const v of [`${p+1} ${name(p)}`,d.before[p]+'歩',d.after[p]+'歩']){const td=document.createElement('td');td.textContent=v;tr.append(td);}body.append(tr);
     }
     text('hintRisk',d.riskBefore===null?'':`ほかの駒を動かさず、相手がフェンス1枚で増やせる自分の歩数の最大値：${d.riskBefore}歩 → ${d.riskAfter}歩。相手が実際にそのフェンスを置く予測ではなく、連続する複数のフェンスも含みません。`);
+    renderCoach();
   }
 
   function undoIndex(){let i=game.actions.length-1;while(i>=0&&!human(states[i].turn))i--;return i;}
@@ -1187,6 +1244,75 @@ function createQuoridorHints(E) {
     $('mobileConfirm').disabled=!((handoffPending&&human(p)&&!ended()&&!dialogsOpen())||forced||(active&&valid));
     $('undoBtn').disabled=undoIndex()<0&&!game.termination;$('resignBtn').disabled=ended();text('resignBtn',E.P===2&&game.humans===1?'投了':'対局を終了');
   }
+  function candidateAt(){return hintResult?.analysis?.alternatives?.[hintChoice]||null;}
+  function currentHintAnalysis(){return candidateAt()?.analysis||hintResult?.analysis;}
+  function selectHintCandidate(i){
+    if(!hintResult||!canPlay())return;
+    const row=hintResult.analysis.alternatives?.[i];if(!row||!E.legal(state,row.action))return;
+    hintChoice=i;hintStage=1;preview=row.action.t==='p'?null:{...row.action};mode=row.action.t==='w'?'wall':'move';if(mode==='wall')orientation=row.action.o;render();
+  }
+  function revealHint(){if(hintResult){hintStage=1;selectHintCandidate(hintChoice);}}
+  function renderCoach(){
+    const r=hintResult,area=$('hintCandidates');area.replaceChildren();
+    $('hintCompare').hidden=!r||hintStage===0;$('hintReveal').hidden=!r||hintStage>0;
+    $('hintPoint').hidden=!r||hintStage===0;
+    if(!r)return;
+    text('hintPoint',r.analysis.point||'前進とフェンスを比べてみましょう。');
+    if(hintStage===0){text('hintTitle','まず、自分で考えてみましょう');text('hintReason',r.analysis.point||'ゴールまでの道を確認しましょう。');$('hintExplanation').hidden=true;return;}
+    const rows=r.analysis.alternatives||[];
+    rows.forEach((row,i)=>{
+      const button=document.createElement('button');button.className='coach-choice'+(i===hintChoice?' selected':'');button.type='button';button.dataset.candidate=i;
+      button.setAttribute('aria-pressed',String(i===hintChoice));
+      const title=document.createElement('strong');title.textContent=(i===0?'推奨候補':`比較候補${i}`)+'：'+E.actionName(row.action);
+      const d=document.createElement('span'),v=row.analysis;d.textContent=`自分の道：${v.before[v.player]} → ${v.after[v.player]}マス`+(v.riskAfter===null?'':` ／ フェンス1枚による最大の増加：+${v.riskAfter}マス`);
+      button.append(title,d);button.addEventListener('click',()=>selectHintCandidate(i));area.append(button);
+    });
+    const row=candidateAt();
+    text('hintLineNote',row?.line.length>1?`${row.line.length}着手分の検討例です。相手が必ずこのとおりに指すという予測ではありません。`:'この候補の先の手順は、今回の計算では表示できません。');
+    $('hintLineBtn').disabled=!row||row.line.length<2;
+    $('hintThreatBtn').disabled=!row?.threat;
+    text('hintThreatBtn',row?.threat?`最大+${row.threat.delay}マスになるフェンスを見る`:'追加の迂回を作るフェンスはありません');
+  }
+  function openVariation(kind){
+    const row=candidateAt();if(!row||!hintResult||!canPlay())return;
+    let frames=[{s:E.clone(state),label:'現在の局面',last:null}];
+    if(kind==='threat'){
+      if(!row.threat)return;
+      const a=E.apply(state,row.action),w=row.threat,b=E.clone(a);E.rawWall(b,w.action,true);b.left[w.actor]--;
+      frames.push({s:a,label:`${name(state.turn)}：${E.actionName(row.action)}`,last:row.action});
+      frames.push({s:b,label:`${name(w.actor)}が${E.actionName(w.action)}を置いた場合（+${w.delay}マス）`,last:w.action});
+      text('variationTitle','フェンスによる迂回を確認');
+      text('variationNote','ほかの駒を動かさずに調べた仮定の図です。3・4人戦では、その人の手番までに局面が変わる可能性があります。実際の着手予測ではありません。');
+    }else{
+      let s=E.clone(state);
+      for(const item of row.line){if(!E.legal(s,item.action))break;s=E.apply(s,item.action);frames.push({s:E.clone(s),label:`${item.actor+1} ${name(item.actor)}：${E.actionName(item.action)}`,last:item.action});}
+      text('variationTitle','候補と応手の比較');text('variationNote','候補を絞って計算した手順の一例です。別の応手もあります。この画面を進めても実際の対局は進みません。');
+    }
+    variation={frames,index:0,stamp:hintStamp(),names:game.names.slice()};
+    $('variationDialog').showModal();renderVariation();render();
+  }
+  function renderVariation(){
+    if(!variation)return;
+    const frame=variation.frames[variation.index],s=frame.s,parts=[],step=440/E.N,start=60,gap=8;
+    for(let r=0;r<E.N;r++)for(let c=0;c<E.N;c++)parts.push(`<rect x="${start+c*step}" y="${start+r*step}" width="${step-gap}" height="${step-gap}" rx="5" fill="#ecebe4"/>`);
+    const line=['M60 44H492','M60 508H492','M508 60V492','M44 60V492'];
+    for(let p=0;p<E.P;p++)parts.push(`<path d="${line[E.SEATS[p]]}" fill="none" stroke="${COLORS[p]}" stroke-width="4"/>`);
+    for(const o of ['h','v'])for(let id=0;id<E.W;id++)if(s[o][id]){
+      const r=Math.floor(id/E.M),c=id%E.M,a={t:'w',o,r,c},last=frame.last&&sameAction(frame.last,a),x=start+c*step+(o==='v'?step-gap/2-4:0),y=start+r*step+(o==='h'?step-gap/2-4:0);
+      parts.push(`<rect x="${x}" y="${y}" width="${o==='h'?step*2-gap:8}" height="${o==='v'?step*2-gap:8}" rx="3" fill="${last?'#b47e19':'#49585c'}"/>`);
+    }
+    for(let p=0;p<E.P;p++){
+      const x=start+s.pos[p]%E.N*step+(step-gap)/2,y=start+Math.floor(s.pos[p]/E.N)*step+(step-gap)/2,angle=[0,180,90,-90][E.SEATS[p]],r=(step-gap)*.36;
+      parts.push(`<g transform="translate(${x} ${y})"><path d="M0 ${-r}L${r} ${r*.9}Q0 ${r*.45} ${-r} ${r*.9}Z" fill="${COLORS[p]}" stroke="white" stroke-width="2" transform="rotate(${angle})"/><text text-anchor="middle" y="5" font-size="14" font-weight="700" fill="white">${p+1}</text></g>`);
+    }
+    for(let i=0;i<E.N;i++)parts.push(`<text x="${start+i*step+(step-gap)/2}" y="531" text-anchor="middle" font-size="12" fill="#647575">${'abcdefghi'[i]}</text><text x="28" y="${start+i*step+(step-gap)/2+4}" text-anchor="middle" font-size="12" fill="#647575">${E.N-i}</text>`);
+    $('variationBoard').innerHTML=parts.join('');text('variationStep',`${variation.index} / ${variation.frames.length-1}：${frame.label}`);
+    text('variationDistances',s.pos.map((_,p)=>`${p+1} ${variation.names[p]}：${E.distance(s,p)}マス`).join(' ／ '));
+    $('variationPrev').disabled=variation.index===0;$('variationNext').disabled=variation.index===variation.frames.length-1;
+  }
+  function logDecision(kind,result){
+    decisionLog.push({kind,gameId:game.id,ply:game.actions.length,actor:state.turn,state:E.pack(state),result:JSON.parse(JSON.stringify(result))});if(decisionLog.length>120)decisionLog.shift();
+  }
   function renderPlayers(){
     const area=$('players');area.replaceChildren();
     for(let p=0;p<E.P;p++){
@@ -1258,7 +1384,7 @@ function createQuoridorHints(E) {
       }
     }
     if(active&&preview?.t==='m'){const [x,y]=point(preview.to);parts.push(`<circle cx="${x}" cy="${y}" r="17" fill="${COLORS[actor]}" fill-opacity=".2" stroke="${COLORS[actor]}" stroke-width="2" stroke-dasharray="4 4"/>`);}
-    if(active&&hintResult&&sameAction(preview,hintResult.action)){
+    if(active&&hintResult&&(hintStage>0&&(hintResult.analysis.alternatives||[{action:hintResult.action}]).some(x=>sameAction(preview,x.action)))){
       if(preview.t==='m'){const r=Math.floor(preview.to/E.N),c=preview.to%E.N;parts.push(`<rect class="hint-marker" x="${GRID+c*S+3}" y="${GRID+r*S+3}" width="${g.cell-6}" height="${g.cell-6}" rx="7" fill="none" stroke="#a57412" stroke-width="3" stroke-dasharray="7 4"/>`);}
       else if(preview.t==='w')parts.push(wallSvg(preview,'none','class="hint-marker" stroke="#a57412" stroke-width="4" stroke-dasharray="7 3"'));
     }
@@ -1295,8 +1421,8 @@ function createQuoridorHints(E) {
   function collectNames(){for(const input of document.querySelectorAll('#nameFields input'))draftNames[+input.dataset.player]=input.value;}
   function updateLevel(){
     const l=+$('levelRange').value,n=+$('playerCount').value,h=+$('humanCount').value,cfg=C.configs[l-1];text('levelNumber',l);
-    const descriptions=['操作を覚えるための設定です。よさそうな手の中でも、ばらつきを持たせて選びます。','前進とフェンスを比べます。ときどき遠回りになる手も選びます。','相手の次の手を考慮します。手の選択にはまだばらつきがあります。','相手の反撃を確認し、移動とフェンスを選びます。','自分の道を守るフェンスと、他のプレイヤーの手も検討します。','候補数を増やし、手の選択のばらつきを減らします。','意図的なばらつきなしで、候補と反撃を比較します。','先読みを増やします。2人戦ではフェンスなしの終盤も計算します。','さらに多くの候補と先読みを設定します。','このアプリで最も多くの候補と深さを設定しています。'];
-    text('levelDescription',n===h?'人間だけで対戦します。コンピューターの設定は使いません。':descriptions[l-1]+` 最大${n>2&&l>=5?Math.max(n,cfg.depth):cfg.depth}手先（時間制限あり）。`);
+    const descriptions=['操作練習向けです。主に駒を進め、ときどき横道やフェンスを選びます。','前進とフェンスを比べます。ときどき遠回りになる手も選びます。','相手の次の手を考慮します。手の選択にはまだばらつきがあります。','相手の反撃を確認し、移動とフェンスを選びます。','自分の道を守るフェンスと、他のプレイヤーの手も検討します。','候補数を増やし、手の選択のばらつきを減らします。','意図的なばらつきなしで、候補と反撃を比較します。','条件付きの守備手と応手を検討します。2人戦のフェンスなし終盤は専用計算を使います。','さらに多くの候補と先読みを設定します。','このアプリで最も多くの候補と深さを設定しています。'];
+    text('levelDescription',n===h?'人間だけで対戦します。コンピューターの設定は使いません。':descriptions[l-1]+` 最大${n>2&&l>=5?Math.max(n+1,cfg.depth):cfg.depth}手先（時間制限あり）。`);
     $('levelField').disabled=n===h;$('levelMinus').disabled=l===1||n===h;$('levelPlus').disabled=l===10||n===h;
   }
   function normalizeDraftSeats(n){
@@ -1395,6 +1521,11 @@ function createQuoridorHints(E) {
   $('confirmBtn').addEventListener('click',()=>{if(canPlay()&&preview&&E.legal(state,preview))commit(preview);});
   $('clearBtn').addEventListener('click',()=>{if(!canPlay())return;stopHint();preview=null;feedback='';render();});
   $('hintBtn').addEventListener('click',requestHint);$('mobileHint').addEventListener('click',requestHint);$('dismissHint').addEventListener('click',dismissHint);
+  $('hintReveal').addEventListener('click',revealHint);
+  $('hintLineBtn').addEventListener('click',()=>openVariation('line'));$('hintThreatBtn').addEventListener('click',()=>openVariation('threat'));
+  $('variationPrev').addEventListener('click',()=>{if(variation&&variation.index>0){variation.index--;renderVariation();}});
+  $('variationNext').addEventListener('click',()=>{if(variation&&variation.index<variation.frames.length-1){variation.index++;renderVariation();}});
+  $('studyHintToggle').addEventListener('change',()=>{try{localStorage.setItem('quoridor-coach-steps',String($('studyHintToggle').checked));}catch(_){};});
   $('readyBtn').addEventListener('click',()=>{if(!ended()&&human(state.turn)){handoffPending=false;feedback='';render();}});
   $('passBtn').addEventListener('click',()=>{if(canPlay()&&E.forcedPass(state))commit({t:'p'});});
   $('mobileMode').addEventListener('click',()=>setMode(mode==='wall'?'move':'wall'));
@@ -1424,6 +1555,10 @@ function createQuoridorHints(E) {
     const blob=new Blob([JSON.stringify(rec(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
     a.href=url;a.download=`quoridor-${E.N}x${E.N}-${E.P}players-${new Date().toISOString().slice(0,10)}-${game.actions.length}moves.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','対局データを書き出しました。');
   });
+  $('exportAnalysisBtn').addEventListener('click',()=>{
+    const data={...rec(),diagnostic:{appVersion:'2.3.0',capturedAt:new Date().toISOString(),environment:navigator.userAgent,decisions:decisionLog.filter(x=>x.gameId===game.id)}};
+    const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='quoridor-analysis-'+game.actions.length+'moves.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);text('dataMessage','現在の対局と、このページで記録した検討内容を書き出しました。外部へ自動送信はしません。');
+  });
   $('importBtn').addEventListener('click',()=>{$('importFile').value='';$('importFile').click();});
   $('importFile').addEventListener('change',async e=>{
     const file=e.target.files[0];if(!file)return;
@@ -1444,7 +1579,8 @@ function createQuoridorHints(E) {
   window.addEventListener('pagehide',()=>{save();stopComputer();});
   window.addEventListener('pageshow',()=>{render();scheduleComputer();});
   // Read-only snapshots for testing and troubleshooting. No ability to mutate a live game.
-  window.Quoridor=Object.freeze({version:'2.2.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError})});
+  window.Quoridor=Object.freeze({version:'2.3.0',get engine(){return E;},inspect:()=>({state:E.pack(state),game:JSON.parse(JSON.stringify(game)),preferences:{...prefs},mode,preview:preview?{...preview}:null,busy,handoffPending,hintBusy,hint:hintResult?JSON.parse(JSON.stringify(hintResult)):null,hintError,hintChoice,hintStage,diagnosticCount:decisionLog.length})});
+  try{$('studyHintToggle').checked=localStorage.getItem('quoridor-coach-steps')==='true';}catch(_){}
   let restored=null,migrated=false;
   try{const raw=localStorage.getItem(STORAGE);if(raw)restored=R.parse(JSON.parse(raw));else{const old=localStorage.getItem(PREVIOUS_STORAGE)||localStorage.getItem(OLD_STORAGE);if(old){restored=R.parse(JSON.parse(old));migrated=true;}}}
   catch(_){notify('保存データを復元できなかったため、新しい盤面を表示します。書き出したファイルは「保存・読込」から復元できます。');}
